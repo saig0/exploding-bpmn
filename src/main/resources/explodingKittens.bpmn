@@ -18,11 +18,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_0oqi9s0" sourceRef="StartEvent_1" targetRef="ServiceTask_1cehycx" />
     <bpmn:serviceTask id="ServiceTask_0zrp5ep" name="Select Player">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="script" />
-        <zeebe:taskHeaders>
-          <zeebe:header key="language" value="feel" />
-          <zeebe:header key="script" value="{   round : round + 1,   nextPlayer : players[modulo(round, count(players)) + 1], begin: [1],  index : 1,   calcTurns :    function(array, idx)      if (index = turns) then       array     else       turnArray(append(array, begin), idx + 1),   turnArray : calcTurns(begin, index)  }" />
-        </zeebe:taskHeaders>
+        <zeebe:taskDefinition type="selectPlayerForNewRound" />
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_00cvyg1</bpmn:incoming>
       <bpmn:incoming>SequenceFlow_17avudo</bpmn:incoming>

@@ -25,5 +25,12 @@ public class Application {
                    "turns", 0))
         .send()
         .join();
+
+    zeebeClient
+        .newWorker()
+        .jobType("selectPlayerForNewRound")
+        .handler(new SelectPlayer())
+        .name("playerSelector")
+        .open();
   }
 }
