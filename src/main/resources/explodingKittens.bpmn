@@ -6,10 +6,10 @@
     </bpmn:startEvent>
     <bpmn:serviceTask id="ServiceTask_1cehycx" name="Build deck">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="script" />
+        <zeebe:taskDefinition type="build-deck" />
         <zeebe:taskHeaders>
           <zeebe:header key="language" value="feel" />
-          <zeebe:header key="script" value="{ 	playerCount: count(players), 	   	cards: [ 		{name: &#34;attack&#34;, count: [4,7]}, 		{name: &#34;skip&#34;, count: [4,6]}, 		{name: &#34;see-the-future&#34;, count: [3,3]}, 	],  	times: function(card) for t in count return card,  	count: function(card) if (playerCount &#60;= 3) then card.count[1] else ( 		if (playerCount &#60;= 7) then card.count[2] else card.count[1] + card.count[2] 	),    deck: for card in cards return times(card) }" />
+          <zeebe:header key="script" value="{ 	playerCount: count(players), 	   	cards: [ 		{name: &#34;attack&#34;, count: [4,7]}, 		{name: &#34;skip&#34;, count: [4,6]}, 		{name: &#34;see-the-future&#34;, count: [3,3]} 	],   	amount: function(card) if (playerCount &#60;= 3) then card.count[1] else ( 		if (playerCount &#60;= 7) then card.count[2] else card.count[1] + card.count[2] 	),  	times: function(list, card) if (count(list) &#60; amount(card)) then times(append(list, card.name), card) else list,      deck: for card in cards return times([], card) }" />
         </zeebe:taskHeaders>
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_0oqi9s0</bpmn:incoming>
