@@ -1,6 +1,12 @@
 package io.zeebe.casino;
 
+import io.zeebe.casino.action.AlterAction;
+import io.zeebe.casino.action.AttackAction;
+import io.zeebe.casino.action.DrawAction;
+import io.zeebe.casino.action.SeeAction;
+import io.zeebe.casino.action.SkipAction;
 import io.zeebe.client.ZeebeClient;
+import io.zeebe.client.api.worker.JobHandler;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -42,18 +48,35 @@ public class Application {
         .send()
         .join();
 
-    zeebeClient
-        .newWorker()
-        .jobType("build-deck")
-        .handler(new BuildDeck(LOG))
-        .name("build-deck")
-        .open();
+    // general
+    installWorkers(zeebeClient,
+        Map.of("build-deck", new BuildDeck(LOG),
+            "selectPlayerForNewRound", new SelectPlayer(LOG),
+            "selectAction", new SelectAction(LOG),
+            "discardCard", new DiscardCard(LOG),
+            "addTurns", new AddTurns(LOG),
+            "drawBottomCard", new DrawBottomCard(LOG),
+            "drawTopCard", new DrawTopCard(LOG)));
 
-    zeebeClient
-        .newWorker()
-        .jobType("selectPlayerForNewRound")
-        .handler(new SelectPlayer(LOG))
-        .name("playerSelector")
-        .open();
+    // actions
+    installWorkers(zeebeClient,
+        Map.of("skip", new SkipAction(LOG),
+            "attack", new AttackAction(LOG),
+//            "favor", new FavorAction(LOG),
+//            "cats", new CatsAction(LOG),
+            "see", new SeeAction(LOG),
+            "alter", new AlterAction(LOG),
+            "draw", new DrawAction(LOG)));
+
+  }
+
+  private static void installWorkers(ZeebeClient zeebeClient,
+      Map<String, JobHandler> jobTypeHandlers) {
+    for (var jobTypeHandler : jobTypeHandlers.entrySet()) {
+      zeebeClient.newWorker()
+          .jobType(jobTypeHandler.getKey())
+          .handler(jobTypeHandler.getValue())
+          .open();
+    }
   }
 }
