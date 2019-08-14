@@ -65,7 +65,20 @@ public class BuildDeck implements JobHandler {
             .collect(Collectors.toList());
 
     deck.addAll(Collections.nCopies(playerCount - 1, "exploding"));
-    deck.addAll(Collections.nCopies(playerCount + 1, "defuse"));
+
+    int defuseCards = -playerCount;
+    if (playerCount < 4) {
+      defuseCards += 3;
+    } else if (playerCount < 8) {
+      defuseCards += 7;
+    } else {
+      defuseCards += 10;
+    }
+
+    if (defuseCards > 0) {
+      deck.addAll(Collections.nCopies(defuseCards, "defuse"));
+    }
+
 
     Collections.shuffle(deck);
 
