@@ -4,9 +4,15 @@ import io.zeebe.client.api.response.ActivatedJob;
 import io.zeebe.client.api.worker.JobClient;
 import io.zeebe.client.api.worker.JobHandler;
 import java.util.Map;
+import org.slf4j.Logger;
 
 public class SelectPlayer implements JobHandler {
 
+  private final Logger log;
+
+  public SelectPlayer(Logger log) {
+    this.log = log;
+  }
 
   @Override
   public void handle(JobClient jobClient, ActivatedJob activatedJob) {
@@ -15,6 +21,7 @@ public class SelectPlayer implements JobHandler {
     final int round = (int) variables.get("round");
     final String[] players = (String[]) variables.get("players");
     final var nextPlayer = players[round % players.length];
+    log.info("Choosed next player {}.", nextPlayer);
 
     final int turns = (int) variables.get("turns");
     final var turnArray = new int[turns];
