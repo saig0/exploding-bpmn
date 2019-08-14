@@ -20,7 +20,7 @@ public class SelectPlayer implements JobHandler {
     final var variables = activatedJob.getVariablesAsMap();
 
     final int round = (int) variables.get("round");
-    final List<String> players = (List<String>) variables.get("players");
+    final List<String> players = (List<String>) variables.get("playerNames");
     final var nextPlayer = players.get(round % players.size());
     log.info("Choosed next player {}.", nextPlayer);
 

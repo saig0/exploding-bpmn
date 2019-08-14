@@ -31,7 +31,7 @@ public class Application {
         .latestVersion()
         .variables(
             Map.of(
-                "players",
+                "playerNames",
                 List.of("phil", "chris"),
                 "round",
                 0,
