@@ -200,7 +200,7 @@
       </bpmn:subProcess>
       <bpmn:boundaryEvent id="BoundaryEvent_16k3lja" name="Draw action" attachedToRef="ServiceTask_05o07yf">
         <bpmn:outgoing>SequenceFlow_093yezd</bpmn:outgoing>
-        <bpmn:messageEventDefinition />
+        <bpmn:messageEventDefinition messageRef="Message_1azz3ge" />
       </bpmn:boundaryEvent>
       <bpmn:endEvent id="EndEvent_1ry3hem" name="Turn ends">
         <bpmn:incoming>SequenceFlow_11qpyjt</bpmn:incoming>
@@ -357,7 +357,7 @@
       <bpmn:sequenceFlow id="SequenceFlow_1ow6z1k" sourceRef="StartEvent_0sdnbjl" targetRef="ServiceTask_1lr9lcc" />
       <bpmn:boundaryEvent id="BoundaryEvent_17iugk7" name="Skip" attachedToRef="ServiceTask_05o07yf">
         <bpmn:outgoing>SequenceFlow_0aiwje6</bpmn:outgoing>
-        <bpmn:messageEventDefinition />
+        <bpmn:messageEventDefinition messageRef="Message_1x29cg3" />
       </bpmn:boundaryEvent>
       <bpmn:sequenceFlow id="SequenceFlow_0aiwje6" sourceRef="BoundaryEvent_17iugk7" targetRef="ExclusiveGateway_0gociiw" />
       <bpmn:sequenceFlow id="SequenceFlow_093yezd" sourceRef="BoundaryEvent_16k3lja" targetRef="ServiceTask_0f8umgt" />
@@ -390,17 +390,37 @@
     <bpmn:sequenceFlow id="SequenceFlow_13vyqw3" sourceRef="ServiceTask_0zrp5ep" targetRef="ServiceTask_1fh04ox" />
     <bpmn:boundaryEvent id="BoundaryEvent_0yfenng" name="Exploding Kitten" attachedToRef="ServiceTask_1fh04ox">
       <bpmn:outgoing>SequenceFlow_1r7bjr1</bpmn:outgoing>
-      <bpmn:messageEventDefinition />
+      <bpmn:messageEventDefinition messageRef="Message_1o45gp9" />
     </bpmn:boundaryEvent>
     <bpmn:sequenceFlow id="SequenceFlow_1r7bjr1" sourceRef="BoundaryEvent_0yfenng" targetRef="ServiceTask_0v9zx3m" />
     <bpmn:boundaryEvent id="BoundaryEvent_0xiqdup" name="Attack" attachedToRef="ServiceTask_1fh04ox">
       <bpmn:outgoing>SequenceFlow_078x4jh</bpmn:outgoing>
-      <bpmn:messageEventDefinition />
+      <bpmn:messageEventDefinition messageRef="Message_1ir0lta" />
     </bpmn:boundaryEvent>
     <bpmn:sequenceFlow id="SequenceFlow_1pkt84a" sourceRef="ExclusiveGateway_177upz2" targetRef="ServiceTask_0zrp5ep" />
     <bpmn:sequenceFlow id="SequenceFlow_078x4jh" sourceRef="BoundaryEvent_0xiqdup" targetRef="ServiceTask_1ynm5t2" />
     <bpmn:sequenceFlow id="SequenceFlow_0oe06wj" sourceRef="ServiceTask_1fh04ox" targetRef="ExclusiveGateway_177upz2" />
   </bpmn:process>
+  <bpmn:message id="Message_1ir0lta" name="attack">
+    <bpmn:extensionElements>
+      <zeebe:subscription correlationKey="correlationKey" />
+    </bpmn:extensionElements>
+  </bpmn:message>
+  <bpmn:message id="Message_1o45gp9" name="explodingKitten">
+    <bpmn:extensionElements>
+      <zeebe:subscription correlationKey="correlationKey" />
+    </bpmn:extensionElements>
+  </bpmn:message>
+  <bpmn:message id="Message_1azz3ge" name="drawAction">
+    <bpmn:extensionElements>
+      <zeebe:subscription correlationKey="correlationKey" />
+    </bpmn:extensionElements>
+  </bpmn:message>
+  <bpmn:message id="Message_1x29cg3" name="skip">
+    <bpmn:extensionElements>
+      <zeebe:subscription correlationKey="correlationKey" />
+    </bpmn:extensionElements>
+  </bpmn:message>
   <bpmndi:BPMNDiagram id="BPMNDiagram_1">
     <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_1">
       <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
