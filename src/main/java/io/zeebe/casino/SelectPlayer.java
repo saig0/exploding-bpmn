@@ -3,6 +3,7 @@ package io.zeebe.casino;
 import io.zeebe.client.api.response.ActivatedJob;
 import io.zeebe.client.api.worker.JobClient;
 import io.zeebe.client.api.worker.JobHandler;
+import java.util.List;
 import java.util.Map;
 import org.slf4j.Logger;
 
@@ -19,8 +20,8 @@ public class SelectPlayer implements JobHandler {
     final var variables = activatedJob.getVariablesAsMap();
 
     final int round = (int) variables.get("round");
-    final String[] players = (String[]) variables.get("players");
-    final var nextPlayer = players[round % players.length];
+    final List<String> players = (List<String>) variables.get("players");
+    final var nextPlayer = players.get(round % players.size());
     log.info("Choosed next player {}.", nextPlayer);
 
     final int turns = (int) variables.get("turns");
