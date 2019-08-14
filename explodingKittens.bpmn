@@ -53,7 +53,7 @@
       <bpmn:outgoing>SequenceFlow_06um3st</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_1vjcsj7" sourceRef="ServiceTask_0mil2x7" targetRef="ServiceTask_109atku" />
-    <bpmn:exclusiveGateway id="ExclusiveGateway_1nrvbmb" name="Are we alone?">
+    <bpmn:exclusiveGateway id="ExclusiveGateway_1nrvbmb" name="Are we alone?" default="SequenceFlow_1ujznag">
       <bpmn:incoming>SequenceFlow_06um3st</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1v5srzg</bpmn:outgoing>
       <bpmn:outgoing>SequenceFlow_1ujznag</bpmn:outgoing>
@@ -66,7 +66,9 @@
       <bpmn:incoming>SequenceFlow_1v5srzg</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1yehcyl</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="SequenceFlow_1v5srzg" name="Yes" sourceRef="ExclusiveGateway_1nrvbmb" targetRef="ServiceTask_14hbzdi" />
+    <bpmn:sequenceFlow id="SequenceFlow_1v5srzg" name="Yes" sourceRef="ExclusiveGateway_1nrvbmb" targetRef="ServiceTask_14hbzdi">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">playerCount == 1</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
     <bpmn:endEvent id="EndEvent_0179ewi" name="Winner">
       <bpmn:incoming>SequenceFlow_1yehcyl</bpmn:incoming>
     </bpmn:endEvent>
@@ -300,7 +302,7 @@
         <bpmn:incoming>SequenceFlow_1bvy4u2</bpmn:incoming>
         <bpmn:outgoing>SequenceFlow_079j3v6</bpmn:outgoing>
         <bpmn:timerEventDefinition>
-          <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT10s</bpmn:timeDuration>
+          <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT10S</bpmn:timeDuration>
         </bpmn:timerEventDefinition>
       </bpmn:intermediateCatchEvent>
       <bpmn:serviceTask id="ServiceTask_17fejpc" name="Discard Cards">
@@ -313,19 +315,19 @@
       <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_1sz7kxt" name="Nope">
         <bpmn:incoming>SequenceFlow_04ybrhs</bpmn:incoming>
         <bpmn:outgoing>SequenceFlow_13il3sc</bpmn:outgoing>
-        <bpmn:messageEventDefinition />
+        <bpmn:messageEventDefinition messageRef="Message_039oztv" />
       </bpmn:intermediateCatchEvent>
       <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_0yuaf0w" name="Timeout">
         <bpmn:incoming>SequenceFlow_1utmzxg</bpmn:incoming>
         <bpmn:outgoing>SequenceFlow_04pgcwc</bpmn:outgoing>
         <bpmn:timerEventDefinition>
-          <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT10s</bpmn:timeDuration>
+          <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT10S</bpmn:timeDuration>
         </bpmn:timerEventDefinition>
       </bpmn:intermediateCatchEvent>
       <bpmn:intermediateCatchEvent id="IntermediateCatchEvent_0lu9yqa" name="Nope">
         <bpmn:incoming>SequenceFlow_1vebb5m</bpmn:incoming>
         <bpmn:outgoing>SequenceFlow_06qcjrj</bpmn:outgoing>
-        <bpmn:messageEventDefinition />
+        <bpmn:messageEventDefinition messageRef="Message_03mmodp" />
       </bpmn:intermediateCatchEvent>
       <bpmn:eventBasedGateway id="ExclusiveGateway_1uye06o" name="Players can play Nope">
         <bpmn:incoming>SequenceFlow_0ntl4ci</bpmn:incoming>
@@ -437,6 +439,16 @@
     </bpmn:extensionElements>
   </bpmn:message>
   <bpmn:message id="Message_1x29cg3" name="skip">
+    <bpmn:extensionElements>
+      <zeebe:subscription correlationKey="correlationKey" />
+    </bpmn:extensionElements>
+  </bpmn:message>
+  <bpmn:message id="Message_039oztv" name="nope">
+    <bpmn:extensionElements>
+      <zeebe:subscription correlationKey="correlationKey" />
+    </bpmn:extensionElements>
+  </bpmn:message>
+  <bpmn:message id="Message_03mmodp" name="nope">
     <bpmn:extensionElements>
       <zeebe:subscription correlationKey="correlationKey" />
     </bpmn:extensionElements>
