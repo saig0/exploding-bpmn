@@ -23,13 +23,16 @@ public class CheckForDefuse implements JobHandler {
     final Map players = (Map) variables.get("players");
     final var hand = (List<String>) players.get(currentPlayer);
 
-    if (hand.remove("defuse"))
+    final boolean defused = hand.remove("defuse");
+    if (defused)
     {
       log.info("Player {} was able to defuse exploding kitten.", currentPlayer);
       variables.put("cards", List.of("defuse"));
       players.put(currentPlayer, hand);
       variables.put("players", players);
     }
+
+    variables.put("defuse", defused);
 
     jobClient.newCompleteCommand(activatedJob.getKey()).variables(variables).send();
   }
