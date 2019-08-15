@@ -1,4 +1,4 @@
-package io.zeebe.casino.user;
+package io.zeebe.casino.action;
 
 import io.zeebe.client.api.response.ActivatedJob;
 import io.zeebe.client.api.worker.JobClient;

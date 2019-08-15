@@ -1,21 +1,18 @@
 package io.zeebe.casino;
 
-import io.zeebe.casino.action.AlterAction;
-import io.zeebe.casino.action.AttackAction;
-import io.zeebe.casino.action.DrawAction;
-import io.zeebe.casino.action.SeeAction;
-import io.zeebe.casino.action.SkipAction;
+import io.zeebe.casino.action.TransferCard;
+import io.zeebe.casino.action.UpdateDeck;
 import io.zeebe.casino.deck.BuildDeck;
 import io.zeebe.casino.deck.DiscardCards;
 import io.zeebe.casino.deck.DrawBottomCard;
 import io.zeebe.casino.deck.DrawTopCard;
 import io.zeebe.casino.user.ChangeOrder;
 import io.zeebe.casino.user.InjectKitten;
-import io.zeebe.casino.user.PassAction;
 import io.zeebe.casino.user.SelectAction;
+import io.zeebe.casino.user.SelectCardFromPlayer;
 import io.zeebe.casino.user.SelectOtherPlayer;
 import io.zeebe.casino.user.SelectRandomCard;
-import io.zeebe.casino.user.UpdateDeck;
+import io.zeebe.casino.user.ShowTopThree;
 import io.zeebe.client.ZeebeClient;
 import io.zeebe.client.api.worker.JobHandler;
 import java.util.List;
@@ -80,22 +77,22 @@ public class Application {
 
     // actions
     installWorkers(zeebeClient,
-        Map.of("skip", new SkipAction(LOG),
-            "attack", new AttackAction(LOG),
-//            "favor", new FavorAction(LOG),
-//            "cats", new CatsAction(LOG),
-            "see", new SeeAction(LOG),
-            "changeOrder", new ChangeOrder(LOG),
+        Map.of(
             "updateDeck", new UpdateDeck(LOG),
-            "draw", new DrawAction(LOG)));
+            "transferCard", new TransferCard(LOG)
+        ));
 
     installWorkers(zeebeClient, Map.of(
         "throwMessage", new ThrowMessage(zeebeClient)));
 
     // user
     installWorkers(zeebeClient,
-        Map.of("selectAction", new SelectAction(LOG),
+        Map.of(
+            "showTopThree", new ShowTopThree(LOG),
+            "changeOrder", new ChangeOrder(LOG),
+            "selectAction", new SelectAction(LOG),
             "selectOtherPlayer", new SelectOtherPlayer(LOG),
+            "selectCardFromPlayer", new SelectCardFromPlayer(LOG),
             "chooseRandomCard", new SelectRandomCard(LOG)));
 
   }

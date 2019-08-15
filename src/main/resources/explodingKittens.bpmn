@@ -175,7 +175,7 @@
         </bpmn:sequenceFlow>
         <bpmn:serviceTask id="ServiceTask_190nbez" name="Select Card">
           <bpmn:extensionElements>
-            <zeebe:taskDefinition type="user" />
+            <zeebe:taskDefinition type="selectCardFromPlayer" />
           </bpmn:extensionElements>
           <bpmn:incoming>SequenceFlow_1n4jqj6</bpmn:incoming>
           <bpmn:outgoing>SequenceFlow_0ugrr32</bpmn:outgoing>
@@ -183,7 +183,7 @@
         <bpmn:sequenceFlow id="SequenceFlow_1n4jqj6" sourceRef="ServiceTask_192lsc1" targetRef="ServiceTask_190nbez" />
         <bpmn:serviceTask id="ServiceTask_1o98r6o" name="Transfer Card">
           <bpmn:extensionElements>
-            <zeebe:taskDefinition type="script" />
+            <zeebe:taskDefinition type="transferCard" />
           </bpmn:extensionElements>
           <bpmn:incoming>SequenceFlow_0ugrr32</bpmn:incoming>
           <bpmn:outgoing>SequenceFlow_0kywfuq</bpmn:outgoing>
