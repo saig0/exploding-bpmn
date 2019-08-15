@@ -4,6 +4,7 @@ import io.zeebe.client.api.response.ActivatedJob;
 import io.zeebe.client.api.worker.JobClient;
 import io.zeebe.client.api.worker.JobHandler;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 import org.slf4j.Logger;
 
@@ -28,6 +29,6 @@ public class InjectKitten implements JobHandler {
 
     log.info("Exploding was inserted again in the deck at position {}", index);
 
-    jobClient.newCompleteCommand(activatedJob.getKey()).variables(variables).send();
+    jobClient.newCompleteCommand(activatedJob.getKey()).variables(Map.of("deck", deck)).send();
   }
 }

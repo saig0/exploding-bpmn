@@ -5,6 +5,7 @@ import io.zeebe.casino.action.AttackAction;
 import io.zeebe.casino.action.DrawAction;
 import io.zeebe.casino.action.SeeAction;
 import io.zeebe.casino.action.SkipAction;
+import io.zeebe.casino.user.InjectKitten;
 import io.zeebe.casino.user.PassAction;
 import io.zeebe.casino.user.SelectAction;
 import io.zeebe.client.ZeebeClient;
@@ -64,10 +65,10 @@ public class Application {
     installWorkers(zeebeClient,
         Map.of("build-deck", new BuildDeck(LOG),
             "discard", new DiscardCards(LOG),
-            //"discardHand", new DiscardHand(LOG),
+            "discardHand", new DiscardHand(LOG),
             "drawBottomCard", new DrawBottomCard(LOG),
             "drawTopCard", new DrawTopCard(LOG),
-            "injectExplodingKitten", new InjectExplodingKitten(LOG)));
+            "injectExplodingKitten", new InjectKitten(LOG)));
 
     // actions
     installWorkers(zeebeClient,
