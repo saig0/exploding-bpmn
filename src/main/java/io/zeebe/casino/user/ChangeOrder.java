@@ -17,21 +17,22 @@ public class ChangeOrder implements JobHandler {
     this.log = log;
   }
 
-
   @Override
   public void handle(JobClient jobClient, ActivatedJob activatedJob) throws Exception {
     final var variables = activatedJob.getVariablesAsMap();
     final var deck = (List<String>) variables.get("deck");
 
-    final List<String> alternativeOrder = deck.subList(0, 3);
+    var cards = Math.min(3, deck.size());
+
+    final List<String> alternativeOrder = deck.subList(0, cards);
 
     Collections.shuffle(alternativeOrder, new Random());
 
     log.info("Player {} changed order of first three cards.", variables.get("nextPlayer"));
 
-    jobClient.newCompleteCommand(activatedJob.getKey())
-        .variables(Map.of(
-            "alternativeOrder", alternativeOrder))
+    jobClient
+        .newCompleteCommand(activatedJob.getKey())
+        .variables(Map.of("alternativeOrder", alternativeOrder))
         .send();
   }
 }
