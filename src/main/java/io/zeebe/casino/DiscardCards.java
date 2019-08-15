@@ -24,6 +24,7 @@ public class DiscardCards implements JobHandler {
     final var discardPile = (List<String>) variables.computeIfAbsent("discardPile", (key) ->
         new ArrayList<String>());
 
+    log.info("Discard {}", cards);
     discardPile.addAll(cards);
 
     variables.put("cards", Collections.EMPTY_LIST);
