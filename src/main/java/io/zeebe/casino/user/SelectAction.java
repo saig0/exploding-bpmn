@@ -26,7 +26,7 @@ public class SelectAction implements JobHandler {
 
     final String nextPlayer = variables.get("nextPlayer").toString();
 
-    final boolean shouldPass = ThreadLocalRandom.current().nextBoolean();
+    final boolean shouldPass = ThreadLocalRandom.current().nextDouble() > 0.25;
     if (shouldPass)
     {
       log.info("Player {} passes.", nextPlayer);

@@ -19,13 +19,17 @@ public class UpdateDeck implements JobHandler {
   public void handle(JobClient jobClient, ActivatedJob activatedJob) throws Exception {
     final var variables = activatedJob.getVariablesAsMap();
     final var deck = ((List<String>) variables.get("deck"));
-    final var subDeck = deck.subList(3, deck.size());
     final var alternativeOrder = ((List<String>) variables.get("alternativeOrder"));
 
+    final var cards = Math.min(3, alternativeOrder.size());
+
+    final var subDeck = deck.subList(cards, deck.size());
     subDeck.addAll(0, alternativeOrder);
 
-    log.info("Player {} updates deck with new order of first three cards.", variables.get("nextPlayer"));
+    log.info(
+        "Player {} updates deck with new order of first three cards.", variables.get("nextPlayer"));
 
-    jobClient.newCompleteCommand(activatedJob.getKey()).variables(Map.of("deck", subDeck)).send();
+    jobClient.newCompleteCommand(activatedJob.getKey()).variables(Map.of(
+        "deck", subDeck)).send();
   }
 }
