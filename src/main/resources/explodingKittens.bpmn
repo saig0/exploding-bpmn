@@ -404,7 +404,7 @@
         <bpmn:sequenceFlow id="SequenceFlow_0ky2agc" sourceRef="StartEvent_1jr74i2" targetRef="ServiceTask_00hrqz4" />
         <bpmn:serviceTask id="ServiceTask_196c86h" name="Nope! (Message Throw)">
           <bpmn:extensionElements>
-            <zeebe:taskDefinition type="messageThrow" />
+            <zeebe:taskDefinition type="throwMessage" />
             <zeebe:taskHeaders>
               <zeebe:header key="messageName" value="nope" />
             </zeebe:taskHeaders>
@@ -443,7 +443,7 @@
         </bpmn:serviceTask>
         <bpmn:serviceTask id="ServiceTask_0j9l6iq" name="Nope! (Message Throw)">
           <bpmn:extensionElements>
-            <zeebe:taskDefinition type="messageThrow" />
+            <zeebe:taskDefinition type="throwMessage" />
             <zeebe:taskHeaders>
               <zeebe:header key="messageName" value="nope" />
             </zeebe:taskHeaders>
@@ -1077,9 +1077,8 @@
         <di:waypoint x="1387" y="369" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="SequenceFlow_0uqsi6p_di" bpmnElement="SequenceFlow_0uqsi6p">
-        <di:waypoint x="1607" y="431" />
-        <di:waypoint x="1862" y="431" />
-        <di:waypoint x="1659" y="431" />
+        <di:waypoint x="1607" y="432" />
+        <di:waypoint x="1659" y="433" />
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>

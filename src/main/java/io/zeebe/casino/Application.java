@@ -9,6 +9,7 @@ import io.zeebe.casino.deck.DrawTopCard;
 import io.zeebe.casino.user.Celebration;
 import io.zeebe.casino.user.ChangeOrder;
 import io.zeebe.casino.user.InjectKitten;
+import io.zeebe.casino.user.NopeAction;
 import io.zeebe.casino.user.SelectAction;
 import io.zeebe.casino.user.SelectCardFromPlayer;
 import io.zeebe.casino.user.SelectOtherPlayer;
@@ -30,7 +31,7 @@ public class Application {
 
     final var zeebeClient =
         ZeebeClient.newClientBuilder()
-            .brokerContactPoint("192.168.30.188:26500")
+            .brokerContactPoint("192.168.21.185:26500")
             .usePlaintext()
             .build();
 
@@ -95,7 +96,8 @@ public class Application {
             "selectOtherPlayer", new SelectOtherPlayer(LOG),
             "selectCardFromPlayer", new SelectCardFromPlayer(LOG),
             "chooseRandomCard", new SelectRandomCard(LOG),
-            "celebrate", new Celebration(LOG)));
+            "celebrate", new Celebration(LOG),
+            "play-nope", new NopeAction(LOG)));
 
   }
 

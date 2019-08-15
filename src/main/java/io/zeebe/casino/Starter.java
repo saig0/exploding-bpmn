@@ -16,7 +16,7 @@ public class Starter {
 
     final var zeebeClient =
         ZeebeClient.newClientBuilder()
-            .brokerContactPoint("192.168.30.188:26500")
+            .brokerContactPoint("192.168.21.185:26500")
             .usePlaintext()
             .build();
 
