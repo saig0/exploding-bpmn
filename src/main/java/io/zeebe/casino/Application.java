@@ -11,6 +11,7 @@ import io.zeebe.casino.deck.DrawBottomCard;
 import io.zeebe.casino.deck.DrawTopCard;
 import io.zeebe.casino.user.InjectKitten;
 import io.zeebe.casino.user.PassAction;
+import io.zeebe.casino.user.SelectAction;
 import io.zeebe.client.ZeebeClient;
 import io.zeebe.client.api.worker.JobHandler;
 import java.util.List;
@@ -88,7 +89,7 @@ public class Application {
 
     // user
     installWorkers(zeebeClient,
-        Map.of("user", new PassAction(LOG)));
+        Map.of("user", new SelectAction(LOG)));
 
   }
 

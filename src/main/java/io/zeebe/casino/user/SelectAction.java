@@ -20,26 +20,36 @@ public class SelectAction implements JobHandler {
 
 
   @Override
-  public void handle(JobClient jobClient, ActivatedJob activatedJob) throws Exception {
+  public void handle(JobClient jobClient, ActivatedJob activatedJob) {
     final var variables = activatedJob.getVariablesAsMap();
 
     final String nextPlayer = variables.get("nextPlayer").toString();
-    final Map players = (Map) variables.get("players");
 
-    final List<String> hand = (List<String>) players.get(nextPlayer);
+    final boolean shouldPass = ThreadLocalRandom.current().nextBoolean();
+    if (shouldPass)
+    {
+      log.info("Player {} passes.", nextPlayer);
 
-    final int handSize = hand.size();
-    final int index = ThreadLocalRandom.current().nextInt(0, handSize);
-    final String card = hand.remove(index);
+      jobClient.newCompleteCommand(activatedJob.getKey()).variables(Map.of("action", null)).send();
+    }
+    else
+    {
+      final Map players = (Map) variables.get("players");
 
-    log.info("Player {} picked card {} to play", nextPlayer, card);
+      final List<String> hand = (List<String>) players.get(nextPlayer);
 
-    players.put(nextPlayer, hand);
-    variables.put("players", players);
+      final int handSize = hand.size();
+      final int index = ThreadLocalRandom.current().nextInt(0, handSize);
+      final String card = hand.remove(index);
 
-    variables.put("cards", List.of(card));
-    variables.put("action", card);
+      log.info("Player {} picked card {} to play", nextPlayer, card);
 
-    jobClient.newCompleteCommand(activatedJob.getKey()).variables(variables).send();
+      players.put(nextPlayer, hand);
+      jobClient.newCompleteCommand(activatedJob.getKey()).variables(Map.of(
+          "players", players,
+          "cards", List.of(card),
+          "action", card
+      )).send();
+    }
   }
 }
