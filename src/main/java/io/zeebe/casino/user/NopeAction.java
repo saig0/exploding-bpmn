@@ -30,13 +30,10 @@ public class NopeAction implements JobHandler {
 
     if (currentHand.contains("nope") && !assignee.equals(currentPlayer) && playNope) {
 
-      final var cards = (List<String>) variables.get("cards");
-      cards.add("nope");
-
       log.info("Player {} plays a 'nope' card", assignee);
 
       jobClient.newCompleteCommand(activatedJob.getKey()).variables(Map.of(
-          "cards", cards)).send();
+          "nopeCard", List.of("nope"))).send();
     }
   }
 }
