@@ -28,9 +28,9 @@ public class Application {
 
   public static void main(String[] args) {
 
-    final var zeebeClient =
+    final var zeebeClient 
         ZeebeClient.newClientBuilder()
-            .brokerContactPoint("192.168.21.185:26500")
+            .brokerContactPoint("192.168.30.188:26500")
             .usePlaintext()
             .build();
 
@@ -74,7 +74,7 @@ public class Application {
             "cleanUpAfterExploding", new CleanUpAfterExploding(LOG),
             "drawBottomCard", new DrawBottomCard(LOG),
             "drawTopCard", new DrawTopCard(LOG),
-            "injectExplodingKitten", new InjectKitten(LOG)));
+            "injectKitten", new InjectKitten(LOG)));
 
     // actions
     installWorkers(zeebeClient,

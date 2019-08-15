@@ -28,7 +28,7 @@
     <bpmn:sequenceFlow id="SequenceFlow_00cvyg1" sourceRef="ServiceTask_1cehycx" targetRef="ServiceTask_0zrp5ep" />
     <bpmn:serviceTask id="ServiceTask_1ynm5t2" name="Add +2 to Turns">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="script" />
+        <zeebe:taskDefinition type="addTurns" />
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_078x4jh</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_17avudo</bpmn:outgoing>
