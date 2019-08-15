@@ -135,7 +135,7 @@
         </bpmn:sequenceFlow>
         <bpmn:serviceTask id="ServiceTask_0rbpkfy" name="Select Player">
           <bpmn:extensionElements>
-            <zeebe:taskDefinition type="user" />
+            <zeebe:taskDefinition type="selectOtherPlayer" />
           </bpmn:extensionElements>
           <bpmn:incoming>SequenceFlow_0i7m4mb</bpmn:incoming>
           <bpmn:outgoing>SequenceFlow_0tz9agl</bpmn:outgoing>
@@ -191,7 +191,7 @@
         <bpmn:sequenceFlow id="SequenceFlow_0ugrr32" sourceRef="ServiceTask_190nbez" targetRef="ServiceTask_1o98r6o" />
         <bpmn:serviceTask id="ServiceTask_1iz8r0l" name="Get Random Card">
           <bpmn:extensionElements>
-            <zeebe:taskDefinition type="script" />
+            <zeebe:taskDefinition type="chooseRandomCard" />
           </bpmn:extensionElements>
           <bpmn:incoming>SequenceFlow_0tz9agl</bpmn:incoming>
           <bpmn:outgoing>SequenceFlow_1t3o0hi</bpmn:outgoing>
