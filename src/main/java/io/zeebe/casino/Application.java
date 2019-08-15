@@ -52,7 +52,6 @@ public class Application {
     installWorkers(zeebeClient,
         Map.of("build-deck", new BuildDeck(LOG),
             "selectPlayerForNewRound", new SelectPlayer(LOG),
-            "selectAction", new SelectAction(LOG),
             "discard", new DiscardCards(LOG),
             "addTurns", new AddTurns(LOG),
             "drawBottomCard", new DrawBottomCard(LOG),
