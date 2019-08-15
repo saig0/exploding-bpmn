@@ -30,7 +30,7 @@ public class SelectAction implements JobHandler {
     {
       log.info("Player {} passes.", nextPlayer);
 
-      jobClient.newCompleteCommand(activatedJob.getKey()).variables(Map.of("action", null)).send();
+      jobClient.newCompleteCommand(activatedJob.getKey()).variables(Map.of("action", "")).send();
     }
     else
     {
