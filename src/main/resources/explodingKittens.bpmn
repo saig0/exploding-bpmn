@@ -71,8 +71,17 @@
       <bpmn:incoming>SequenceFlow_13vyqw3</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0oe06wj</bpmn:outgoing>
       <bpmn:multiInstanceLoopCharacteristics isSequential="true">
-        <bpmn:extensionElements />
+        <!--
+          <bpmn:extensionElements>
+                       <zeebe:loopCharacteristics inputCollection="playerNames" inputElement="player" />
+        </bpmn:extensionElements>
+                                       -->
+         <bpmn:extensionElements>
+                       <zeebe:loopCharacteristics inputCollection="playerNames" inputElement="assignee" />
+        </bpmn:extensionElements>
       </bpmn:multiInstanceLoopCharacteristics>
+      
+      
       <bpmn:subProcess id="ServiceTask_05o07yf" name="Apply Action">
         <bpmn:incoming>SequenceFlow_0iz3mlh</bpmn:incoming>
         <bpmn:outgoing>SequenceFlow_0qz2afc</bpmn:outgoing>
@@ -368,7 +377,14 @@
         <bpmn:incoming>SequenceFlow_18pcqkx</bpmn:incoming>
         <bpmn:outgoing>SequenceFlow_1s7n8q9</bpmn:outgoing>
         <bpmn:multiInstanceLoopCharacteristics>
-          <bpmn:extensionElements />
+                            <!--
+          <bpmn:extensionElements>
+                       <zeebe:loopCharacteristics inputCollection="playerNames" inputElement="player" />
+        </bpmn:extensionElements>
+                                       -->
+         <bpmn:extensionElements>
+                       <zeebe:loopCharacteristics inputCollection="playerNames" inputElement="assignee" />
+        </bpmn:extensionElements>
         </bpmn:multiInstanceLoopCharacteristics>
       </bpmn:serviceTask>
       <bpmn:boundaryEvent id="BoundaryEvent_0eaedcv" name="Timeout 30s" attachedToRef="ServiceTask_06iz61u">
@@ -388,7 +404,14 @@
         <bpmn:incoming>SequenceFlow_1s7n8q9</bpmn:incoming>
         <bpmn:outgoing>SequenceFlow_18pcqkx</bpmn:outgoing>
         <bpmn:multiInstanceLoopCharacteristics>
-          <bpmn:extensionElements />
+                  <!--
+          <bpmn:extensionElements>
+                       <zeebe:loopCharacteristics inputCollection="playerNames" inputElement="player" />
+        </bpmn:extensionElements>
+                                       -->
+         <bpmn:extensionElements>
+                       <zeebe:loopCharacteristics inputCollection="playerNames" inputElement="assignee" />
+        </bpmn:extensionElements>
         </bpmn:multiInstanceLoopCharacteristics>
       </bpmn:serviceTask>
       <bpmn:sequenceFlow id="SequenceFlow_1s7n8q9" sourceRef="ServiceTask_06iz61u" targetRef="ServiceTask_0odbl0n" />
