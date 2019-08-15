@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 
 public class SelectAction implements JobHandler {
@@ -38,9 +39,13 @@ public class SelectAction implements JobHandler {
 
       final List<String> hand = (List<String>) players.get(nextPlayer);
 
-      final int handSize = hand.size();
+      final List<String> handWithoutDefuse = hand.stream().filter(card -> !card.equals("defuse"))
+          .collect(Collectors.toList());
+
+      final int handSize = handWithoutDefuse.size();
       final int index = ThreadLocalRandom.current().nextInt(0, handSize);
-      final String card = hand.remove(index);
+      final String card = handWithoutDefuse.remove(index);
+      hand.remove(card);
 
       log.info("Player {} picked card {} to play", nextPlayer, card);
 

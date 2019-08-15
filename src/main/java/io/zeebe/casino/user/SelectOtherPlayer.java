@@ -31,6 +31,6 @@ public class SelectOtherPlayer implements JobHandler {
 
     log.info("Player {} choose player {} to select a random card from.", currentPlayer, otherPlayer);
 
-    jobClient.newCompleteCommand(activatedJob.getKey()).variables(Map.of("otherPlayer", otherPlayer));
+    jobClient.newCompleteCommand(activatedJob.getKey()).variables(Map.of("otherPlayer", otherPlayer)).send();
   }
 }
