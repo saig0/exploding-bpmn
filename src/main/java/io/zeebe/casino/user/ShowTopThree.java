@@ -20,7 +20,9 @@ public class ShowTopThree implements JobHandler {
     final var deck = (List<String>) variables.get("deck");
     final String currentPlayer = variables.get("nextPlayer").toString();
 
-    final List<String> topThreeCards = deck.subList(0, 3);
+    var cards = Math.min(3, deck.size());
+    
+    final List<String> topThreeCards = deck.subList(0, cards);
 
     log.info("Player {} takes a look at the current top three cards on deck {}", currentPlayer, topThreeCards);
 
