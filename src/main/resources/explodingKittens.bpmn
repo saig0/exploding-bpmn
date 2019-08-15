@@ -88,7 +88,7 @@
       <bpmn:outgoing>SequenceFlow_0oe06wj</bpmn:outgoing>
       <bpmn:multiInstanceLoopCharacteristics isSequential="true">
           <bpmn:extensionElements>
-        		<zeebe:loopCharacteristics inputCollection="turnArray" inputElement="turn" />
+        		<zeebe:loopCharacteristics inputCollection="turnArray" />
         </bpmn:extensionElements>
       </bpmn:multiInstanceLoopCharacteristics>
       <bpmn:subProcess id="ServiceTask_05o07yf" name="Apply Action">
@@ -238,14 +238,17 @@
       </bpmn:exclusiveGateway>
       <bpmn:serviceTask id="ServiceTask_1snsa4o" name="Inject Exploding Kitten Card">
         <bpmn:extensionElements>
-          <zeebe:taskDefinition type="injectKitten" />
+          <zeebe:taskDefinition type="injectExplodingKitten" />
         </bpmn:extensionElements>
         <bpmn:incoming>SequenceFlow_1pyldqs</bpmn:incoming>
         <bpmn:outgoing>SequenceFlow_1qt6o5f</bpmn:outgoing>
       </bpmn:serviceTask>
-      <bpmn:serviceTask id="ServiceTask_0elhkky" name="Player dies (ErrorEvent)">
+      <bpmn:serviceTask id="ServiceTask_0elhkky" name="Player exploded (ErrorEvent)">
         <bpmn:extensionElements>
-          <zeebe:taskDefinition type="playerDies" />
+          <zeebe:taskDefinition type="throwMessage" />
+          <zeebe:taskHeaders>
+            <zeebe:header key="messageName" value="explodingKitten" />
+          </zeebe:taskHeaders>
         </bpmn:extensionElements>
         <bpmn:incoming>SequenceFlow_1cze8a1</bpmn:incoming>
       </bpmn:serviceTask>

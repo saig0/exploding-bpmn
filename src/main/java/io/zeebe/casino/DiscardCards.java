@@ -1,6 +1,5 @@
 package io.zeebe.casino;
 
-import com.google.common.collect.Maps;
 import io.zeebe.client.api.response.ActivatedJob;
 import io.zeebe.client.api.worker.JobClient;
 import io.zeebe.client.api.worker.JobHandler;
@@ -26,12 +25,24 @@ public class DiscardCards implements JobHandler {
     final var discardPile = (List<String>) variables.computeIfAbsent("discardPile", (key) ->
         new ArrayList<String>());
 
-    log.info("Discard {}", cards);
+    final String currentPlayer = variables.get("nextPlayer").toString();
+    final Map players = (Map) variables.get("players");
+    final var hand = (List<String>) players.get(currentPlayer);
+
+    hand.removeAll(cards);
+    log.info("Remove {} from player {}'s hand", cards, currentPlayer);
+    players.put(currentPlayer, hand);
+
+    log.info("Discard cards: {}", cards);
     discardPile.addAll(cards);
 
-    jobClient.newCompleteCommand(activatedJob.getKey()).variables(Map.of(
-        "cards", List.of(),
-        "discardPile", discardPile
-    )).send();
+    jobClient
+        .newCompleteCommand(activatedJob.getKey())
+        .variables(
+            Map.of(
+                "cards", Collections.emptyList(),
+                "discardPile", discardPile,
+                "players", players))
+        .send();
   }
 }

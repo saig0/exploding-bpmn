@@ -5,7 +5,6 @@ import io.zeebe.casino.action.AttackAction;
 import io.zeebe.casino.action.DrawAction;
 import io.zeebe.casino.action.SeeAction;
 import io.zeebe.casino.action.SkipAction;
-import io.zeebe.casino.user.InjectKitten;
 import io.zeebe.casino.user.PassAction;
 import io.zeebe.casino.user.SelectAction;
 import io.zeebe.client.ZeebeClient;
@@ -53,21 +52,22 @@ public class Application {
 
     // general
     installWorkers(zeebeClient,
-        Map.of(
+        Map.of("build-deck", new BuildDeck(LOG),
             "selectPlayerForNewRound", new SelectPlayer(LOG),
+            "discard", new DiscardCards(LOG),
             "addTurns", new AddTurns(LOG),
             "endTurn", new EndTurn(LOG),
             "newTurn", new NewTurn(LOG),
-            "checkForDefuse", new CheckForDefuse(LOG),
-            "playerDies", new PlayerDies(zeebeClient, LOG)));
+            "checkForDefuse", new CheckForDefuse(LOG)));
 
     // deck based
     installWorkers(zeebeClient,
         Map.of("build-deck", new BuildDeck(LOG),
             "discard", new DiscardCards(LOG),
-            "discardHand", new DiscardHand(LOG),
+            //"discardHand", new DiscardHand(LOG),
             "drawBottomCard", new DrawBottomCard(LOG),
-            "drawTopCard", new DrawTopCard(LOG)));
+            "drawTopCard", new DrawTopCard(LOG),
+            "injectExplodingKitten", new InjectExplodingKitten(LOG)));
 
     // actions
     installWorkers(zeebeClient,
@@ -79,10 +79,13 @@ public class Application {
             "alter", new AlterAction(LOG),
             "draw", new DrawAction(LOG)));
 
+    installWorkers(zeebeClient, Map.of(
+        "throwMessage", new ThrowMessage(zeebeClient)));
+
     // user
     installWorkers(zeebeClient,
-        Map.of("user", new PassAction(LOG),
-            "injectKitten", new InjectKitten(LOG)));
+        Map.of("user", new PassAction(LOG)));
+
   }
 
   private static void installWorkers(ZeebeClient zeebeClient,
