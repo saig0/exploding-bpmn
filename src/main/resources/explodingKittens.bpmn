@@ -34,7 +34,7 @@
       <bpmn:outgoing>SequenceFlow_17avudo</bpmn:outgoing>
     </bpmn:serviceTask>
     <bpmn:sequenceFlow id="SequenceFlow_17avudo" sourceRef="ServiceTask_1ynm5t2" targetRef="ServiceTask_0zrp5ep" />
-    <bpmn:serviceTask id="ServiceTask_0v9zx3m" name="Discard Hand cards">
+    <bpmn:serviceTask id="ServiceTask_0v9zx3m" name="Clean up">
       <bpmn:extensionElements>
         <zeebe:taskDefinition type="cleanUpAfterExploding" />
       </bpmn:extensionElements>
@@ -49,7 +49,7 @@
     </bpmn:exclusiveGateway>
     <bpmn:serviceTask id="ServiceTask_14hbzdi" name="Celebrate survivor">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="script" />
+        <zeebe:taskDefinition type="user" />
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1v5srzg</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1yehcyl</bpmn:outgoing>
@@ -92,7 +92,10 @@
         <bpmn:sequenceFlow id="SequenceFlow_1s1jhaz" sourceRef="StartEvent_00xlfl8" targetRef="ExclusiveGateway_11t6106" />
         <bpmn:serviceTask id="ServiceTask_0s1qbtf" name="Skip (Message Throw)">
           <bpmn:extensionElements>
-            <zeebe:taskDefinition type="script" />
+            <zeebe:taskDefinition type="throwMessage" />
+            <zeebe:taskHeaders>
+              <zeebe:header key="messageName" value="skip" />
+            </zeebe:taskHeaders>
           </bpmn:extensionElements>
           <bpmn:incoming>SequenceFlow_1k0xbe0</bpmn:incoming>
         </bpmn:serviceTask>
@@ -101,7 +104,10 @@
         </bpmn:sequenceFlow>
         <bpmn:serviceTask id="ServiceTask_0xzs5gk" name="Attack (Message Throw)">
           <bpmn:extensionElements>
-            <zeebe:taskDefinition type="script" />
+            <zeebe:taskDefinition type="throwMessage" />
+            <zeebe:taskHeaders>
+              <zeebe:header key="messageName" value="attack" />
+            </zeebe:taskHeaders>
           </bpmn:extensionElements>
           <bpmn:incoming>SequenceFlow_1d5ot4w</bpmn:incoming>
         </bpmn:serviceTask>
@@ -148,9 +154,12 @@
         <bpmn:sequenceFlow id="SequenceFlow_01wcgpu" name="Alter the Future" sourceRef="ExclusiveGateway_11t6106" targetRef="ServiceTask_0k6qvqz">
           <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">action == "alter"</bpmn:conditionExpression>
         </bpmn:sequenceFlow>
-        <bpmn:serviceTask id="ServiceTask_19jbgif" name="(Message Throw)">
+        <bpmn:serviceTask id="ServiceTask_19jbgif" name="Draw from Bottom (Message Throw)">
           <bpmn:extensionElements>
-            <zeebe:taskDefinition type="script" />
+            <zeebe:taskDefinition type="throwMessage" />
+            <zeebe:taskHeaders>
+              <zeebe:header key="messageName" value="draw" />
+            </zeebe:taskHeaders>
           </bpmn:extensionElements>
           <bpmn:incoming>SequenceFlow_1f84fx6</bpmn:incoming>
         </bpmn:serviceTask>
@@ -434,7 +443,7 @@
       <zeebe:subscription correlationKey="correlationKey" />
     </bpmn:extensionElements>
   </bpmn:message>
-  <bpmn:message id="Message_1azz3ge" name="drawAction">
+  <bpmn:message id="Message_1azz3ge" name="draw">
     <bpmn:extensionElements>
       <zeebe:subscription correlationKey="correlationKey" />
     </bpmn:extensionElements>
@@ -536,7 +545,7 @@
       <bpmndi:BPMNShape id="BoundaryEvent_0j6abri_di" bpmnElement="BoundaryEvent_16k3lja">
         <dc:Bounds x="2140" y="1041" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2097" y="1010" width="58" height="14" />
+          <dc:Bounds x="2083" y="1074" width="59" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="EndEvent_1ry3hem_di" bpmnElement="EndEvent_1ry3hem">
@@ -707,7 +716,7 @@
       <bpmndi:BPMNShape id="BoundaryEvent_1vikrks_di" bpmnElement="BoundaryEvent_0yfenng">
         <dc:Bounds x="3493" y="1209" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="3520" y="1241" width="80" height="14" />
+          <dc:Bounds x="3530" y="1189" width="80" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_1r7bjr1_di" bpmnElement="SequenceFlow_1r7bjr1">
