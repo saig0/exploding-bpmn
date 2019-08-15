@@ -88,7 +88,7 @@ public class Application {
     // user
     installWorkers(zeebeClient,
         Map.of(
-            "showTopThree", new ShowTopThree(LOG),
+            "showTopThreeCards", new ShowTopThree(LOG),
             "changeOrder", new ChangeOrder(LOG),
             "selectAction", new SelectAction(LOG),
             "selectOtherPlayer", new SelectOtherPlayer(LOG),
