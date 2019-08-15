@@ -22,13 +22,22 @@ public class InjectKitten implements JobHandler {
     final var card = variables.remove("card").toString();
     final var deck = (List<String>) variables.get("deck");
 
+    final var currentPlayer = (String) variables.get("nextPlayer");
+    log.info("Remove card {} from player {}'s hand", card, currentPlayer);
+
+    final var players = (Map<String, List<String>>) variables.get("players");
+    final var handCards = players.get(currentPlayer);
+    handCards.add(card);
+    players.put(currentPlayer, handCards);
+
     final int index = ThreadLocalRandom.current().nextInt(0, deck.size());
     deck.add(index, card);
 
-    variables.put("deck", deck);
-
     log.info("Exploding was inserted again in the deck at position {}", index);
 
-    jobClient.newCompleteCommand(activatedJob.getKey()).variables(Map.of("deck", deck)).send();
+    jobClient.newCompleteCommand(activatedJob.getKey()).variables(Map.of(
+        "deck", deck,
+        "players", players)
+    ).send();
   }
 }

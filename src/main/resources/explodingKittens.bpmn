@@ -73,7 +73,7 @@
       <bpmn:multiInstanceLoopCharacteristics isSequential="true">
         <!--
           <bpmn:extensionElements>
-                       <zeebe:loopCharacteristics inputCollection="turnArray" />
+                       <zeebe:loopCharacteristics inputCollection="turnArray"k />
         </bpmn:extensionElements>
                                        -->
          <bpmn:extensionElements>
