@@ -5,6 +5,8 @@ import io.zeebe.client.api.worker.JobClient;
 import io.zeebe.client.api.worker.JobHandler;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Supplier;
 import org.slf4j.Logger;
 
 public class DrawTopCard implements JobHandler {
@@ -17,10 +19,20 @@ public class DrawTopCard implements JobHandler {
 
   @Override
   public void handle(JobClient jobClient, ActivatedJob activatedJob) {
+    final Map<String, Object> variables = drawCard(log, activatedJob, () -> 0);
+    jobClient.newCompleteCommand(activatedJob.getKey()).variables(variables).send();
+  }
+
+  static Map<String, Object> drawCard(Logger log, ActivatedJob activatedJob, Supplier<Integer> drawingCardIndex)
+  {
     final var variables = activatedJob.getVariablesAsMap();
     final var deck = (List<String>) variables.get("deck");
 
-    final var card = deck.remove(0);
+    int index = drawingCardIndex.get();
+    if (index == Integer.MAX_VALUE)
+      index = deck.size() - 1;
+
+    final var card = deck.remove(index);
     variables.put("deck", deck);
 
     final var currentPlayer = variables.get("nextPlayer");
@@ -32,7 +44,5 @@ public class DrawTopCard implements JobHandler {
     handCards.add(card);
     players.put(currentPlayer, handCards);
     variables.put("players", players);
-
-    jobClient.newCompleteCommand(activatedJob.getKey()).variables(variables).send();
   }
 }
