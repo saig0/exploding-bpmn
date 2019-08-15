@@ -64,6 +64,20 @@ public class BuildDeck implements JobHandler {
                 entry -> Collections.nCopies(entry.getValue().get(times), entry.getKey()).stream())
             .collect(Collectors.toList());
 
+    Collections.shuffle(deck);
+
+    final Map<String, List<String>> players =
+        playerNames.stream()
+              .collect(Collectors.toMap(name -> name, p -> {
+                var hand =
+                    IntStream.range(0, 7)
+                        .mapToObj(i -> deck.remove(0))
+                        .collect(Collectors.toList());
+
+                hand.add("defuse");
+                return hand;
+              }));
+
     deck.addAll(Collections.nCopies(playerCount - 1, "exploding"));
 
     int defuseCards = -playerCount;
@@ -78,21 +92,6 @@ public class BuildDeck implements JobHandler {
     if (defuseCards > 0) {
       deck.addAll(Collections.nCopies(defuseCards, "defuse"));
     }
-
-
-    Collections.shuffle(deck);
-
-    final Map<String, List<String>> players =
-        playerNames.stream()
-              .collect(Collectors.toMap(name -> name, p -> {
-                var hand =
-                    IntStream.range(0, 7)
-                        .mapToObj(i -> deck.remove(new Random().nextInt(deck.size())))
-                        .collect(Collectors.toList());
-
-                hand.add("defuse");
-                return hand;
-              }));
 
     jobClient
         .newCompleteCommand(job.getKey())
