@@ -5,6 +5,7 @@ import io.zeebe.casino.action.AttackAction;
 import io.zeebe.casino.action.DrawAction;
 import io.zeebe.casino.action.SeeAction;
 import io.zeebe.casino.action.SkipAction;
+import io.zeebe.casino.user.PassAction;
 import io.zeebe.casino.user.SelectAction;
 import io.zeebe.client.ZeebeClient;
 import io.zeebe.client.api.worker.JobHandler;
@@ -72,7 +73,7 @@ public class Application {
 
     // user
     installWorkers(zeebeClient,
-        Map.of("selectAction", new SelectAction(LOG)));
+        Map.of("user", new PassAction(LOG)));
 
   }
 

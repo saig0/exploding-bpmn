@@ -26,17 +26,20 @@ public class SelectAction implements JobHandler {
     final String nextPlayer = variables.get("nextPlayer").toString();
     final Map players = (Map) variables.get("players");
 
-    final List<String> hand = (List<String>) players.get("hand");
+    final List<String> hand = (List<String>) players.get(nextPlayer);
 
-    final int index = ThreadLocalRandom.current().nextInt(0, hand.size());
+    final int handSize = hand.size();
+    final int index = ThreadLocalRandom.current().nextInt(0, handSize);
     final String card = hand.remove(index);
 
-    log.info("Picked card {} to play", card);
+    log.info("Player {} picked card {} to play", nextPlayer, card);
 
-    players.put("hand", hand);
+    players.put(nextPlayer, hand);
     variables.put("players", players);
 
     variables.put("cards", List.of(card));
     variables.put("action", card);
+
+    jobClient.newCompleteCommand(activatedJob.getKey()).variables(variables).send();
   }
 }

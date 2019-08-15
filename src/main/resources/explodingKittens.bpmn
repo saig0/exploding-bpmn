@@ -87,7 +87,9 @@
       <bpmn:incoming>SequenceFlow_13vyqw3</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0oe06wj</bpmn:outgoing>
       <bpmn:multiInstanceLoopCharacteristics isSequential="true">
-        <bpmn:extensionElements />
+          <bpmn:extensionElements>
+        		<zeebe:loopCharacteristics inputCollection="turnArray" inputElement="turn" />
+        </bpmn:extensionElements>
       </bpmn:multiInstanceLoopCharacteristics>
       <bpmn:subProcess id="ServiceTask_05o07yf" name="Apply Action">
         <bpmn:incoming>SequenceFlow_0iz3mlh</bpmn:incoming>
