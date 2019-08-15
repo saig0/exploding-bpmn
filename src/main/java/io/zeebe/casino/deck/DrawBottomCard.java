@@ -1,6 +1,6 @@
-package io.zeebe.casino;
+package io.zeebe.casino.deck;
 
-import static io.zeebe.casino.DrawTopCard.drawCard;
+import static io.zeebe.casino.deck.DrawTopCard.drawCard;
 
 import io.zeebe.client.api.response.ActivatedJob;
 import io.zeebe.client.api.worker.JobClient;
