@@ -82,24 +82,23 @@ public class BuildDeck implements JobHandler {
 
     Collections.shuffle(deck);
 
-    var players =
+    final Map<String, List<String>> players =
         playerNames.stream()
-            .map(
-                player -> {
-                  var hand =
-                      IntStream.range(0, 7)
-                          .mapToObj(i -> deck.remove(new Random().nextInt(deck.size())))
-                          .collect(Collectors.toList());
+              .collect(Collectors.toMap(name -> name, p -> {
+                var hand =
+                    IntStream.range(0, 7)
+                        .mapToObj(i -> deck.remove(new Random().nextInt(deck.size())))
+                        .collect(Collectors.toList());
 
-                  hand.add("defuse");
-
-                  return Map.of("name", player, "hand", hand);
-                })
-            .collect(Collectors.toList());
+                hand.add("defuse");
+                return hand;
+              }));
 
     jobClient
         .newCompleteCommand(job.getKey())
-        .variables(Map.of("deck", deck, "players", players))
+        .variables(Map.of(
+            "deck", deck,
+            "players", players))
         .send()
         .join();
   }
