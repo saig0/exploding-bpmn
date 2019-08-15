@@ -27,7 +27,7 @@ public class InjectKitten implements JobHandler {
 
     final var players = (Map<String, List<String>>) variables.get("players");
     final var handCards = players.get(currentPlayer);
-    handCards.add(card);
+    handCards.remove(card);
     players.put(currentPlayer, handCards);
 
     final int index = deck.size() > 0 ? ThreadLocalRandom.current().nextInt(0, deck.size()) : 0;
