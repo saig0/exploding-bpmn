@@ -28,7 +28,7 @@ public class Application {
 
   public static void main(String[] args) {
 
-    final var zeebeClient 
+    final var zeebeClient =
         ZeebeClient.newClientBuilder()
             .brokerContactPoint("192.168.30.188:26500")
             .usePlaintext()
