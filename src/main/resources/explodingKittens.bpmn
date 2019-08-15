@@ -87,7 +87,14 @@
       <bpmn:incoming>SequenceFlow_13vyqw3</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_0oe06wj</bpmn:outgoing>
       <bpmn:multiInstanceLoopCharacteristics isSequential="true">
-        <bpmn:extensionElements />
+        <!--
+          <bpmn:extensionElements>
+        		<zeebe:loopCharacteristics inputCollection="turnArray" />  
+        </bpmn:extensionElements>
+					-->
+        <bpmn:extensionElements>
+        	<zeebe:loopCharacteristics inputCollection="turnArray" />  
+        </bpmn:extensionElements>
       </bpmn:multiInstanceLoopCharacteristics>
       <bpmn:subProcess id="ServiceTask_05o07yf" name="Apply Action">
         <bpmn:incoming>SequenceFlow_0iz3mlh</bpmn:incoming>
@@ -312,7 +319,15 @@
       </bpmn:startEvent>
       <bpmn:serviceTask id="ServiceTask_1lr9lcc" name="Select Action">
         <bpmn:extensionElements>
-          <zeebe:taskDefinition type="script" />
+          <zeebe:taskDefinition type="user" />
+          <zeebe:taskHeaders>
+            <zeebe:header key="taskForm" value="&#60;div class=&#34;border-bottom mb-2&#34;&#62;   	&#60;form&#62;  			   			{{#hand}} 			&#60;div class=&#34;form-check&#34;&#62; 			  &#60;input class=&#34;form-check-input card&#34; type=&#34;checkbox&#34; value=&#34;{{.}}&#34; id=&#34;defaultCheck1&#34;&#62; 			  &#60;label class=&#34;form-check-label&#34; for=&#34;defaultCheck1&#34;&#62; 			    {{.}} 			  &#60;/label&#62; 			&#60;/div&#62; 			{{/hand}}  		&#60;/form&#62; &#60;/div&#62;  &#60;div&#62;     &#60;button type=&#34;button&#34; class=&#34;btn btn-primary&#34; onclick=&#34;playCards()&#34;&#62;Play Cards&#60;/button&#62;     &#60;button type=&#34;button&#34; class=&#34;btn btn-secondary&#34; onclick=&#34;pass()&#34;&#62;Pass&#60;/button&#62; &#60;/div&#62;			   &#60;script&#62; 	 	function playCards() {  		var selectedCards = $(&#34;.card:checked&#34;).toArray().map(i =&#62; i.value); 		var action = selectedCards[0];  		var data = [{ 				key: &#34;cards&#34;, 				value: selectedCards 			}, { 				key: &#34;action&#34;, 				value: action 			}]; 		 		completeTask(data); 	}	 	 	function pass() { 		var data = [{ 				key: &#34;cards&#34;, 				value: [] 			},{ 				key: &#34;action&#34;, 				value: null 			}]; 		 		completeTask(data); 	}	 &#60;/script&#62;" />
+            <zeebe:header key="name" value="Play Cards" />
+            <zeebe:header key="description" value="play cards or pass" />
+          </zeebe:taskHeaders>
+          <zeebe:ioMapping>
+            <zeebe:input source="nextPlayer" target="assignee" />
+          </zeebe:ioMapping>
         </bpmn:extensionElements>
         <bpmn:incoming>SequenceFlow_1m5p055</bpmn:incoming>
         <bpmn:incoming>SequenceFlow_1ow6z1k</bpmn:incoming>
@@ -365,7 +380,14 @@
         <bpmn:incoming>SequenceFlow_18pcqkx</bpmn:incoming>
         <bpmn:outgoing>SequenceFlow_1s7n8q9</bpmn:outgoing>
         <bpmn:multiInstanceLoopCharacteristics>
-          <bpmn:extensionElements />
+          <!--
+          <bpmn:extensionElements>
+        		<zeebe:loopCharacteristics inputCollection="playerNames" inputElement="player" />  
+        </bpmn:extensionElements>
+					-->
+          <bpmn:extensionElements>
+        		<zeebe:loopCharacteristics inputCollection="playerNames" inputElement="player" />  
+        </bpmn:extensionElements>
         </bpmn:multiInstanceLoopCharacteristics>
       </bpmn:serviceTask>
       <bpmn:boundaryEvent id="BoundaryEvent_0eaedcv" name="Timeout 30s" attachedToRef="ServiceTask_06iz61u">
@@ -381,7 +403,14 @@
         <bpmn:incoming>SequenceFlow_1s7n8q9</bpmn:incoming>
         <bpmn:outgoing>SequenceFlow_18pcqkx</bpmn:outgoing>
         <bpmn:multiInstanceLoopCharacteristics>
-          <bpmn:extensionElements />
+          <!--
+          <bpmn:extensionElements>
+        		<zeebe:loopCharacteristics inputCollection="playerNames" inputElement="player" />  
+        </bpmn:extensionElements>
+					-->
+          <bpmn:extensionElements>
+        		<zeebe:loopCharacteristics inputCollection="playerNames" inputElement="player" />  
+        </bpmn:extensionElements>
         </bpmn:multiInstanceLoopCharacteristics>
       </bpmn:serviceTask>
       <bpmn:sequenceFlow id="SequenceFlow_1s7n8q9" sourceRef="ServiceTask_06iz61u" targetRef="ServiceTask_0odbl0n" />

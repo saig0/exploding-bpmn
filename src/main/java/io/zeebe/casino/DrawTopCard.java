@@ -44,5 +44,7 @@ public class DrawTopCard implements JobHandler {
     handCards.add(card);
     players.put(currentPlayer, handCards);
     variables.put("players", players);
+
+    return  variables;
   }
 }
