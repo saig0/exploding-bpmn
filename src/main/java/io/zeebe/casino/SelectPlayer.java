@@ -25,6 +25,7 @@ public class SelectPlayer implements JobHandler {
     log.info("Choosed next player {}.", nextPlayer);
 
     final int turns = (int) variables.get("turns");
+    log.info("Player {} has {} turns.", nextPlayer, turns);
     final var turnArray = new int[turns];
 
     final Map<String, List<String>> players = (Map<String, List<String>>) variables.get("players");

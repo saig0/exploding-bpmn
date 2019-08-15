@@ -54,6 +54,8 @@ public class Application {
             "selectPlayerForNewRound", new SelectPlayer(LOG),
             "discard", new DiscardCards(LOG),
             "addTurns", new AddTurns(LOG),
+            "endTurn", new EndTurn(LOG),
+            "newTurn", new NewTurn(LOG),
             "drawBottomCard", new DrawBottomCard(LOG),
             "drawTopCard", new DrawTopCard(LOG)));
 
