@@ -343,7 +343,7 @@
       <bpmn:sequenceFlow id="SequenceFlow_0l9kjoy" sourceRef="ServiceTask_0q2gjd5" targetRef="ExclusiveGateway_1or11bn" />
       <bpmn:sequenceFlow id="SequenceFlow_1lrcyqc" sourceRef="ExclusiveGateway_1e48nez" targetRef="ServiceTask_0q2gjd5" />
       <bpmn:sequenceFlow id="SequenceFlow_0ntl4ci" name="Yes" sourceRef="ExclusiveGateway_1e48nez" targetRef="ServiceTask_0xzxnpb">
-        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">action != null</bpmn:conditionExpression>
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">action != null &amp;&amp; action != ""</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="SequenceFlow_1l1urat" sourceRef="ServiceTask_17fejpc" targetRef="ExclusiveGateway_1j7hro3" />
       <bpmn:sequenceFlow id="SequenceFlow_1bvy4u2" sourceRef="BoundaryEvent_0eaedcv" targetRef="ServiceTask_0xzxnpb" />
