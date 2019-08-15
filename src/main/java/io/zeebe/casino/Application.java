@@ -58,6 +58,7 @@ public class Application {
             "addTurns", new AddTurns(LOG),
             "endTurn", new EndTurn(LOG),
             "newTurn", new NewTurn(LOG),
+            "checkForDefuse", new CheckForDefuse(LOG),
             "drawBottomCard", new DrawBottomCard(LOG),
             "drawTopCard", new DrawTopCard(LOG)));
 
