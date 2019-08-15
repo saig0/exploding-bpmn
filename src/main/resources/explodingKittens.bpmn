@@ -238,20 +238,20 @@
       </bpmn:exclusiveGateway>
       <bpmn:serviceTask id="ServiceTask_1snsa4o" name="Inject Exploding Kitten Card">
         <bpmn:extensionElements>
-          <zeebe:taskDefinition type="user" />
+          <zeebe:taskDefinition type="injectKitten" />
         </bpmn:extensionElements>
         <bpmn:incoming>SequenceFlow_1pyldqs</bpmn:incoming>
         <bpmn:outgoing>SequenceFlow_1qt6o5f</bpmn:outgoing>
       </bpmn:serviceTask>
       <bpmn:serviceTask id="ServiceTask_0elhkky" name="Player dies (ErrorEvent)">
         <bpmn:extensionElements>
-          <zeebe:taskDefinition type="script" />
+          <zeebe:taskDefinition type="playerDies" />
         </bpmn:extensionElements>
         <bpmn:incoming>SequenceFlow_1cze8a1</bpmn:incoming>
       </bpmn:serviceTask>
       <bpmn:serviceTask id="ServiceTask_0vrrxr4" name="Discard Defuse Card">
         <bpmn:extensionElements>
-          <zeebe:taskDefinition type="script" />
+          <zeebe:taskDefinition type="discard" />
         </bpmn:extensionElements>
         <bpmn:incoming>SequenceFlow_067ow2h</bpmn:incoming>
         <bpmn:outgoing>SequenceFlow_1pyldqs</bpmn:outgoing>
@@ -263,7 +263,7 @@
       </bpmn:exclusiveGateway>
       <bpmn:serviceTask id="ServiceTask_1gqp1db" name="Check for Defuse Card">
         <bpmn:extensionElements>
-          <zeebe:taskDefinition type="script" />
+          <zeebe:taskDefinition type="checkForDefuse" />
         </bpmn:extensionElements>
         <bpmn:incoming>SequenceFlow_1ftg95d</bpmn:incoming>
         <bpmn:outgoing>SequenceFlow_0x7tjnk</bpmn:outgoing>

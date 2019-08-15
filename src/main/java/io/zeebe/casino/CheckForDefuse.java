@@ -26,12 +26,13 @@ public class CheckForDefuse implements JobHandler {
     final boolean defused = hand.remove("defuse");
     if (defused)
     {
-      log.info("Player {} was able to defuse exploding kitten.", currentPlayer);
       variables.put("cards", List.of("defuse"));
       players.put(currentPlayer, hand);
       variables.put("players", players);
     }
 
+
+    log.info("Player {} was {}able to defuse exploding kitten.", currentPlayer, (defused ? "" : "not "));
     variables.put("defuse", defused);
 
     jobClient.newCompleteCommand(activatedJob.getKey()).variables(variables).send();
