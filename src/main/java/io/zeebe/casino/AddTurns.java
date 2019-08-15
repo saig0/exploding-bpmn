@@ -8,8 +8,7 @@ import org.slf4j.Logger;
 
 public class AddTurns implements JobHandler {
 
-  public AddTurns(Logger log) {
-  }
+  public AddTurns(Logger log) {}
 
   @Override
   public void handle(JobClient jobClient, ActivatedJob activatedJob) {
@@ -18,8 +17,9 @@ public class AddTurns implements JobHandler {
 
     // -1 turn, because end of the turn
     // +2 turn because of attack
-    variables.put("turns", turns + 1);
-
-    jobClient.newCompleteCommand(activatedJob.getKey()).variables(variables).send();
+    jobClient
+        .newCompleteCommand(activatedJob.getKey())
+        .variables(Map.of("turns", turns + 1))
+        .send();
   }
 }

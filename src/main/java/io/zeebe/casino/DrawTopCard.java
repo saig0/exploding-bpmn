@@ -5,7 +5,6 @@ import io.zeebe.client.api.worker.JobClient;
 import io.zeebe.client.api.worker.JobHandler;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.function.Supplier;
 import org.slf4j.Logger;
 
@@ -23,20 +22,20 @@ public class DrawTopCard implements JobHandler {
     jobClient.newCompleteCommand(activatedJob.getKey()).variables(variables).send();
   }
 
-  static Map<String, Object> drawCard(Logger log, ActivatedJob activatedJob, Supplier<Integer> drawingCardIndex)
-  {
+  static Map<String, Object> drawCard(
+      Logger log, ActivatedJob activatedJob, Supplier<Integer> drawingCardIndex) {
     final var variables = activatedJob.getVariablesAsMap();
+
     final var deck = (List<String>) variables.get("deck");
 
     int index = drawingCardIndex.get();
-    if (index == Integer.MAX_VALUE)
+    if (index == Integer.MAX_VALUE) {
       index = deck.size() - 1;
+    }
 
     final var card = deck.remove(index);
-    variables.put("card", card);
-    variables.put("deck", deck);
 
-    final var currentPlayer = variables.get("nextPlayer");
+    final String currentPlayer = (String) variables.get("nextPlayer");
     log.info("Player {} draw card {}", currentPlayer, card);
 
     final Map players = (Map) variables.get("players");
@@ -44,8 +43,11 @@ public class DrawTopCard implements JobHandler {
 
     handCards.add(card);
     players.put(currentPlayer, handCards);
-    variables.put("players", players);
 
-    return  variables;
+    return Map.of(
+        "card", card,
+        "deck", deck,
+        currentPlayer, handCards,
+        "players", players);
   }
 }

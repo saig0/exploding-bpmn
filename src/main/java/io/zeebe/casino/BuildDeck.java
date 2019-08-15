@@ -93,6 +93,8 @@ public class BuildDeck implements JobHandler {
       deck.addAll(Collections.nCopies(defuseCards, "defuse"));
     }
 
+    Collections.shuffle(deck);
+
     jobClient
         .newCompleteCommand(job.getKey())
         .variables(Map.of(

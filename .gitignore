@@ -18,4 +18,3 @@ trace.out
 .coverage/
 .logs/
 *.iml
-/.idea/

@@ -3,6 +3,7 @@ package io.zeebe.casino;
 import io.zeebe.client.api.response.ActivatedJob;
 import io.zeebe.client.api.worker.JobClient;
 import io.zeebe.client.api.worker.JobHandler;
+import java.util.Map;
 import org.slf4j.Logger;
 
 public class EndTurn implements JobHandler {
@@ -18,9 +19,12 @@ public class EndTurn implements JobHandler {
     final var variables = activatedJob.getVariablesAsMap();
     final int turns = (int) variables.get("turns");
 
-    variables.put("turns", turns -1);
-    log.info("End turn, remaining turns {}", turns - 1);
+    final var remainingTurns = turns - 1;
+    log.info("End turn, remaining turns {}", remainingTurns);
 
-    jobClient.newCompleteCommand(activatedJob.getKey()).variables(variables).send();
+    jobClient
+        .newCompleteCommand(activatedJob.getKey())
+        .variables(Map.of("turns", remainingTurns))
+        .send();
   }
 }

@@ -1,11 +1,13 @@
 package io.zeebe.casino;
 
+import com.google.common.collect.Maps;
 import io.zeebe.client.api.response.ActivatedJob;
 import io.zeebe.client.api.worker.JobClient;
 import io.zeebe.client.api.worker.JobHandler;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 
 public class DiscardCards implements JobHandler {
@@ -27,9 +29,9 @@ public class DiscardCards implements JobHandler {
     log.info("Discard {}", cards);
     discardPile.addAll(cards);
 
-    variables.put("cards", Collections.EMPTY_LIST);
-    variables.put("discardPile", discardPile);
-
-    jobClient.newCompleteCommand(activatedJob.getKey()).variables(variables).send();
+    jobClient.newCompleteCommand(activatedJob.getKey()).variables(Map.of(
+        "cards", List.of(),
+        "discardPile", discardPile
+    )).send();
   }
 }

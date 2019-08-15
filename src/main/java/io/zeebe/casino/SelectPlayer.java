@@ -22,7 +22,7 @@ public class SelectPlayer implements JobHandler {
     final int round = (int) variables.get("round");
     final List<String> playerNames = (List<String>) variables.get("playerNames");
     final var nextPlayer = playerNames.get(round % playerNames.size());
-    log.info("Choosed next player {}.", nextPlayer);
+    log.info("Chose next player {}.", nextPlayer);
 
     final int turns = (int) variables.get("turns");
     log.info("Player {} has {} turns.", nextPlayer, turns);
