@@ -23,10 +23,10 @@ public class Celebration implements JobHandler {
     final Map players = (Map) variables.get("players");
     final String winner = new ArrayList<>((Set<String>) players.keySet()).get(0);
 
-    final int count = 16 - winner.length();
+    final int count = 17 - winner.length();
     log.info("\n"
         + "=========================================="
-        + "\n=============WINNER: {} " + Strings.repeat("=", count > 0 ? count : 0)
+        + "\n============= WINNER: {} " + Strings.repeat("=", count > 0 ? count : 0)
         + "\n==========================================", players.keySet());
 
     jobClient.newCompleteCommand(activatedJob.getKey()).variables(Map.of("winner", winner)).send();

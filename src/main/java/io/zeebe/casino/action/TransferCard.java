@@ -28,12 +28,15 @@ public class TransferCard implements JobHandler {
     final var otherHand = (List<String>) players.get(otherPlayer);
 
     final int index = (int) variables.get("choosenCard");
-    final String choosenCard = otherHand.remove(index);
+    if (index >= 0)
+    {
+      final String choosenCard = otherHand.remove(index);
 
-    log.info("Transfer card {} from player {} to player {}", choosenCard, otherPlayer, currentPlayer);
-    currentHand.add(choosenCard);
-    players.put(currentPlayer, currentHand);
-    players.put(otherPlayer, otherHand);
+      log.info("Transfer card {} from player {} to player {}", choosenCard, otherPlayer, currentPlayer);
+      currentHand.add(choosenCard);
+      players.put(currentPlayer, currentHand);
+      players.put(otherPlayer, otherHand);
+    }
 
     jobClient.newCompleteCommand(activatedJob.getKey()).variables(Map.of("players", players)).send();
   }

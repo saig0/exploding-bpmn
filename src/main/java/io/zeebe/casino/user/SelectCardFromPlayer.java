@@ -24,7 +24,14 @@ public class SelectCardFromPlayer implements JobHandler {
     final Map players = (Map) variables.get("players");
 
     final var otherHand = (List<String>) players.get(otherPlayer);
-    final int index = ThreadLocalRandom.current().nextInt(0, otherHand.size());
+    final int index;
+    if (otherHand.size() == 0)
+    {
+      index = -1;
+    }
+    else {
+      index = ThreadLocalRandom.current().nextInt(0, otherHand.size());
+    }
 
     jobClient.newCompleteCommand(activatedJob.getKey()).variables(Map.of("choosenCard", index)).send();
   }
