@@ -312,7 +312,7 @@
       </bpmn:startEvent>
       <bpmn:serviceTask id="ServiceTask_1lr9lcc" name="Select Action">
         <bpmn:extensionElements>
-          <zeebe:taskDefinition type="user" />
+          <zeebe:taskDefinition type="selectAction" />
           <zeebe:taskHeaders>
             <zeebe:header key="taskForm" value="&#60;div class=&#34;border-bottom mb-2&#34;&#62;   	&#60;form&#62;  			   			{{#hand}} 			&#60;div class=&#34;form-check&#34;&#62; 			  &#60;input class=&#34;form-check-input card&#34; type=&#34;checkbox&#34; value=&#34;{{.}}&#34; id=&#34;defaultCheck1&#34;&#62; 			  &#60;label class=&#34;form-check-label&#34; for=&#34;defaultCheck1&#34;&#62; 			    {{.}} 			  &#60;/label&#62; 			&#60;/div&#62; 			{{/hand}}  		&#60;/form&#62; &#60;/div&#62;  &#60;div&#62;     &#60;button type=&#34;button&#34; class=&#34;btn btn-primary&#34; onclick=&#34;playCards()&#34;&#62;Play Cards&#60;/button&#62;     &#60;button type=&#34;button&#34; class=&#34;btn btn-secondary&#34; onclick=&#34;pass()&#34;&#62;Pass&#60;/button&#62; &#60;/div&#62;			   &#60;script&#62; 	 	function playCards() {  		var selectedCards = $(&#34;.card:checked&#34;).toArray().map(i =&#62; i.value); 		var action = selectedCards[0];  		var data = [{ 				key: &#34;cards&#34;, 				value: selectedCards 			}, { 				key: &#34;action&#34;, 				value: action 			}]; 		 		completeTask(data); 	}	 	 	function pass() { 		var data = [{ 				key: &#34;cards&#34;, 				value: [] 			}]; 		 		completeTask(data); 	}	 &#60;/script&#62;" />
             <zeebe:header key="name" value="Play Cards" />
