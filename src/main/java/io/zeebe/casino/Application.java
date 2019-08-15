@@ -21,7 +21,7 @@ public class Application {
 
     final var zeebeClient =
         ZeebeClient.newClientBuilder()
-            .brokerContactPoint("192.168.30.188:26500")
+            .brokerContactPoint("192.168.21.185:26500")
             .usePlaintext()
             .build();
 
@@ -33,7 +33,7 @@ public class Application {
     LOG.info("> start demo");
     zeebeClient
         .newCreateInstanceCommand()
-        .bpmnProcessId("Process_1")
+        .bpmnProcessId("exploding-kittens")
         .latestVersion()
         .variables(
             Map.of(
