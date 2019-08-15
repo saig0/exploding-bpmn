@@ -243,7 +243,10 @@
       </bpmn:serviceTask>
       <bpmn:serviceTask id="ServiceTask_0elhkky" name="Player dies (ErrorEvent)">
         <bpmn:extensionElements>
-          <zeebe:taskDefinition type="playerDies" />
+          <zeebe:taskDefinition type="throwMessage" />
+          <zeebe:taskHeaders>
+            <zeebe:header key="messageName" value="explodingKitten" />
+          </zeebe:taskHeaders>
         </bpmn:extensionElements>
         <bpmn:incoming>SequenceFlow_1cze8a1</bpmn:incoming>
       </bpmn:serviceTask>
