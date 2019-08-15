@@ -33,6 +33,7 @@ public class DrawTopCard implements JobHandler {
       index = deck.size() - 1;
 
     final var card = deck.remove(index);
+    variables.put("card", card);
     variables.put("deck", deck);
 
     final var currentPlayer = variables.get("nextPlayer");
