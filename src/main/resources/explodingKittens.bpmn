@@ -153,7 +153,7 @@
         </bpmn:sequenceFlow>
         <bpmn:serviceTask id="ServiceTask_0k6qvqz" name="Change order of Top 3 Cards">
           <bpmn:extensionElements>
-            <zeebe:taskDefinition type="user" />
+            <zeebe:taskDefinition type="changeOrder" />
           </bpmn:extensionElements>
           <bpmn:incoming>SequenceFlow_01wcgpu</bpmn:incoming>
           <bpmn:outgoing>SequenceFlow_0gda7rx</bpmn:outgoing>
@@ -199,7 +199,7 @@
         <bpmn:sequenceFlow id="SequenceFlow_0tz9agl" sourceRef="ServiceTask_0rbpkfy" targetRef="ServiceTask_1iz8r0l" />
         <bpmn:serviceTask id="ServiceTask_1sgqadl" name="Update Deck">
           <bpmn:extensionElements>
-            <zeebe:taskDefinition type="script" />
+            <zeebe:taskDefinition type="updateDeck" />
           </bpmn:extensionElements>
           <bpmn:incoming>SequenceFlow_0gda7rx</bpmn:incoming>
           <bpmn:outgoing>SequenceFlow_1r2bmn5</bpmn:outgoing>

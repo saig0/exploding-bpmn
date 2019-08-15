@@ -9,11 +9,13 @@ import io.zeebe.casino.deck.BuildDeck;
 import io.zeebe.casino.deck.DiscardCards;
 import io.zeebe.casino.deck.DrawBottomCard;
 import io.zeebe.casino.deck.DrawTopCard;
+import io.zeebe.casino.user.ChangeOrder;
 import io.zeebe.casino.user.InjectKitten;
 import io.zeebe.casino.user.PassAction;
 import io.zeebe.casino.user.SelectAction;
 import io.zeebe.casino.user.SelectOtherPlayer;
 import io.zeebe.casino.user.SelectRandomCard;
+import io.zeebe.casino.user.UpdateDeck;
 import io.zeebe.client.ZeebeClient;
 import io.zeebe.client.api.worker.JobHandler;
 import java.util.List;
@@ -83,7 +85,8 @@ public class Application {
 //            "favor", new FavorAction(LOG),
 //            "cats", new CatsAction(LOG),
             "see", new SeeAction(LOG),
-            "alter", new AlterAction(LOG),
+            "changeOrder", new ChangeOrder(LOG),
+            "updateDeck", new UpdateDeck(LOG),
             "draw", new DrawAction(LOG)));
 
     installWorkers(zeebeClient, Map.of(
