@@ -30,14 +30,17 @@ public class InjectKitten implements JobHandler {
     handCards.add(card);
     players.put(currentPlayer, handCards);
 
-    final int index = ThreadLocalRandom.current().nextInt(0, deck.size());
+    final int index = deck.size() > 0 ? ThreadLocalRandom.current().nextInt(0, deck.size()) : 0;
     deck.add(index, card);
 
     log.info("Exploding was inserted again in the deck at position {}", index);
 
-    jobClient.newCompleteCommand(activatedJob.getKey()).variables(Map.of(
-        "deck", deck,
-        "players", players)
-    ).send();
+    jobClient
+        .newCompleteCommand(activatedJob.getKey())
+        .variables(
+            Map.of(
+                "deck", deck,
+                "players", players))
+        .send();
   }
 }
