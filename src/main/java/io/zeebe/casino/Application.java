@@ -6,6 +6,7 @@ import io.zeebe.casino.deck.BuildDeck;
 import io.zeebe.casino.deck.DiscardCards;
 import io.zeebe.casino.deck.DrawBottomCard;
 import io.zeebe.casino.deck.DrawTopCard;
+import io.zeebe.casino.user.Celebration;
 import io.zeebe.casino.user.ChangeOrder;
 import io.zeebe.casino.user.InjectKitten;
 import io.zeebe.casino.user.SelectAction;
@@ -93,7 +94,8 @@ public class Application {
             "selectAction", new SelectAction(LOG),
             "selectOtherPlayer", new SelectOtherPlayer(LOG),
             "selectCardFromPlayer", new SelectCardFromPlayer(LOG),
-            "chooseRandomCard", new SelectRandomCard(LOG)));
+            "chooseRandomCard", new SelectRandomCard(LOG),
+            "celebrate", new Celebration(LOG)));
 
   }
 

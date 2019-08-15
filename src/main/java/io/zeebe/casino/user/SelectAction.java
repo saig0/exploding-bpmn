@@ -38,11 +38,43 @@ public class SelectAction implements JobHandler {
       final Map players = (Map) variables.get("players");
 
       final List<String> hand = (List<String>) players.get(nextPlayer);
+// CAT algo ?
+//      final Map<String, List<String>> cardGroups = hand.stream()
+//          .filter(card -> card.contains("cat"))
+//          .collect(Collectors.groupingBy(card -> card));
+//
+//
+//      if (cardGroups.size() > 2)
+//      {
+//        if (cardGroups.containsKey("feral-cat"))
+//        {
+//
+//          final int feralCount = cardGroups.get("feral-cat").size();
+//
+//        }
+//      }
+//      else
+//      {
+//        //
+//      }
+//
+//
+//
+//      final long catCount = hand.stream().filter(card -> card.contains("cat")).count();
 
-      final List<String> handWithoutDefuse = hand.stream().filter(card -> !card.equals("defuse"))
+      final List<String> handWithoutDefuse = hand.stream().filter(card -> !card.equals("defuse") && !card.equals("nope"))
+//          .filter(card -> catCount >= 2 ? true : !card.contains("cat"))
           .collect(Collectors.toList());
 
       final int handSize = handWithoutDefuse.size();
+
+      if (handSize == 0)
+      {
+        // pass
+        jobClient.newCompleteCommand(activatedJob.getKey()).variables(Map.of("action", "")).send();
+        return;
+      }
+
       final int index = ThreadLocalRandom.current().nextInt(0, handSize);
       final String card = handWithoutDefuse.remove(index);
       hand.remove(card);

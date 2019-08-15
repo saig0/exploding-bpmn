@@ -49,7 +49,7 @@
     </bpmn:exclusiveGateway>
     <bpmn:serviceTask id="ServiceTask_14hbzdi" name="Celebrate survivor">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="user" />
+        <zeebe:taskDefinition type="celebrate" />
       </bpmn:extensionElements>
       <bpmn:incoming>SequenceFlow_1v5srzg</bpmn:incoming>
       <bpmn:outgoing>SequenceFlow_1yehcyl</bpmn:outgoing>

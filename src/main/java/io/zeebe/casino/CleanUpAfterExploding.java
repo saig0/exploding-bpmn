@@ -17,7 +17,7 @@ public class CleanUpAfterExploding implements JobHandler {
   }
 
   @Override
-  public void handle(JobClient jobClient, ActivatedJob activatedJob) throws Exception {
+  public void handle(JobClient jobClient, ActivatedJob activatedJob) {
     final var variables = activatedJob.getVariablesAsMap();
 
     final String currentPlayer = variables.get("nextPlayer").toString();
@@ -29,11 +29,12 @@ public class CleanUpAfterExploding implements JobHandler {
 
     discardPile.addAll(hand);
 
-    log.info("Remove player {} from game.", currentPlayer);
+    log.info("Player {} explodes.", currentPlayer);
+
 
     jobClient
         .newCompleteCommand(activatedJob.getKey())
-        .variables(Map.of("discardPile", discardPile, "players", players, "card", null))
+        .variables(Map.of("discardPile", discardPile, "players", players, "playerCount", players.size(), "card", ""))
         .send();
   }
 }
