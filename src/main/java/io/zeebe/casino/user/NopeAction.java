@@ -24,11 +24,11 @@ public class NopeAction implements JobHandler {
 
     final var currentPlayer = (String) variables.get("nextPlayer");
     final var players = (Map<String, List<String>>) variables.get("players");
-    final var currentHand = players.get(currentPlayer);
+    final var playersHand = players.get(assignee);
 
     final var playNope = ThreadLocalRandom.current().nextDouble() > 0.5;
 
-    if (currentHand.contains("nope") && !assignee.equals(currentPlayer) && playNope) {
+    if (playersHand.contains("nope") && !assignee.equals(currentPlayer) && playNope) {
 
       log.info("Player {} plays a 'nope' card", assignee);
 
