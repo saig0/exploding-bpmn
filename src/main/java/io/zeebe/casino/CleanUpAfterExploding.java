@@ -36,7 +36,13 @@ public class CleanUpAfterExploding implements JobHandler {
 
     jobClient
         .newCompleteCommand(activatedJob.getKey())
-        .variables(Map.of("discardPile", discardPile, "players", players, "playerCount", players.size(), "card", "", "playerNames", playerNames))
+        .variables(Map.of(
+            "discardPile", discardPile,
+            "players", players,
+            "playerCount", players.size(),
+            "card", "",
+            "playerNames", playerNames,
+            "turns", 0))
         .send();
   }
 }
