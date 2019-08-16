@@ -1,9 +1,11 @@
 package io.zeebe.casino;
 
 import io.zeebe.client.ZeebeClient;
+import io.zeebe.client.api.command.PublishMessageCommandStep1.PublishMessageCommandStep3;
 import io.zeebe.client.api.response.ActivatedJob;
 import io.zeebe.client.api.worker.JobClient;
 import io.zeebe.client.api.worker.JobHandler;
+import java.util.Map;
 import java.util.Optional;
 
 public class ThrowMessage implements JobHandler {
@@ -23,10 +25,22 @@ public class ThrowMessage implements JobHandler {
         Optional.ofNullable(activatedJob.getCustomHeaders().get("messageName"))
             .orElseThrow(() -> new RuntimeException("missing custom header 'messageName'"));
 
-    client
+
+    final PublishMessageCommandStep3 publishMessageCommandStep3 = client
         .newPublishMessageCommand()
         .messageName(messageName)
-        .correlationKey(correlationKey)
+        .correlationKey(correlationKey);
+
+    final Optional<String> variableOptional = Optional
+        .ofNullable(activatedJob.getCustomHeaders().get("variable"));
+    if (variableOptional.isPresent())
+    {
+      final String variableName = variableOptional.get();
+      final String assignee = activatedJob.getVariablesAsMap().get(variableName).toString();
+      publishMessageCommandStep3.variables(Map.of("playerNoped", assignee));
+    }
+
+    publishMessageCommandStep3
         .send()
         .join();
 

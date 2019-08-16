@@ -4,6 +4,7 @@ import io.zeebe.casino.action.TransferCard;
 import io.zeebe.casino.action.UpdateDeck;
 import io.zeebe.casino.deck.BuildDeck;
 import io.zeebe.casino.deck.DiscardCards;
+import io.zeebe.casino.deck.DiscardNope;
 import io.zeebe.casino.deck.DrawBottomCard;
 import io.zeebe.casino.deck.DrawTopCard;
 import io.zeebe.casino.deck.InitGame;
@@ -18,9 +19,8 @@ import io.zeebe.casino.user.SelectRandomCard;
 import io.zeebe.casino.user.ShowTopThree;
 import io.zeebe.client.ZeebeClient;
 import io.zeebe.client.api.worker.JobHandler;
-import java.util.List;
+import java.time.Duration;
 import java.util.Map;
-import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,6 +50,7 @@ public class Application {
             "build-deck", new BuildDeck(LOG),
             "selectPlayerForNewRound", new SelectPlayer(LOG),
             "discard", new DiscardCards(LOG),
+            "discardNope", new DiscardNope(LOG),
             "addTurns", new AddTurns(LOG),
             "endTurn", new EndTurn(LOG),
             "newTurn", new NewTurn(LOG),
@@ -96,6 +97,7 @@ public class Application {
       zeebeClient.newWorker()
           .jobType(jobTypeHandler.getKey())
           .handler(jobTypeHandler.getValue())
+          .timeout(Duration.ofSeconds(30))
           .open();
     }
   }
