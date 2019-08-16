@@ -356,10 +356,10 @@
       </bpmn:serviceTask>
       <bpmn:sequenceFlow id="SequenceFlow_0iz3mlh" sourceRef="ServiceTask_0xzxnpb" targetRef="ServiceTask_05o07yf" />
       <bpmn:sequenceFlow id="SequenceFlow_0qz2afc" sourceRef="ServiceTask_05o07yf" targetRef="ExclusiveGateway_1j7hro3" />
-      <bpmn:boundaryEvent id="BoundaryEvent_0eaedcv" name="10s" attachedToRef="ServiceTask_06iz61u">
+      <bpmn:boundaryEvent id="BoundaryEvent_0eaedcv" name="5s" attachedToRef="ServiceTask_06iz61u">
         <bpmn:outgoing>SequenceFlow_1bvy4u2</bpmn:outgoing>
         <bpmn:timerEventDefinition>
-          <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT10S</bpmn:timeDuration>
+          <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT5S</bpmn:timeDuration>
         </bpmn:timerEventDefinition>
       </bpmn:boundaryEvent>
       <bpmn:serviceTask id="ServiceTask_059gfr7" name="End turn">
@@ -470,10 +470,10 @@
         <bpmn:messageEventDefinition id="MessageEventDefinition_13uomuj" messageRef="Message_03mmodp" />
       </bpmn:boundaryEvent>
       <bpmn:sequenceFlow id="SequenceFlow_170d6iy" sourceRef="BoundaryEvent_0jdshqf" targetRef="ServiceTask_02cfwre" />
-      <bpmn:boundaryEvent id="BoundaryEvent_076pqru" name="10s" attachedToRef="SubProcess_11b0053">
+      <bpmn:boundaryEvent id="BoundaryEvent_076pqru" name="5s" attachedToRef="SubProcess_11b0053">
         <bpmn:outgoing>SequenceFlow_0uadm3e</bpmn:outgoing>
         <bpmn:timerEventDefinition id="TimerEventDefinition_13t3712">
-          <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT10S</bpmn:timeDuration>
+          <bpmn:timeDuration xsi:type="bpmn:tFormalExpression">PT5S</bpmn:timeDuration>
         </bpmn:timerEventDefinition>
       </bpmn:boundaryEvent>
       <bpmn:sequenceFlow id="SequenceFlow_0uadm3e" sourceRef="BoundaryEvent_076pqru" targetRef="ServiceTask_17fejpc" />
@@ -979,7 +979,7 @@
       <bpmndi:BPMNShape id="BoundaryEvent_0sgfafg_di" bpmnElement="BoundaryEvent_0eaedcv">
         <dc:Bounds x="1769" y="645" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="1795" y="684" width="19" height="14" />
+          <dc:Bounds x="1798" y="684" width="13" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="ServiceTask_059gfr7_di" bpmnElement="ServiceTask_059gfr7">
@@ -1087,7 +1087,7 @@
       <bpmndi:BPMNShape id="BoundaryEvent_076pqru_di" bpmnElement="BoundaryEvent_076pqru">
         <dc:Bounds x="2157" y="448" width="36" height="36" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="2177" y="486" width="19" height="14" />
+          <dc:Bounds x="2180" y="486" width="13" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_0uadm3e_di" bpmnElement="SequenceFlow_0uadm3e">

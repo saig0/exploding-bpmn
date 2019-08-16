@@ -22,6 +22,8 @@ public class CleanUpAfterExploding implements JobHandler {
 
     final String currentPlayer = variables.get("nextPlayer").toString();
     final Map players = (Map) variables.get("players");
+    final var playerNames = (List<String>) variables.get("playerNames");
+    playerNames.remove(currentPlayer);
     final var hand = (List<String>) players.remove(currentPlayer);
 
     final var discardPile = (List<String>) variables.computeIfAbsent("discardPile", (key) ->
@@ -34,7 +36,7 @@ public class CleanUpAfterExploding implements JobHandler {
 
     jobClient
         .newCompleteCommand(activatedJob.getKey())
-        .variables(Map.of("discardPile", discardPile, "players", players, "playerCount", players.size(), "card", ""))
+        .variables(Map.of("discardPile", discardPile, "players", players, "playerCount", players.size(), "card", "", "playerNames", playerNames))
         .send();
   }
 }

@@ -99,7 +99,7 @@ public class Application {
       zeebeClient.newWorker()
           .jobType(jobTypeHandler.getKey())
           .handler(jobTypeHandler.getValue())
-          .timeout(Duration.ofSeconds(30))
+          .timeout(Duration.ofSeconds(5))
           .open();
     }
   }
