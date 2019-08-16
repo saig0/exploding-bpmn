@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 
 public class DiscardCards implements JobHandler {
@@ -28,7 +29,7 @@ public class DiscardCards implements JobHandler {
 
     final String currentPlayer = variables.get("nextPlayer").toString();
     final var players = (Map<String, List<String>>) variables.get("players");
-    final var hand = players.get(currentPlayer);
+    final var hand = players.getOrDefault(currentPlayer, Collections.emptyList());
 
     hand.removeAll(cards);
     log.info("Remove {} from player {}'s hand", cards, currentPlayer);

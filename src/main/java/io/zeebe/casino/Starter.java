@@ -29,7 +29,7 @@ public class Starter {
                   .newCreateInstanceCommand()
                   .bpmnProcessId("exploding-kittens")
                   .latestVersion()
-                  .variables(Map.of("playerNames", List.of("phil", "chris", "basti", "niccola")))
+                  .variables(Map.of("playerNames", List.of("phil", "chris")))
                   .send()
                   .join();
             });

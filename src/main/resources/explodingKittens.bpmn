@@ -404,7 +404,7 @@
           <bpmn:extensionElements>
             <zeebe:taskDefinition type="throwMessage" />
             <zeebe:taskHeaders>
-              <zeebe:header key="messageName" value="nope" />
+              <zeebe:header key="messageName" value="nope1" />
             </zeebe:taskHeaders>
           </bpmn:extensionElements>
           <bpmn:incoming>SequenceFlow_1jn596f</bpmn:incoming>
@@ -455,7 +455,7 @@
           <bpmn:extensionElements>
             <zeebe:taskDefinition type="throwMessage" />
             <zeebe:taskHeaders>
-              <zeebe:header key="messageName" value="nope" />
+              <zeebe:header key="messageName" value="nope2" />
             </zeebe:taskHeaders>
           </bpmn:extensionElements>
           <bpmn:incoming>SequenceFlow_0jobvch</bpmn:incoming>
@@ -477,7 +477,7 @@
       </bpmn:subProcess>
       <bpmn:boundaryEvent id="BoundaryEvent_0jdshqf" name="nope" attachedToRef="SubProcess_11b0053">
         <bpmn:outgoing>SequenceFlow_170d6iy</bpmn:outgoing>
-        <bpmn:messageEventDefinition id="MessageEventDefinition_13uomuj" messageRef="Message_039oztv" />
+        <bpmn:messageEventDefinition id="MessageEventDefinition_13uomuj" messageRef="Message_03mmodp" />
       </bpmn:boundaryEvent>
       <bpmn:boundaryEvent id="BoundaryEvent_076pqru" name="10s" attachedToRef="SubProcess_11b0053">
         <bpmn:outgoing>SequenceFlow_0uadm3e</bpmn:outgoing>
@@ -540,12 +540,12 @@
       <zeebe:subscription correlationKey="correlationKey" />
     </bpmn:extensionElements>
   </bpmn:message>
-  <bpmn:message id="Message_039oztv" name="nope">
+  <bpmn:message id="Message_039oztv" name="nope1">
     <bpmn:extensionElements>
       <zeebe:subscription correlationKey="correlationKey" />
     </bpmn:extensionElements>
   </bpmn:message>
-  <bpmn:message id="Message_03mmodp" name="nope">
+  <bpmn:message id="Message_03mmodp" name="nope2">
     <bpmn:extensionElements>
       <zeebe:subscription correlationKey="correlationKey" />
     </bpmn:extensionElements>
