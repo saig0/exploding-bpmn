@@ -6,6 +6,7 @@ import io.zeebe.casino.deck.BuildDeck;
 import io.zeebe.casino.deck.DiscardCards;
 import io.zeebe.casino.deck.DrawBottomCard;
 import io.zeebe.casino.deck.DrawTopCard;
+import io.zeebe.casino.deck.InitGame;
 import io.zeebe.casino.user.Celebration;
 import io.zeebe.casino.user.ChangeOrder;
 import io.zeebe.casino.user.InjectKitten;
@@ -40,27 +41,13 @@ public class Application {
     zeebeClient.newDeployCommand().addResourceFromClasspath("explodingKittens.bpmn").send().join();
 
     // ---
-    LOG.info("> start demo");
-    zeebeClient
-        .newCreateInstanceCommand()
-        .bpmnProcessId("exploding-kittens")
-        .latestVersion()
-        .variables(
-            Map.of(
-                "playerNames",
-                List.of("phil", "chris"),
-                "round",
-                0,
-                "turns",
-                1,
-                "correlationKey",
-                UUID.randomUUID()))
-        .send()
-        .join();
+    LOG.info("> starting workers");
 
     // general
     installWorkers(zeebeClient,
-        Map.of("build-deck", new BuildDeck(LOG),
+        Map.of(
+            "initGame", new InitGame(LOG),
+            "build-deck", new BuildDeck(LOG),
             "selectPlayerForNewRound", new SelectPlayer(LOG),
             "discard", new DiscardCards(LOG),
             "addTurns", new AddTurns(LOG),
@@ -99,6 +86,8 @@ public class Application {
             "celebrate", new Celebration(LOG),
             "play-nope", new NopeAction(LOG)));
 
+    // ---
+    LOG.info("> ready!");
   }
 
   private static void installWorkers(ZeebeClient zeebeClient,

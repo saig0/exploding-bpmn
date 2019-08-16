@@ -21,13 +21,14 @@ public class DiscardCards implements JobHandler {
   public void handle(JobClient jobClient, ActivatedJob activatedJob) {
     final var variables = activatedJob.getVariablesAsMap();
 
-    final var cards = (List<String>) variables.get("cards");
-    final var discardPile = (List<String>) variables.computeIfAbsent("discardPile", (key) ->
-        new ArrayList<String>());
+    final var cards =
+        (List<String>) variables.computeIfAbsent("cards", key -> Collections.emptyList());
+    final var discardPile =
+        (List<String>) variables.computeIfAbsent("discardPile", (key) -> new ArrayList<String>());
 
     final String currentPlayer = variables.get("nextPlayer").toString();
-    final Map players = (Map) variables.get("players");
-    final var hand = (List<String>) players.get(currentPlayer);
+    final var players = (Map<String, List<String>>) variables.get("players");
+    final var hand = players.get(currentPlayer);
 
     hand.removeAll(cards);
     log.info("Remove {} from player {}'s hand", cards, currentPlayer);

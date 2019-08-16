@@ -3,7 +3,6 @@ package io.zeebe.casino;
 import io.zeebe.client.ZeebeClient;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.stream.IntStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,20 +22,16 @@ public class Starter {
     // ---
     LOG.info("> start demo");
 
-    IntStream.range(0, 10).forEach(i -> {
-
-    zeebeClient
-        .newCreateInstanceCommand()
-        .bpmnProcessId("exploding-kittens")
-        .latestVersion()
-        .variables(
-            Map.of(
-                "playerNames", List.of("phil", "chris"),
-                "round",0,
-                "turns",1,
-                "correlationKey", UUID.randomUUID()))
-        .send()
-        .join();
-    });
+    IntStream.range(0, 1)
+        .forEach(
+            i -> {
+              zeebeClient
+                  .newCreateInstanceCommand()
+                  .bpmnProcessId("exploding-kittens")
+                  .latestVersion()
+                  .variables(Map.of("playerNames", List.of("phil", "chris", "basti", "niccola")))
+                  .send()
+                  .join();
+            });
   }
 }
