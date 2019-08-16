@@ -17,6 +17,7 @@ import io.zeebe.casino.user.SelectCardFromPlayer;
 import io.zeebe.casino.user.SelectOtherPlayer;
 import io.zeebe.casino.user.SelectRandomCard;
 import io.zeebe.casino.user.ShowTopThree;
+import io.zeebe.casino.user.ShuffleDeck;
 import io.zeebe.client.ZeebeClient;
 import io.zeebe.client.api.worker.JobHandler;
 import java.time.Duration;
@@ -69,7 +70,8 @@ public class Application {
     installWorkers(zeebeClient,
         Map.of(
             "updateDeck", new UpdateDeck(LOG),
-            "transferCard", new TransferCard(LOG)
+            "transferCard", new TransferCard(LOG),
+            "shuffle", new ShuffleDeck(LOG)
         ));
 
     installWorkers(zeebeClient, Map.of(
