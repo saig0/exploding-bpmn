@@ -36,7 +36,8 @@ public class InitGame implements JobHandler {
         .variables(Map.of(
             "round",0,
             "turns",1,
-            "correlationKey", String.valueOf(job.getWorkflowInstanceKey())))
+            "correlationKey", String.valueOf(job.getWorkflowInstanceKey()),
+            "allPlayers", playerNames))
         .send()
         .join();
   }
