@@ -782,7 +782,6 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="SequenceFlow_1r7bjr1_di" bpmnElement="SequenceFlow_1r7bjr1">
         <di:waypoint x="5309" y="1074" />
-        <di:waypoint x="5450" y="1074" />
         <di:waypoint x="5400" y="1074" />
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="BoundaryEvent_00vvvcz_di" bpmnElement="BoundaryEvent_0xiqdup">
