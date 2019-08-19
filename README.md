@@ -1,6 +1,6 @@
 # bpmn-games
 
-The games are modeled with BPMN and can be executed with Zeebe (0.21.0-SNAPSHOT). 
+The games are modeled with BPMN and can be executed with Zeebe. 
 
 Available games:
 
