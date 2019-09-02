@@ -75,7 +75,7 @@
           </descriptorRefs>
           <archive>
             <manifest>
-              <mainClass>io.zeebe.bpmn.games.Application</mainClass>
+              <mainClass>io.zeebe.bpmn.games.StandaloneApplication</mainClass>
             </manifest>
           </archive>
           <finalName>${project.artifactId}-${project.version}</finalName>

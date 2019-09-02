@@ -7,17 +7,17 @@ import io.zeebe.bpmn.games.action.EndTurn;
 import io.zeebe.bpmn.games.action.NewTurn;
 import io.zeebe.bpmn.games.action.SelectPlayer;
 import io.zeebe.bpmn.games.action.ThrowMessage;
-import io.zeebe.bpmn.games.deck.DiscardNope;
-import io.zeebe.bpmn.games.user.Celebration;
-import io.zeebe.bpmn.games.user.InjectKitten;
 import io.zeebe.bpmn.games.action.TransferCard;
 import io.zeebe.bpmn.games.action.UpdateDeck;
 import io.zeebe.bpmn.games.deck.BuildDeck;
 import io.zeebe.bpmn.games.deck.DiscardCards;
+import io.zeebe.bpmn.games.deck.DiscardNope;
 import io.zeebe.bpmn.games.deck.DrawBottomCard;
 import io.zeebe.bpmn.games.deck.DrawTopCard;
 import io.zeebe.bpmn.games.deck.InitGame;
+import io.zeebe.bpmn.games.user.Celebration;
 import io.zeebe.bpmn.games.user.ChangeOrder;
+import io.zeebe.bpmn.games.user.InjectKitten;
 import io.zeebe.bpmn.games.user.NopeAction;
 import io.zeebe.bpmn.games.user.SelectAction;
 import io.zeebe.bpmn.games.user.SelectCardFromPlayer;
@@ -28,31 +28,32 @@ import io.zeebe.bpmn.games.user.ShuffleDeck;
 import io.zeebe.client.ZeebeClient;
 import io.zeebe.client.api.worker.JobHandler;
 import java.time.Duration;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Application {
+public class GamesApplication {
 
-  private static final Logger LOG = LoggerFactory.getLogger(Application.class);
+  private static final Logger LOG = LoggerFactory.getLogger(GamesApplication.class);
 
-  public static void main(String[] args) {
+  private final ZeebeClient client;
 
-    final var zeebeClient =
-        ZeebeClient.newClientBuilder()
-            .brokerContactPoint("192.168.21.185:26500")
-            .usePlaintext()
-            .build();
+  public GamesApplication(ZeebeClient client) {
+    this.client = client;
+  }
 
-    // ---
-    LOG.info("> deploying workflows");
-    zeebeClient.newDeployCommand().addResourceFromClasspath("explodingKittens.bpmn").send().join();
+  public void start() {
+    LOG.info("Deploy workflows");
 
-    // ---
-    LOG.info("> starting workers");
+    client.newDeployCommand().addResourceFromClasspath("explodingKittens.bpmn").send().join();
+
+    LOG.info("Start workers");
 
     // general
-    installWorkers(zeebeClient,
+    installWorkers(
         Map.of(
             "initGame", new InitGame(LOG),
             "build-deck", new BuildDeck(LOG),
@@ -65,27 +66,32 @@ public class Application {
             "checkForDefuse", new CheckForDefuse(LOG)));
 
     // deck based
-    installWorkers(zeebeClient,
-        Map.of("build-deck", new BuildDeck(LOG),
-            "discard", new DiscardCards(LOG),
-            "cleanUpAfterExploding", new CleanUpAfterExploding(LOG),
-            "drawBottomCard", new DrawBottomCard(LOG),
-            "drawTopCard", new DrawTopCard(LOG),
-            "injectKitten", new InjectKitten(LOG)));
+    installWorkers(
+        Map.of(
+            "build-deck",
+            new BuildDeck(LOG),
+            "discard",
+            new DiscardCards(LOG),
+            "cleanUpAfterExploding",
+            new CleanUpAfterExploding(LOG),
+            "drawBottomCard",
+            new DrawBottomCard(LOG),
+            "drawTopCard",
+            new DrawTopCard(LOG),
+            "injectKitten",
+            new InjectKitten(LOG)));
 
     // actions
-    installWorkers(zeebeClient,
+    installWorkers(
         Map.of(
             "updateDeck", new UpdateDeck(LOG),
             "transferCard", new TransferCard(LOG),
-            "shuffle", new ShuffleDeck(LOG)
-        ));
+            "shuffle", new ShuffleDeck(LOG)));
 
-    installWorkers(zeebeClient, Map.of(
-        "throwMessage", new ThrowMessage(zeebeClient)));
+    installWorkers(Map.of("throwMessage", new ThrowMessage(client)));
 
     // user
-    installWorkers(zeebeClient,
+    installWorkers(
         Map.of(
             "showTopThreeCards", new ShowTopThree(LOG),
             "changeOrder", new ChangeOrder(LOG),
@@ -95,15 +101,22 @@ public class Application {
             "chooseRandomCard", new SelectRandomCard(LOG),
             "celebrate", new Celebration(LOG),
             "play-nope", new NopeAction(LOG)));
-
-    // ---
-    LOG.info("> ready!");
   }
 
-  private static void installWorkers(ZeebeClient zeebeClient,
-      Map<String, JobHandler> jobTypeHandlers) {
+  public void startNewGame(Collection<String> playerNames) {
+    client
+        .newCreateInstanceCommand()
+        .bpmnProcessId("exploding-kittens")
+        .latestVersion()
+        .variables(Map.of("playerNames", playerNames))
+        .send()
+        .join();
+  }
+
+  private void installWorkers(Map<String, JobHandler> jobTypeHandlers) {
     for (var jobTypeHandler : jobTypeHandlers.entrySet()) {
-      zeebeClient.newWorker()
+      client
+          .newWorker()
           .jobType(jobTypeHandler.getKey())
           .handler(jobTypeHandler.getValue())
           .timeout(Duration.ofSeconds(5))

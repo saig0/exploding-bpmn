@@ -12,6 +12,7 @@ import com.github.seratch.jslack.app_backend.slash_commands.payload.SlashCommand
 import com.github.seratch.jslack.app_backend.slash_commands.response.SlashCommandResponse;
 import com.github.seratch.jslack.common.json.GsonFactory;
 import com.google.gson.Gson;
+import io.zeebe.bpmn.games.GamesApplication;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -39,6 +40,7 @@ public class SlackActions {
 
   @Autowired
   private ResponseSender responseSender;
+
 
   @PostMapping("game")
   public void game(@RequestParam Map<String, String> body) {
