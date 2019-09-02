@@ -3,11 +3,12 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
-  <name>BPMN casino</name>
-  <groupId>io.zeebe</groupId>
-  <artifactId>bpmn-casino</artifactId>
+  <groupId>io.zeebe.bpmn-games</groupId>
+  <artifactId>root</artifactId>
   <version>0.1.0-SNAPSHOT</version>
-  <packaging>jar</packaging>
+  <name>BPMN Games - Root</name>
+
+  <packaging>pom</packaging>
 
   <parent>
     <groupId>org.camunda</groupId>
@@ -17,8 +18,17 @@
     <relativePath/>
   </parent>
 
+  <modules>
+    <module>games</module>
+    <module>slack</module>
+  </modules>
+
   <properties>
     <version.zeebe>0.21.0-alpha1</version.zeebe>
+    <version.jslack>2.1.1</version.jslack>
+    <version.spring>2.1.2.RELEASE</version.spring>
+    <version.log4j>2.11.1</version.log4j>
+
 
     <!-- release parent settings -->
     <version.java>11</version.java>
@@ -34,6 +44,13 @@
 
   <dependencyManagement>
     <dependencies>
+
+      <dependency>
+        <groupId>io.zeebe.bpmn-games</groupId>
+        <artifactId>games</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
       <dependency>
         <groupId>io.zeebe</groupId>
         <artifactId>zeebe-bom</artifactId>
@@ -45,94 +62,46 @@
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
-        <version>2.1.2.RELEASE</version>
+        <version>${version.spring}</version>
         <type>pom</type>
         <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>com.github.seratch</groupId>
+        <artifactId>jslack</artifactId>
+        <version>${version.jslack}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-core</artifactId>
+        <version>${version.log4j}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-slf4j-impl</artifactId>
+        <version>${version.log4j}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>4.12</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.assertj</groupId>
+        <artifactId>assertj-core</artifactId>
+        <version>3.10.0</version>
       </dependency>
 
     </dependencies>
   </dependencyManagement>
 
-  <dependencies>
-
-    <dependency>
-      <groupId>io.zeebe</groupId>
-      <artifactId>zeebe-client-java</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>com.github.seratch</groupId>
-      <artifactId>jslack</artifactId>
-      <version>2.1.1</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
-
-    <!-- logging -->
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-core</artifactId>
-      <version>2.11.1</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.logging.log4j</groupId>
-      <artifactId>log4j-slf4j-impl</artifactId>
-      <version>2.11.1</version>
-    </dependency>
-
-    <!-- test -->
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-      <version>4.12</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.assertj</groupId>
-      <artifactId>assertj-core</artifactId>
-      <version>3.10.0</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>io.zeebe</groupId>
-      <artifactId>zeebe-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-  </dependencies>
-
   <build>
     <plugins>
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <configuration>
-          <descriptorRefs>
-            <descriptorRef>jar-with-dependencies</descriptorRef>
-          </descriptorRefs>
-          <archive>
-            <manifest>
-              <mainClass>io.zeebe.casino.Application</mainClass>
-            </manifest>
-          </archive>
-          <finalName>${project.artifactId}-${project.version}</finalName>
-          <appendAssemblyId>false</appendAssemblyId>
-        </configuration>
-        <executions>
-          <execution>
-            <id>make-assembly</id>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
@@ -170,9 +139,9 @@
   </repositories>
 
   <scm>
-    <url>https://github.com/saig0/bpmn-casino</url>
-    <connection>scm:git:git@github.com:saig0/bpmn-casino.git</connection>
-    <developerConnection>scm:git:git@github.com:saig0/bpmn-casino.git</developerConnection>
+    <url>https://github.com/saig0/bpmn-games</url>
+    <connection>scm:git:git@github.com:saig0/bpmn-games.git</connection>
+    <developerConnection>scm:git:git@github.com:saig0/bpmn-games.git</developerConnection>
     <tag>HEAD</tag>
   </scm>
 
