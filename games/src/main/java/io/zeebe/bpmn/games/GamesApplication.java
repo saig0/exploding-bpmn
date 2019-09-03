@@ -29,9 +29,7 @@ import io.zeebe.client.ZeebeClient;
 import io.zeebe.client.api.worker.JobHandler;
 import java.time.Duration;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,9 +38,11 @@ public class GamesApplication {
   private static final Logger LOG = LoggerFactory.getLogger(GamesApplication.class);
 
   private final ZeebeClient client;
+  private final GameListener listener;
 
-  public GamesApplication(ZeebeClient client) {
+  public GamesApplication(ZeebeClient client, GameListener listener) {
     this.client = client;
+    this.listener = listener;
   }
 
   public void start() {
@@ -56,8 +56,8 @@ public class GamesApplication {
     installWorkers(
         Map.of(
             "initGame", new InitGame(LOG),
-            "build-deck", new BuildDeck(LOG),
-            "selectPlayerForNewRound", new SelectPlayer(LOG),
+            "build-deck", new BuildDeck(listener),
+            "selectPlayerForNewRound", new SelectPlayer(listener),
             "discard", new DiscardCards(LOG),
             "discardNope", new DiscardNope(LOG),
             "addTurns", new AddTurns(LOG),
@@ -69,7 +69,7 @@ public class GamesApplication {
     installWorkers(
         Map.of(
             "build-deck",
-            new BuildDeck(LOG),
+            new BuildDeck(listener),
             "discard",
             new DiscardCards(LOG),
             "cleanUpAfterExploding",

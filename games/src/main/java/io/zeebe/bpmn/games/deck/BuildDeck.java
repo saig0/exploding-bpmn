@@ -1,5 +1,10 @@
 package io.zeebe.bpmn.games.deck;
 
+import io.zeebe.bpmn.games.GameListener;
+import io.zeebe.bpmn.games.model.Card;
+import io.zeebe.bpmn.games.model.CardType;
+import io.zeebe.bpmn.games.model.GameState;
+import io.zeebe.bpmn.games.model.Player;
 import io.zeebe.client.api.response.ActivatedJob;
 import io.zeebe.client.api.worker.JobClient;
 import io.zeebe.client.api.worker.JobHandler;
@@ -7,16 +12,37 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import org.slf4j.Logger;
 
 public class BuildDeck implements JobHandler {
 
-  private final Logger log;
+  private final GameListener listener;
 
-  public BuildDeck(Logger log) {
-    this.log = log;
+  private final Map<CardType, List<Integer>> actionCards =
+      Map.of(
+          CardType.ATTACK, List.of(4, 7, 11),
+          CardType.SKIP, List.of(4, 6, 10),
+          CardType.SEE_THE_FUTURE, List.of(3, 3, 6),
+          CardType.ALTER_THE_FUTURE, List.of(2, 4, 6),
+          CardType.SHUFFLE, List.of(2, 4, 6),
+          CardType.DRAW_FROM_BOTTOM, List.of(3, 4, 7),
+          CardType.FAVOR, List.of(2, 4, 6),
+          CardType.NOPE, List.of(4, 6, 10),
+          CardType.DEFUSE, List.of(3, 7, 10));
+
+  private final Map<CardType, List<Integer>> catCards =
+      Map.of(
+          CardType.FERAL_CAT, List.of(2, 4, 6),
+          CardType.CAT_1, List.of(3, 4, 7),
+          CardType.CAT_2, List.of(3, 4, 7),
+          CardType.CAT_3, List.of(3, 4, 7),
+          CardType.CAT_4, List.of(3, 4, 7),
+          CardType.CAT_5, List.of(3, 4, 7));
+
+  public BuildDeck(GameListener listener) {
+    this.listener = listener;
   }
 
   @Override
@@ -25,6 +51,26 @@ public class BuildDeck implements JobHandler {
     final List<String> playerNames = (List<String>) job.getVariablesAsMap().get("playerNames");
     final var playerCount = playerNames.size();
 
+    final List<Card> deck = buildDeck(playerCount);
+
+    final var players = dealHandCards(playerNames, deck);
+
+    Collections.shuffle(deck);
+
+    final var gameState = new GameState();
+    gameState.setDeck(deck);
+    gameState.setDiscardPile(List.of());
+
+    listener.newGameStarted(gameState);
+
+    jobClient.newCompleteCommand(job.getKey()).variables(Map.of(
+        "deck", deck,
+        "discardPile", List.of(),
+        "players", players)
+    ).send().join();
+  }
+
+  private List<Card> buildDeck(int playerCount) {
     int times;
     if (playerCount < 4) {
       times = 0;
@@ -34,72 +80,55 @@ public class BuildDeck implements JobHandler {
       times = 2;
     }
 
-    var actionCards =
-        Map.of(
-            "attack", List.of(4, 7, 11),
-            "skip", List.of(4, 6, 10),
-            "see-the-future", List.of(3, 3, 6),
-            "alter-the-future", List.of(2, 4, 6),
-            "shuffle", List.of(2, 4, 6),
-            "draw-from-bottom", List.of(3, 4, 7),
-            "favor", List.of(2, 4, 6),
-            "nope", List.of(4, 6, 10));
-    var catCards =
-        Map.of(
-            "feral-cat", List.of(2, 4, 6),
-            "cat-1", List.of(3, 4, 7),
-            "cat-2", List.of(3, 4, 7),
-            "cat-3", List.of(3, 4, 7),
-            "cat-4", List.of(3, 4, 7),
-            "cat-5", List.of(3, 4, 7));
-
-    var cards = new HashMap<String, List<Integer>>();
+    final var cards = new HashMap<CardType, List<Integer>>();
     cards.putAll(actionCards);
     cards.putAll(catCards);
+
+    final var cardId = new AtomicInteger(1);
 
     final var deck =
         cards.entrySet().stream()
             .flatMap(
                 entry -> Collections.nCopies(entry.getValue().get(times), entry.getKey()).stream())
+            .map(cardType -> new Card(cardId.getAndIncrement(), cardType))
             .collect(Collectors.toList());
 
-    Collections.shuffle(deck);
+    Collections.nCopies(playerCount - 1, CardType.EXPLODING)
+        .forEach(
+            cardType -> {
+              final var card = new Card(cardId.getAndIncrement(), cardType);
+              deck.add(card);
+            });
 
-    final Map<String, List<String>> players =
-        playerNames.stream()
-              .collect(Collectors.toMap(name -> name, p -> {
-                var hand =
-                    IntStream.range(0, 7)
-                        .mapToObj(i -> deck.remove(0))
-                        .collect(Collectors.toList());
+    return deck;
+  }
 
-                hand.add("defuse");
-                return hand;
-              }));
+  private Map<String, List<Card>> dealHandCards(List<String> playerNames, List<Card> deck) {
 
-    deck.addAll(Collections.nCopies(playerCount - 1, "exploding"));
+    final var playerCards =
+        deck.stream()
+            .filter(
+                card -> card.getType() != CardType.DEFUSE && card.getType() != CardType.EXPLODING)
+            .collect(Collectors.toList());
 
-    int defuseCards = -playerCount;
-    if (playerCount < 4) {
-      defuseCards += 3;
-    } else if (playerCount < 8) {
-      defuseCards += 7;
-    } else {
-      defuseCards += 10;
-    }
+    Collections.shuffle(playerCards);
 
-    if (defuseCards > 0) {
-      deck.addAll(Collections.nCopies(defuseCards, "defuse"));
-    }
+    return playerNames
+        .stream()
+        .collect(Collectors.toMap(name -> name, name -> {
+          var handCards =
+              IntStream.range(0, 7)
+                  .mapToObj(i -> playerCards.remove(0))
+                  .collect(Collectors.toList());
 
-    Collections.shuffle(deck);
+          deck.stream()
+              .filter(card -> card.getType() == CardType.DEFUSE)
+              .findFirst()
+              .ifPresent(handCards::add);
 
-    jobClient
-        .newCompleteCommand(job.getKey())
-        .variables(Map.of(
-            "deck", deck,
-            "players", players))
-        .send()
-        .join();
+          deck.removeAll(handCards);
+
+          return handCards;
+        }));
   }
 }
