@@ -1,31 +1,46 @@
 package io.zeebe.bpmn.games.model;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.zeebe.client.api.response.ActivatedJob;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class Variables {
 
-  private final Map<String, Object> resultVariables = new HashMap<>();
-  private Map<String, Object> jobVariables;
+  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-  public Variables(ActivatedJob job) {
-    wrap(job);
+  private final Map<String, Object> resultVariables = new HashMap<>();
+  private final Map<String, Object> jobVariables;
+
+  private Variables(Map<String, Object> jobVariables) {
+    this.jobVariables = jobVariables;
   }
 
-  public Variables wrap(ActivatedJob job) {
-    jobVariables = job.getVariablesAsMap();
-    resultVariables.clear();
-    return this;
+  public static Variables from(ActivatedJob job) {
+    return new Variables(job.getVariablesAsMap());
   }
 
   public Map<String, Object> getResultVariables() {
     return resultVariables;
   }
 
+  private Card asCard(Map serializedCard) {
+    final var id = Optional.ofNullable((Integer) serializedCard.get("id")).orElseThrow();
+    final var type = Optional.ofNullable((String) serializedCard.get("type"))
+        .map(CardType::valueOf)
+        .orElseThrow();
+    return new Card(id, type);
+  }
+
+  private List<Card> asCardList(List<Map> serializedCards) {
+    return serializedCards.stream().map(this::asCard).collect(Collectors.toList());
+  }
+
   public List<Card> getDeck() {
-    return (List<Card>) jobVariables.get("deck");
+    return asCardList((List<Map>) jobVariables.get("deck"));
   }
 
   public Variables putDeck(List<Card> deck) {
@@ -34,7 +49,7 @@ public class Variables {
   }
 
   public List<Card> getDiscardPile() {
-    return (List<Card>) jobVariables.get("discardPile");
+    return asCardList((List<Map>) jobVariables.get("discardPile"));
   }
 
   public Variables putDiscardPile(List<Card> discardPile) {
@@ -42,11 +57,15 @@ public class Variables {
     return this;
   }
 
-  public Map<String,List<Card>> getPlayers() {
-    return (Map<String,List<Card>>) jobVariables.get("players");
+  public Map<String, List<Card>> getPlayers() {
+    final var map = (Map<String, List>) jobVariables.get("players");
+    return map.entrySet().stream()
+        .collect(Collectors.toMap(
+            e -> e.getKey(),
+            e -> asCardList(e.getValue())));
   }
 
-  public Variables putPlayers(Map<String,List<Card>> players) {
+  public Variables putPlayers(Map<String, List<Card>> players) {
     resultVariables.put("players", players);
     return this;
   }
@@ -66,6 +85,7 @@ public class Variables {
 
   public Variables putTurns(int turns) {
     resultVariables.put("turns", turns);
+    resultVariables.put("turnArray", new int[turns]); // used for multi-instance
     return this;
   }
 
@@ -84,6 +104,42 @@ public class Variables {
 
   public Variables putPlayerNames(List<String> playerNames) {
     resultVariables.put("playerNames", playerNames);
+    return this;
+  }
+
+  public String getNextPlayer() {
+    return (String) jobVariables.get("nextPlayer");
+  }
+
+  public Variables putNextPlayer(String nextPlayer) {
+    resultVariables.put("nextPlayer", nextPlayer);
+    return this;
+  }
+
+  public List<Card> getCards() {
+    return asCardList((List<Map>) jobVariables.get("cards"));
+  }
+
+  public Variables putCards(List<Card> cards) {
+    resultVariables.put("cards", cards);
+    return this;
+  }
+
+  public String getAction() {
+    return (String) jobVariables.get("action");
+  }
+
+  public Variables putAction(String action) {
+    resultVariables.put("action", action);
+    return this;
+  }
+
+  public Card getCard() {
+    return asCard((Map) jobVariables.get("card"));
+  }
+
+  public Variables putCard(Card card) {
+    resultVariables.put("card", card);
     return this;
   }
 

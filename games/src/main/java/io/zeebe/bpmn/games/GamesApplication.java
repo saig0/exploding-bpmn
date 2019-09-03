@@ -55,14 +55,14 @@ public class GamesApplication {
     // general
     installWorkers(
         Map.of(
-            "initGame", new InitGame(LOG),
+            "initGame", new InitGame(listener),
             "build-deck", new BuildDeck(listener),
             "selectPlayerForNewRound", new SelectPlayer(listener),
             "discard", new DiscardCards(LOG),
             "discardNope", new DiscardNope(LOG),
-            "addTurns", new AddTurns(LOG),
-            "endTurn", new EndTurn(LOG),
-            "newTurn", new NewTurn(LOG),
+            "addTurns", new AddTurns(listener),
+            "endTurn", new EndTurn(listener),
+            "newTurn", new NewTurn(),
             "checkForDefuse", new CheckForDefuse(LOG)));
 
     // deck based
@@ -75,9 +75,9 @@ public class GamesApplication {
             "cleanUpAfterExploding",
             new CleanUpAfterExploding(LOG),
             "drawBottomCard",
-            new DrawBottomCard(LOG),
+            new DrawBottomCard(listener),
             "drawTopCard",
-            new DrawTopCard(LOG),
+            new DrawTopCard(listener),
             "injectKitten",
             new InjectKitten(LOG)));
 
@@ -95,7 +95,7 @@ public class GamesApplication {
         Map.of(
             "showTopThreeCards", new ShowTopThree(LOG),
             "changeOrder", new ChangeOrder(LOG),
-            "selectAction", new SelectAction(LOG),
+            "selectAction", new SelectAction(listener),
             "selectOtherPlayer", new SelectOtherPlayer(LOG),
             "selectCardFromPlayer", new SelectCardFromPlayer(LOG),
             "chooseRandomCard", new SelectRandomCard(LOG),

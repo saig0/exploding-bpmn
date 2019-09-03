@@ -22,5 +22,10 @@ public enum CardType {
   CAT_2,
   CAT_3,
   CAT_4,
-  CAT_5
+  CAT_5;
+
+  public boolean isCatCard() {
+    return name().contains("CAT");
+  }
+
 }

@@ -1,8 +1,9 @@
 package io.zeebe.bpmn.games;
 
-import io.zeebe.bpmn.games.model.GameState;
-import io.zeebe.bpmn.games.model.Player;
+import io.zeebe.bpmn.games.model.Card;
 import io.zeebe.client.ZeebeClient;
+import java.util.List;
+import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,13 +24,38 @@ public class StandaloneApplication {
         new GameListener() {
 
           @Override
-          public void newGameStarted(GameState state) {
-            LOG.debug("New game: {}", state);
+          public void newGameStarted(List<String> playerNames) {
+            LOG.debug("New game with players: {}", playerNames);
+          }
+
+          @Override
+          public void handCardsDealt(Map<String, List<Card>> handCards) {
+            LOG.debug("Hand cards dealt: {}", handCards);
           }
 
           @Override
           public void nextPlayerSelected(String player, int turns) {
             LOG.debug("Next player: {} for {} turn(s)", player, turns);
+          }
+
+          @Override
+          public void cardsPlayed(String player, List<Card> cardsToPlay) {
+            LOG.debug("Player {} selected {} to play.", player, cardsToPlay);
+          }
+
+          @Override
+          public void playerPassed(String player) {
+            LOG.debug("Player {} passed its turn.", player);
+          }
+
+          @Override
+          public void playerDrawnCard(String player, Card card) {
+            LOG.debug("Player {} drawn card {}.", player, card);
+          }
+
+          @Override
+          public void turnEnded(String player, int remainingTurns) {
+            LOG.debug("Player {} turn ended. Remaining turns {}.", player, remainingTurns);
           }
         };
 

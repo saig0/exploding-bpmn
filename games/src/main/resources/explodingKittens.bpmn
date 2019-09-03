@@ -329,7 +329,7 @@
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="SequenceFlow_0x7tjnk" sourceRef="ServiceTask_1gqp1db" targetRef="ExclusiveGateway_1brze8p" />
       <bpmn:sequenceFlow id="SequenceFlow_1ftg95d" name="Yes" sourceRef="ExclusiveGateway_15hu64e" targetRef="ServiceTask_1gqp1db">
-        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">card == "exploding"</bpmn:conditionExpression>
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">card.type == "EXPLODING"</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="SequenceFlow_0gf4te4" sourceRef="ExclusiveGateway_1or11bn" targetRef="ExclusiveGateway_15hu64e" />
       <bpmn:sequenceFlow id="SequenceFlow_0za4pay" sourceRef="ServiceTask_0f8umgt" targetRef="ExclusiveGateway_1or11bn" />

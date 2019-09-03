@@ -3,8 +3,7 @@ package io.zeebe.bpmn.games.deck;
 import io.zeebe.bpmn.games.GameListener;
 import io.zeebe.bpmn.games.model.Card;
 import io.zeebe.bpmn.games.model.CardType;
-import io.zeebe.bpmn.games.model.GameState;
-import io.zeebe.bpmn.games.model.Player;
+import io.zeebe.bpmn.games.model.Variables;
 import io.zeebe.client.api.response.ActivatedJob;
 import io.zeebe.client.api.worker.JobClient;
 import io.zeebe.client.api.worker.JobHandler;
@@ -48,7 +47,9 @@ public class BuildDeck implements JobHandler {
   @Override
   public void handle(JobClient jobClient, ActivatedJob job) throws Exception {
 
-    final List<String> playerNames = (List<String>) job.getVariablesAsMap().get("playerNames");
+    final var variables = Variables.from(job);
+
+    final List<String> playerNames = variables.getPlayerNames();
     final var playerCount = playerNames.size();
 
     final List<Card> deck = buildDeck(playerCount);
@@ -57,17 +58,18 @@ public class BuildDeck implements JobHandler {
 
     Collections.shuffle(deck);
 
-    final var gameState = new GameState();
-    gameState.setDeck(deck);
-    gameState.setDiscardPile(List.of());
+    listener.handCardsDealt(players);
 
-    listener.newGameStarted(gameState);
+    variables
+        .putDeck(deck)
+        .putDiscardPile(List.of())
+        .putPlayers(players);
 
-    jobClient.newCompleteCommand(job.getKey()).variables(Map.of(
-        "deck", deck,
-        "discardPile", List.of(),
-        "players", players)
-    ).send().join();
+    jobClient
+        .newCompleteCommand(job.getKey())
+        .variables(variables.getResultVariables())
+        .send()
+        .join();
   }
 
   private List<Card> buildDeck(int playerCount) {
@@ -113,22 +115,24 @@ public class BuildDeck implements JobHandler {
 
     Collections.shuffle(playerCards);
 
-    return playerNames
-        .stream()
-        .collect(Collectors.toMap(name -> name, name -> {
-          var handCards =
-              IntStream.range(0, 7)
-                  .mapToObj(i -> playerCards.remove(0))
-                  .collect(Collectors.toList());
+    return playerNames.stream()
+        .collect(
+            Collectors.toMap(
+                name -> name,
+                name -> {
+                  var handCards =
+                      IntStream.range(0, 7)
+                          .mapToObj(i -> playerCards.remove(0))
+                          .collect(Collectors.toList());
 
-          deck.stream()
-              .filter(card -> card.getType() == CardType.DEFUSE)
-              .findFirst()
-              .ifPresent(handCards::add);
+                  deck.stream()
+                      .filter(card -> card.getType() == CardType.DEFUSE)
+                      .findFirst()
+                      .ifPresent(handCards::add);
 
-          deck.removeAll(handCards);
+                  deck.removeAll(handCards);
 
-          return handCards;
-        }));
+                  return handCards;
+                }));
   }
 }
