@@ -12,11 +12,13 @@ public interface GameListener {
 
   void nextPlayerSelected(String player, int turns);
 
-  void cardsPlayed(String player, List<Card> cardsToPlay);
+  void cardsPlayed(String player, List<Card> cards);
 
   void playerPassed(String player);
 
   void playerDrawnCard(String player, Card card);
 
   void turnEnded(String player, int remainingTurns);
+
+  void cardsDiscarded(String player, List<Card> cards);
 }

@@ -55,7 +55,12 @@ public class StandaloneApplication {
 
           @Override
           public void turnEnded(String player, int remainingTurns) {
-            LOG.debug("Player {} turn ended. Remaining turns {}.", player, remainingTurns);
+            LOG.debug("Player {}'s turn ended. Remaining turns {}.", player, remainingTurns);
+          }
+
+          @Override
+          public void cardsDiscarded(String player, List<Card> cards) {
+            LOG.debug("Player {} put the cards {} onto the discard pile.", player, cards);
           }
         };
 
