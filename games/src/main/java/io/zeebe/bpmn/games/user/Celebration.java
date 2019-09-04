@@ -1,34 +1,31 @@
 package io.zeebe.bpmn.games.user;
 
 import com.google.common.base.Strings;
+import io.zeebe.bpmn.games.GameListener;
+import io.zeebe.bpmn.games.model.Variables;
 import io.zeebe.client.api.response.ActivatedJob;
 import io.zeebe.client.api.worker.JobClient;
 import io.zeebe.client.api.worker.JobHandler;
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.Set;
-import org.slf4j.Logger;
 
 public class Celebration implements JobHandler {
 
-  private final Logger log;
+  private final GameListener listener;
 
-  public Celebration(Logger log) {
-    this.log = log;
+  public Celebration(GameListener listener) {
+    this.listener = listener;
   }
 
   @Override
-  public void handle(JobClient jobClient, ActivatedJob activatedJob) {
-    final var variables = activatedJob.getVariablesAsMap();
-    final Map players = (Map) variables.get("players");
-    final String winner = new ArrayList<>((Set<String>) players.keySet()).get(0);
+  public void handle(JobClient jobClient, ActivatedJob job) {
+    final var variables = Variables.from(job);
 
-    final int count = 17 - winner.length();
-    log.info("\n"
-        + "=========================================="
-        + "\n============= WINNER: {} " + Strings.repeat("=", count > 0 ? count : 0)
-        + "\n==========================================", players.keySet());
+    final var playerNames = variables.getPlayerNames();
+    final var winner = playerNames.get(0);
 
-    jobClient.newCompleteCommand(activatedJob.getKey()).variables(Map.of("winner", winner)).send();
+    listener.playerWonTheGame(winner);
+
+    jobClient.newCompleteCommand(job.getKey())
+        .send()
+        .join();
   }
 }

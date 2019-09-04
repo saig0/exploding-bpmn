@@ -63,7 +63,7 @@ public class GamesApplication {
             "addTurns", new AddTurns(listener),
             "endTurn", new EndTurn(listener),
             "newTurn", new NewTurn(),
-            "checkForDefuse", new CheckForDefuse(LOG)));
+            "checkForDefuse", new CheckForDefuse(listener)));
 
     // deck based
     installWorkers(
@@ -73,33 +73,33 @@ public class GamesApplication {
             "discard",
             new DiscardCards(listener),
             "cleanUpAfterExploding",
-            new CleanUpAfterExploding(LOG),
+            new CleanUpAfterExploding(listener),
             "drawBottomCard",
             new DrawBottomCard(listener),
             "drawTopCard",
             new DrawTopCard(listener),
             "injectKitten",
-            new InjectKitten(LOG)));
+            new InjectKitten(listener)));
 
     // actions
     installWorkers(
         Map.of(
-            "updateDeck", new UpdateDeck(LOG),
-            "transferCard", new TransferCard(LOG),
-            "shuffle", new ShuffleDeck(LOG)));
+            "updateDeck", new UpdateDeck(listener),
+            "transferCard", new TransferCard(listener),
+            "shuffle", new ShuffleDeck(listener)));
 
     installWorkers(Map.of("throwMessage", new ThrowMessage(client)));
 
     // user
     installWorkers(
         Map.of(
-            "showTopThreeCards", new ShowTopThree(LOG),
-            "changeOrder", new ChangeOrder(LOG),
+            "showTopThreeCards", new ShowTopThree(listener),
+            "changeOrder", new ChangeOrder(listener),
             "selectAction", new SelectAction(listener),
-            "selectOtherPlayer", new SelectOtherPlayer(LOG),
-            "selectCardFromPlayer", new SelectCardFromPlayer(LOG),
-            "chooseRandomCard", new SelectRandomCard(LOG),
-            "celebrate", new Celebration(LOG),
+            "selectOtherPlayer", new SelectOtherPlayer(listener),
+            "selectCardFromPlayer", new SelectCardFromPlayer(listener),
+            "chooseRandomCard", new SelectRandomCard(listener),
+            "celebrate", new Celebration(listener),
             "play-nope", new NopeAction(LOG)));
   }
 

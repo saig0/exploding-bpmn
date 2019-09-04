@@ -1,38 +1,40 @@
 package io.zeebe.bpmn.games.user;
 
+import io.zeebe.bpmn.games.GameListener;
+import io.zeebe.bpmn.games.model.Variables;
 import io.zeebe.client.api.response.ActivatedJob;
 import io.zeebe.client.api.worker.JobClient;
 import io.zeebe.client.api.worker.JobHandler;
 import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import org.slf4j.Logger;
 
 public class ChangeOrder implements JobHandler {
 
-  private final Logger log;
+  private final GameListener listener;
 
-  public ChangeOrder(Logger log) {
-    this.log = log;
+  public ChangeOrder(GameListener listener) {
+    this.listener = listener;
   }
 
   @Override
-  public void handle(JobClient jobClient, ActivatedJob activatedJob) throws Exception {
-    final var variables = activatedJob.getVariablesAsMap();
-    final var deck = (List<String>) variables.get("deck");
+  public void handle(JobClient jobClient, ActivatedJob job) throws Exception {
+    final var variables = Variables.from(job);
 
-    var cards = Math.min(3, deck.size());
+    final var currentPlayer = variables.getNextPlayer();
+    final var deck = variables.getDeck();
 
-    final List<String> alternativeOrder = deck.subList(0, cards);
+    final var amount = Math.min(3, deck.size());
+    final var cards = deck.subList(0, amount);
 
-    Collections.shuffle(alternativeOrder, new Random());
+    Collections.shuffle(cards);
 
-    log.info("Player {} changed order of first three cards.", variables.get("nextPlayer"));
+    listener.playerAlteredTheFuture(currentPlayer, cards);
+
+    variables.putCards(cards);
 
     jobClient
-        .newCompleteCommand(activatedJob.getKey())
-        .variables(Map.of("alternativeOrder", alternativeOrder))
-        .send();
+        .newCompleteCommand(job.getKey())
+        .variables(variables.getResultVariables())
+        .send()
+        .join();
   }
 }

@@ -1,48 +1,48 @@
 package io.zeebe.bpmn.games.action;
 
+import io.zeebe.bpmn.games.GameListener;
+import io.zeebe.bpmn.games.model.Variables;
 import io.zeebe.client.api.response.ActivatedJob;
 import io.zeebe.client.api.worker.JobClient;
 import io.zeebe.client.api.worker.JobHandler;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import org.slf4j.Logger;
 
 public class CleanUpAfterExploding implements JobHandler {
 
-  private final Logger log;
+  private final GameListener listener;
 
-  public CleanUpAfterExploding(Logger log) {
-    this.log = log;
+  public CleanUpAfterExploding(GameListener listener) {
+    this.listener = listener;
   }
 
   @Override
-  public void handle(JobClient jobClient, ActivatedJob activatedJob) {
-    final var variables = activatedJob.getVariablesAsMap();
+  public void handle(JobClient jobClient, ActivatedJob job) {
+    final var variables = Variables.from(job);
 
-    final String currentPlayer = variables.get("nextPlayer").toString();
-    final Map players = (Map) variables.get("players");
-    final var playerNames = (List<String>) variables.get("playerNames");
+    final var discardPile = variables.getDiscardPile();
+
+    final var currentPlayer = variables.getNextPlayer();
+    final var players = variables.getPlayers();
+    final var playerNames = variables.getPlayerNames();
+
     playerNames.remove(currentPlayer);
-    final var hand = (List<String>) players.remove(currentPlayer);
 
-    final var discardPile = (List<String>) variables.computeIfAbsent("discardPile", (key) ->
-        new ArrayList<String>());
+    final var handCards = players.remove(currentPlayer);
+    discardPile.addAll(handCards);
 
-    discardPile.addAll(hand);
+    listener.playerExploded(currentPlayer);
 
-    log.info("Player {} explodes.", currentPlayer);
-
+    variables
+        .putPlayers(players)
+        .putPlayerNames(playerNames)
+        .putDiscardPile(discardPile)
+        .putTurns(0)
+        .putPlayerCount(players.size());
+    // card = null ?
 
     jobClient
-        .newCompleteCommand(activatedJob.getKey())
-        .variables(Map.of(
-            "discardPile", discardPile,
-            "players", players,
-            "playerCount", players.size(),
-            "card", "",
-            "playerNames", playerNames,
-            "turns", 0))
-        .send();
+        .newCompleteCommand(job.getKey())
+        .variables(variables.getResultVariables())
+        .send()
+        .join();
   }
 }

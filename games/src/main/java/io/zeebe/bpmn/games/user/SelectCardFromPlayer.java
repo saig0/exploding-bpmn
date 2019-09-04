@@ -1,38 +1,42 @@
 package io.zeebe.bpmn.games.user;
 
+import io.zeebe.bpmn.games.GameListener;
+import io.zeebe.bpmn.games.model.Variables;
 import io.zeebe.client.api.response.ActivatedJob;
 import io.zeebe.client.api.worker.JobClient;
 import io.zeebe.client.api.worker.JobHandler;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
-import org.slf4j.Logger;
 
 public class SelectCardFromPlayer implements JobHandler {
 
-  private final Logger log;
+  private final GameListener listener;
 
-  public SelectCardFromPlayer(Logger log) {
-    this.log = log;
+  public SelectCardFromPlayer(GameListener listener) {
+    this.listener = listener;
   }
 
   @Override
-  public void handle(JobClient jobClient, ActivatedJob activatedJob) throws Exception {
-    final var variables = activatedJob.getVariablesAsMap();
+  public void handle(JobClient jobClient, ActivatedJob job) throws Exception {
+    final var variables = Variables.from(job);
 
-    final String otherPlayer = variables.get("otherPlayer").toString();
-    final Map players = (Map) variables.get("players");
+    final var currentPlayer = variables.getNextPlayer();
+    final var otherPlayer = variables.getOtherPlayer();
+    final var players = variables.getPlayers();
+    final var otherHand = players.get(otherPlayer);
 
-    final var otherHand = (List<String>) players.get(otherPlayer);
-    final int index;
-    if (otherHand.size() == 0)
-    {
-      index = -1;
+    if (!otherHand.isEmpty()) {
+      final int randomCardIndex = ThreadLocalRandom.current().nextInt(0, otherHand.size());
+      final var card = otherHand.get(randomCardIndex);
+
+      listener.cardChosenFrom(currentPlayer, otherPlayer, card);
+
+      variables.putCard(card);
     }
-    else {
-      index = ThreadLocalRandom.current().nextInt(0, otherHand.size());
-    }
 
-    jobClient.newCompleteCommand(activatedJob.getKey()).variables(Map.of("choosenCard", index)).send();
+    jobClient
+        .newCompleteCommand(job.getKey())
+        .variables(variables.getResultVariables())
+        .send()
+        .join();
   }
 }

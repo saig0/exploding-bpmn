@@ -1,42 +1,45 @@
 package io.zeebe.bpmn.games.action;
 
+import io.zeebe.bpmn.games.GameListener;
+import io.zeebe.bpmn.games.model.Variables;
 import io.zeebe.client.api.response.ActivatedJob;
 import io.zeebe.client.api.worker.JobClient;
 import io.zeebe.client.api.worker.JobHandler;
-import java.util.List;
-import java.util.Map;
-import org.slf4j.Logger;
 
 public class TransferCard implements JobHandler {
 
-  private final Logger log;
+  private final GameListener listener;
 
-  public TransferCard(Logger log) {
-    this.log = log;
+  public TransferCard(GameListener listener) {
+    this.listener = listener;
   }
 
   @Override
-  public void handle(JobClient jobClient, ActivatedJob activatedJob) throws Exception {
-    final var variables = activatedJob.getVariablesAsMap();
+  public void handle(JobClient jobClient, ActivatedJob job) throws Exception {
+    final var variables = Variables.from(job);
 
-    final String currentPlayer = variables.get("nextPlayer").toString();
-    final String otherPlayer = variables.get("otherPlayer").toString();
-    final Map players = (Map) variables.get("players");
+    final var currentPlayer = variables.getNextPlayer();
+    final var otherPlayer = variables.getOtherPlayer();
 
-    final var currentHand = (List<String>) players.get(currentPlayer);
-    final var otherHand = (List<String>) players.get(otherPlayer);
+    final var players = variables.getPlayers();
+    final var playersHand = players.get(currentPlayer);
+    final var otherHand = players.get(otherPlayer);
 
-    final int index = (int) variables.get("choosenCard");
-    if (index >= 0)
-    {
-      final String choosenCard = otherHand.remove(index);
+    if (!otherHand.isEmpty()) {
+      final var card = variables.getCard();
 
-      log.info("Transfer card {} from player {} to player {}", choosenCard, otherPlayer, currentPlayer);
-      currentHand.add(choosenCard);
-      players.put(currentPlayer, currentHand);
-      players.put(otherPlayer, otherHand);
+      otherHand.remove(card);
+      playersHand.add(card);
+
+      listener.cardTakenFrom(currentPlayer, otherPlayer, card);
     }
 
-    jobClient.newCompleteCommand(activatedJob.getKey()).variables(Map.of("players", players)).send();
+    variables.putPlayers(players);
+
+    jobClient
+        .newCompleteCommand(job.getKey())
+        .variables(variables.getResultVariables())
+        .send()
+        .join();
   }
 }

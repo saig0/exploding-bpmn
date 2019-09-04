@@ -143,4 +143,31 @@ public class Variables {
     return this;
   }
 
+  public String getOtherPlayer() {
+    return (String) jobVariables.get("otherPlayer");
+  }
+
+  public Variables putOtherPlayer(String otherPlayer) {
+    resultVariables.put("otherPlayer", otherPlayer);
+    return this;
+  }
+
+  public boolean hasDefuseCard() {
+    return (boolean) resultVariables.get("hasDefuse");
+  }
+
+  public Variables putHasDefuse(boolean hasDefuseCard) {
+    resultVariables.put("hasDefuse", hasDefuseCard);
+    return this;
+  }
+
+  public int getPlayerCount() {
+    return (Integer) jobVariables.get("playerCount");
+  }
+
+  public Variables putPlayerCount(int playerCount) {
+    resultVariables.put("playerCount", playerCount);
+    return this;
+  }
+
 }

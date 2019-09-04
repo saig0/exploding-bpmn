@@ -325,7 +325,7 @@
       <bpmn:sequenceFlow id="SequenceFlow_1pyldqs" sourceRef="ServiceTask_0vrrxr4" targetRef="ServiceTask_1snsa4o" />
       <bpmn:sequenceFlow id="SequenceFlow_1cze8a1" name="No" sourceRef="ExclusiveGateway_1brze8p" targetRef="ServiceTask_0elhkky" />
       <bpmn:sequenceFlow id="SequenceFlow_067ow2h" name="Yes" sourceRef="ExclusiveGateway_1brze8p" targetRef="ServiceTask_0vrrxr4">
-        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">defuse == true</bpmn:conditionExpression>
+        <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">hasDefuse == true</bpmn:conditionExpression>
       </bpmn:sequenceFlow>
       <bpmn:sequenceFlow id="SequenceFlow_0x7tjnk" sourceRef="ServiceTask_1gqp1db" targetRef="ExclusiveGateway_1brze8p" />
       <bpmn:sequenceFlow id="SequenceFlow_1ftg95d" name="Yes" sourceRef="ExclusiveGateway_15hu64e" targetRef="ServiceTask_1gqp1db">

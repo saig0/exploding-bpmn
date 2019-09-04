@@ -1,35 +1,37 @@
 package io.zeebe.bpmn.games.action;
 
+import io.zeebe.bpmn.games.GameListener;
+import io.zeebe.bpmn.games.model.Variables;
 import io.zeebe.client.api.response.ActivatedJob;
 import io.zeebe.client.api.worker.JobClient;
 import io.zeebe.client.api.worker.JobHandler;
-import java.util.List;
-import java.util.Map;
-import org.slf4j.Logger;
 
 public class UpdateDeck implements JobHandler {
 
-  private final Logger log;
+  private final GameListener listener;
 
-  public UpdateDeck(Logger log) {
-    this.log = log;
+  public UpdateDeck(GameListener listener) {
+    this.listener = listener;
   }
 
   @Override
-  public void handle(JobClient jobClient, ActivatedJob activatedJob) throws Exception {
-    final var variables = activatedJob.getVariablesAsMap();
-    final var deck = ((List<String>) variables.get("deck"));
-    final var alternativeOrder = ((List<String>) variables.get("alternativeOrder"));
+  public void handle(JobClient jobClient, ActivatedJob job) throws Exception {
+    final var variables = Variables.from(job);
 
-    final var cards = Math.min(3, alternativeOrder.size());
+    final var deck = variables.getDeck();
+    final var cards = variables.getCards();
 
-    final var subDeck = deck.subList(cards, deck.size());
-    subDeck.addAll(0, alternativeOrder);
+    final var updatedDeck = deck.subList(cards.size(), deck.size());
+    updatedDeck.addAll(0, cards);
 
-    log.info(
-        "Player {} updates deck with new order of first three cards.", variables.get("nextPlayer"));
+    listener.deckReordered(updatedDeck);
 
-    jobClient.newCompleteCommand(activatedJob.getKey()).variables(Map.of(
-        "deck", subDeck)).send();
+    variables.putDeck(updatedDeck);
+
+    jobClient
+        .newCompleteCommand(job.getKey())
+        .variables(variables.getResultVariables())
+        .send()
+        .join();
   }
 }

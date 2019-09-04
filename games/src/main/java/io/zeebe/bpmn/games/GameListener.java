@@ -21,4 +21,26 @@ public interface GameListener {
   void turnEnded(String player, int remainingTurns);
 
   void cardsDiscarded(String player, List<Card> cards);
+
+  void playerToDrawSelected(String player, String playerToDrawFrom);
+
+  void cardTakenFrom(String player, String playerTakenFrom, Card card);
+
+  void cardChosenFrom(String player, String playerChosenFrom, Card card);
+
+  void playerSawTheFuture(String player, List<Card> cards);
+
+  void deckShuffled(List<Card> deck);
+
+  void playerAlteredTheFuture(String player, List<Card> cards);
+
+  void deckReordered(List<Card> deck);
+
+  void handCheckedForDefuse(String player, List<Card> hand);
+
+  void playerInsertedCard(String player, Card card, List<Card> deck);
+
+  void playerExploded(String player);
+
+  void playerWonTheGame(String player);
 }
