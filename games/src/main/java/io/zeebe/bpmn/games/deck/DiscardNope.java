@@ -40,7 +40,8 @@ public class DiscardNope implements JobHandler {
 
     variables
         .putPlayers(players)
-        .putDiscardPile(discardPile);
+        .putDiscardPile(discardPile)
+        .putLastPlayedCards(List.of(nopeCard));
 
     jobClient
         .newCompleteCommand(job.getKey())

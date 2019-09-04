@@ -85,7 +85,6 @@ public class Variables {
 
   public Variables putTurns(int turns) {
     resultVariables.put("turns", turns);
-    resultVariables.put("turnArray", new int[turns]); // used for multi-instance
     return this;
   }
 
@@ -176,6 +175,20 @@ public class Variables {
 
   public Variables putPlayerCount(int playerCount) {
     resultVariables.put("playerCount", playerCount);
+    return this;
+  }
+
+  public List<Card> getLastPlayedCards() {
+    return asCardList((List<Map>) jobVariables.get("lastPlayedCards"));
+  }
+
+  public Variables putLastPlayedCards(List<Card> lastPlayedCards) {
+    resultVariables.put("lastPlayedCards", lastPlayedCards);
+    return this;
+  }
+
+  public Variables putTurnArray(int turns) {
+    resultVariables.put("turnArray", new int[turns]);
     return this;
   }
 

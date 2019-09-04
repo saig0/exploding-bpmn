@@ -135,7 +135,7 @@
           <bpmn:outgoing>SequenceFlow_0krwyiv</bpmn:outgoing>
         </bpmn:serviceTask>
         <bpmn:sequenceFlow id="SequenceFlow_1odpt03" name="See the Future" sourceRef="ExclusiveGateway_11t6106" targetRef="ServiceTask_0qn7auw">
-          <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">action == "see-the-future"</bpmn:conditionExpression>
+          <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">action == "see_the_future"</bpmn:conditionExpression>
         </bpmn:sequenceFlow>
         <bpmn:serviceTask id="ServiceTask_0k6qvqz" name="Change order of Top 3 Cards">
           <bpmn:extensionElements>
@@ -145,7 +145,7 @@
           <bpmn:outgoing>SequenceFlow_0gda7rx</bpmn:outgoing>
         </bpmn:serviceTask>
         <bpmn:sequenceFlow id="SequenceFlow_01wcgpu" name="Alter the Future" sourceRef="ExclusiveGateway_11t6106" targetRef="ServiceTask_0k6qvqz">
-          <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">action == "alter-the-future"</bpmn:conditionExpression>
+          <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">action == "alter_the_future"</bpmn:conditionExpression>
         </bpmn:sequenceFlow>
         <bpmn:serviceTask id="ServiceTask_19jbgif" name="Draw from Bottom (Message Throw)">
           <bpmn:extensionElements>
@@ -157,7 +157,7 @@
           <bpmn:incoming>SequenceFlow_1f84fx6</bpmn:incoming>
         </bpmn:serviceTask>
         <bpmn:sequenceFlow id="SequenceFlow_1f84fx6" name="Draw from Bottom" sourceRef="ExclusiveGateway_11t6106" targetRef="ServiceTask_19jbgif">
-          <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">action == "draw-from-bottom"</bpmn:conditionExpression>
+          <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">action == "draw_from_bottom"</bpmn:conditionExpression>
         </bpmn:sequenceFlow>
         <bpmn:serviceTask id="ServiceTask_190nbez" name="Select Card">
           <bpmn:extensionElements>

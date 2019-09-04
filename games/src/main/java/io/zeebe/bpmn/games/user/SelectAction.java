@@ -31,7 +31,9 @@ public class SelectAction implements JobHandler {
 
     final List<Card> cardsToPlay = selectCardsToPlay(hand);
 
-    variables.putCards(cardsToPlay);
+    variables
+        .putCards(cardsToPlay)
+        .putLastPlayedCards(cardsToPlay);
 
     if (cardsToPlay.isEmpty()) {
       variables.putAction("pass");

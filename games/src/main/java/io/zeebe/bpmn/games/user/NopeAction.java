@@ -22,7 +22,7 @@ public class NopeAction implements JobHandler {
   public void handle(JobClient jobClient, ActivatedJob job) {
     final var variables = Variables.from(job);
 
-    final var playedCards = variables.getCards();
+    final var playedCards = variables.getLastPlayedCards();
 
     final var currentPlayer = variables.getNextPlayer();
     final var nopePlayer = variables.getNopePlayer();

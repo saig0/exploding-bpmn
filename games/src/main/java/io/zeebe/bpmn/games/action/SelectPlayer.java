@@ -31,11 +31,13 @@ public class SelectPlayer implements JobHandler {
 
     variables
         .putRound(round + 1)
-        .putNextPlayer(nextPlayer);
+        .putNextPlayer(nextPlayer)
+        .putTurnArray(turns);  // used for multi-instance
 
     jobClient
         .newCompleteCommand(job.getKey())
         .variables(variables.getResultVariables())
-        .send();
+        .send()
+        .join();
   }
 }
