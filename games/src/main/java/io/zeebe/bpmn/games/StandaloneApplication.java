@@ -112,6 +112,11 @@ public class StandaloneApplication {
           }
 
           @Override
+          public void playerNoped(String player, List<Card> nopedCards) {
+            LOG.debug("Player {} noped the card(s) {}.", player, nopedCards);
+          }
+
+          @Override
           public void playerExploded(String player) {
             LOG.debug("Player {} exploded.", player);
           }

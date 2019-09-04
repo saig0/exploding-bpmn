@@ -1,5 +1,6 @@
 package io.zeebe.bpmn.games.action;
 
+import io.zeebe.bpmn.games.model.Variables;
 import io.zeebe.client.ZeebeClient;
 import io.zeebe.client.api.command.PublishMessageCommandStep1.PublishMessageCommandStep3;
 import io.zeebe.client.api.response.ActivatedJob;
@@ -17,32 +18,26 @@ public class ThrowMessage implements JobHandler {
   }
 
   @Override
-  public void handle(JobClient jobClient, ActivatedJob activatedJob) {
-    final var variables = activatedJob.getVariablesAsMap();
-    final var correlationKey = (String) variables.get("correlationKey");
+  public void handle(JobClient jobClient, ActivatedJob job) {
+    final var variables = Variables.from(job);
+
+    final var correlationKey = variables.getCorrelationKey();
 
     final var messageName =
-        Optional.ofNullable(activatedJob.getCustomHeaders().get("messageName"))
+        Optional.ofNullable(job.getCustomHeaders().get("messageName"))
             .orElseThrow(() -> new RuntimeException("missing custom header 'messageName'"));
 
+    final PublishMessageCommandStep3 publishMessageCommandStep3 =
+        client.newPublishMessageCommand().messageName(messageName).correlationKey(correlationKey);
 
-    final PublishMessageCommandStep3 publishMessageCommandStep3 = client
-        .newPublishMessageCommand()
-        .messageName(messageName)
-        .correlationKey(correlationKey);
+    Optional.ofNullable(job.getCustomHeaders().get("variable"))
+        .ifPresent(
+            variableName -> {
+              final var value = job.getVariablesAsMap().get(variableName);
+              publishMessageCommandStep3.variables(Map.of(variableName, value));
+            });
 
-    final Optional<String> variableOptional = Optional
-        .ofNullable(activatedJob.getCustomHeaders().get("variable"));
-    if (variableOptional.isPresent())
-    {
-      final String variableName = variableOptional.get();
-      final String assignee = activatedJob.getVariablesAsMap().get(variableName).toString();
-      publishMessageCommandStep3.variables(Map.of("playerNoped", assignee));
-    }
-
-    publishMessageCommandStep3
-        .send()
-        .join();
+    publishMessageCommandStep3.send().join();
 
     // don't complete job for interrupting message event
   }

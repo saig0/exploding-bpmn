@@ -59,7 +59,7 @@ public class GamesApplication {
             "build-deck", new BuildDeck(listener),
             "selectPlayerForNewRound", new SelectPlayer(listener),
             "discard", new DiscardCards(listener),
-            "discardNope", new DiscardNope(LOG),
+            "discardNope", new DiscardNope(listener),
             "addTurns", new AddTurns(listener),
             "endTurn", new EndTurn(listener),
             "newTurn", new NewTurn(),
@@ -100,7 +100,7 @@ public class GamesApplication {
             "selectCardFromPlayer", new SelectCardFromPlayer(listener),
             "chooseRandomCard", new SelectRandomCard(listener),
             "celebrate", new Celebration(listener),
-            "play-nope", new NopeAction(LOG)));
+            "play-nope", new NopeAction(listener)));
   }
 
   public void startNewGame(Collection<String> playerNames) {

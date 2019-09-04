@@ -372,18 +372,11 @@
       </bpmn:serviceTask>
       <bpmn:sequenceFlow id="SequenceFlow_0f7gka5" sourceRef="ServiceTask_059gfr7" targetRef="EndEvent_1ry3hem" />
       <bpmn:subProcess id="ServiceTask_06iz61u" name="Nope Card">
-        <bpmn:extensionElements>
-          <zeebe:taskDefinition type="user" />
-          <zeebe:taskHeaders>
-            <zeebe:header key="name" value="play nope" />
-            <zeebe:header key="description" value="play nope card?" />
-          </zeebe:taskHeaders>
-        </bpmn:extensionElements>
         <bpmn:incoming>SequenceFlow_0ntl4ci</bpmn:incoming>
         <bpmn:incoming>SequenceFlow_1e7rdx2</bpmn:incoming>
         <bpmn:multiInstanceLoopCharacteristics>
            <bpmn:extensionElements>
-            <zeebe:loopCharacteristics inputCollection="playerNames" inputElement="assignee" />
+            <zeebe:loopCharacteristics inputCollection="playerNames" inputElement="nopePlayer" />
          </bpmn:extensionElements>
         </bpmn:multiInstanceLoopCharacteristics>
         <bpmn:startEvent id="StartEvent_1jr74i2">
@@ -402,7 +395,7 @@
             <zeebe:taskDefinition type="throwMessage" />
             <zeebe:taskHeaders>
               <zeebe:header key="messageName" value="nope1" />
-              <zeebe:header key="variable" value="assignee" />
+              <zeebe:header key="variable" value="nopePlayer" />
             </zeebe:taskHeaders>
           </bpmn:extensionElements>
           <bpmn:incoming>SequenceFlow_0nqg4vp</bpmn:incoming>
@@ -430,17 +423,10 @@
         <bpmn:outgoing>SequenceFlow_1a3a1l2</bpmn:outgoing>
       </bpmn:serviceTask>
       <bpmn:subProcess id="SubProcess_11b0053" name="Nope Nope-Card">
-        <bpmn:extensionElements>
-          <zeebe:taskDefinition type="user" />
-          <zeebe:taskHeaders>
-            <zeebe:header key="name" value="play nope" />
-            <zeebe:header key="description" value="play nope card?" />
-          </zeebe:taskHeaders>
-        </bpmn:extensionElements>
         <bpmn:incoming>SequenceFlow_1a3a1l2</bpmn:incoming>
         <bpmn:multiInstanceLoopCharacteristics>
            <bpmn:extensionElements>
-            <zeebe:loopCharacteristics inputCollection="playerNames" inputElement="assignee" />
+            <zeebe:loopCharacteristics inputCollection="playerNames" inputElement="nopePlayer" />
          </bpmn:extensionElements>
         </bpmn:multiInstanceLoopCharacteristics>
         <bpmn:startEvent id="StartEvent_1ed53ph">
@@ -451,7 +437,7 @@
             <zeebe:taskDefinition type="throwMessage" />
             <zeebe:taskHeaders>
               <zeebe:header key="messageName" value="nope2" />
-              <zeebe:header key="variable" value="assignee" />
+              <zeebe:header key="variable" value="nopePlayer" />
             </zeebe:taskHeaders>
           </bpmn:extensionElements>
           <bpmn:incoming>SequenceFlow_1hc3mdc</bpmn:incoming>

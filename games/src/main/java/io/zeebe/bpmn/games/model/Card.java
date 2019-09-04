@@ -49,6 +49,6 @@ public class Card {
 
   @Override
   public String toString() {
-    return "Card{" + "id=" + id + ", type=" + type + '}';
+    return "{" + "id=" + id + ", type=" + type + '}';
   }
 }

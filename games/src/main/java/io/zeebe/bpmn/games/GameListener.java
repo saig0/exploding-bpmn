@@ -43,4 +43,6 @@ public interface GameListener {
   void playerExploded(String player);
 
   void playerWonTheGame(String player);
+
+  void playerNoped(String player, List<Card> nopedCards);
 }

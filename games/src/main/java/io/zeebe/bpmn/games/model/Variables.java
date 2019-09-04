@@ -152,6 +152,15 @@ public class Variables {
     return this;
   }
 
+  public String getNopePlayer() {
+    return (String) jobVariables.get("nopePlayer");
+  }
+
+  public Variables putNopePlayer(String nopePlayer) {
+    resultVariables.put("nopePlayer", nopePlayer);
+    return this;
+  }
+
   public boolean hasDefuseCard() {
     return (boolean) resultVariables.get("hasDefuse");
   }

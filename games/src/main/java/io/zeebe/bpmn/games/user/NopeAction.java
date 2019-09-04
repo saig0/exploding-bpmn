@@ -1,39 +1,50 @@
 package io.zeebe.bpmn.games.user;
 
+import io.zeebe.bpmn.games.GameListener;
+import io.zeebe.bpmn.games.model.CardType;
+import io.zeebe.bpmn.games.model.Variables;
 import io.zeebe.client.api.response.ActivatedJob;
 import io.zeebe.client.api.worker.JobClient;
 import io.zeebe.client.api.worker.JobHandler;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
-import org.slf4j.Logger;
 
 public class NopeAction implements JobHandler {
 
-  private final Logger log;
+  private final GameListener listener;
 
-  public NopeAction(Logger log) {
-    this.log = log;
+  public NopeAction(GameListener listener) {
+    this.listener = listener;
   }
 
   @Override
-  public void handle(JobClient jobClient, ActivatedJob activatedJob) {
-    final var variables = activatedJob.getVariablesAsMap();
+  public void handle(JobClient jobClient, ActivatedJob job) {
+    final var variables = Variables.from(job);
 
-    final var assignee = (String) variables.get("assignee");
+    final var playedCards = variables.getCards();
 
-    final var currentPlayer = (String) variables.get("nextPlayer");
-    final var players = (Map<String, List<String>>) variables.get("players");
-    final var playersHand = players.get(assignee);
+    final var currentPlayer = variables.getNextPlayer();
+    final var nopePlayer = variables.getNopePlayer();
 
-    final var playNope = ThreadLocalRandom.current().nextDouble() > 0.5;
+    final var players = variables.getPlayers();
+    final var playersHand = players.get(nopePlayer);
 
-    if (playersHand.contains("nope") && !assignee.equals(currentPlayer) && playNope) {
+    final var nopeCard = playersHand
+        .stream()
+        .filter(c -> c.getType() == CardType.NOPE)
+        .findFirst();
 
-      log.info("Player {} plays a 'nope' card", assignee);
+    final var wantToNope = ThreadLocalRandom.current().nextDouble() > 0.5;
 
-      jobClient.newCompleteCommand(activatedJob.getKey()).variables(Map.of(
-          "nopeCard", List.of("nope"))).send();
+    if (!nopePlayer.equals(currentPlayer) && nopeCard.isPresent() && wantToNope) {
+
+      listener.playerNoped(nopePlayer, playedCards);
+
+      jobClient
+          .newCompleteCommand(job.getKey())
+          .send()
+          .join();
     }
   }
 }
