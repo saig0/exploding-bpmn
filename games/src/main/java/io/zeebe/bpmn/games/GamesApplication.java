@@ -26,6 +26,7 @@ import io.zeebe.bpmn.games.user.SelectRandomCard;
 import io.zeebe.bpmn.games.user.ShowTopThree;
 import io.zeebe.bpmn.games.user.ShuffleDeck;
 import io.zeebe.client.ZeebeClient;
+import io.zeebe.client.api.response.WorkflowInstanceEvent;
 import io.zeebe.client.api.worker.JobHandler;
 import java.time.Duration;
 import java.util.Collection;
@@ -103,14 +104,17 @@ public class GamesApplication {
             "play-nope", new NopeAction(listener)));
   }
 
-  public void startNewGame(Collection<String> playerNames) {
-    client
+  public long startNewGame(Collection<String> playerNames) {
+
+    final var workflowInstance = client
         .newCreateInstanceCommand()
         .bpmnProcessId("exploding-kittens")
         .latestVersion()
         .variables(Map.of("playerNames", playerNames))
         .send()
         .join();
+
+    return workflowInstance.getWorkflowInstanceKey();
   }
 
   private void installWorkers(Map<String, JobHandler> jobTypeHandlers) {

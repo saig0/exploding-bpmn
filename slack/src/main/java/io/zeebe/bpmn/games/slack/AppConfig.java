@@ -11,8 +11,10 @@ public class AppConfig {
 
   @Autowired private ZeebeClient zeebeClient;
 
+  @Autowired private SlackGameStateNotifier gameStateNotifier;
+
   @Bean
   public GamesApplication games() {
-    return new GamesApplication(zeebeClient, null);
+    return new GamesApplication(zeebeClient, gameStateNotifier);
   }
 }

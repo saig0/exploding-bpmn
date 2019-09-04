@@ -5,6 +5,8 @@ import com.github.seratch.jslack.api.methods.SlackApiException;
 import com.github.seratch.jslack.app_backend.slash_commands.payload.SlashCommandPayloadParser;
 import com.github.seratch.jslack.app_backend.slash_commands.response.SlashCommandResponse;
 import io.zeebe.bpmn.games.GamesApplication;
+import io.zeebe.bpmn.games.slack.SlackContext.GameInfo;
+import io.zeebe.bpmn.games.slack.SlackContext.UserInfo;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -33,6 +35,8 @@ public class SlashCommands {
 
   @Autowired private GamesApplication gamesApplication;
 
+  @Autowired private SlackContext slackContext;
+
   @PostMapping("/new-game")
   public SlashCommandResponse newGame(@RequestBody String body) {
     LOG.debug("Received new command 'new-game' with body {}", body);
@@ -51,9 +55,9 @@ public class SlashCommands {
 
     LOG.debug("Start new game with players {}", players);
 
-    gamesApplication.startNewGame(players.keySet());
-
     players.entrySet().forEach(p -> sendPrivateMessage(p.getKey(), p.getValue()));
+
+    final long key = gamesApplication.startNewGame(players.keySet());
 
     final var playerList = players.values().stream().collect(Collectors.joining(", "));
 
@@ -91,6 +95,8 @@ public class SlashCommands {
       LOG.debug("Send private message to {}", userName);
 
       methodsClient.chatPostMessage(req -> req.channel(channelId).text("Starting new game"));
+
+      slackContext.putUser(new UserInfo(userId, userName, channelId));
 
     } catch (SlackApiException | IOException e) {
       throw new RuntimeException(e);
