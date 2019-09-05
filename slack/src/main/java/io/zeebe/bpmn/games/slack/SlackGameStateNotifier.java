@@ -218,13 +218,13 @@ public class SlackGameStateNotifier implements GameListener {
     sendMessageTo(
         player,
         String.format(
-            "Alter the future by changing the order of the top cards of the deck: %s",
+            "You altered the future to %s",
             formatCards(cards)));
   }
 
   @Override
   public void deckReordered(List<Card> deck) {
-    sendMessage(user -> "The future was altered (the order of the top 3 cards was changed)");
+    sendMessage(user -> "The future was altered (the order of the top 3 cards has changed)");
   }
 
   @Override
