@@ -2,7 +2,10 @@ package io.zeebe.bpmn.games.slack;
 
 import com.github.seratch.jslack.api.methods.MethodsClient;
 import com.github.seratch.jslack.api.methods.SlackApiException;
-import com.github.seratch.jslack.api.model.Attachment;
+import com.github.seratch.jslack.api.model.block.ImageBlock;
+import com.github.seratch.jslack.api.model.block.SectionBlock;
+import com.github.seratch.jslack.api.model.block.composition.MarkdownTextObject;
+import com.github.seratch.jslack.api.model.block.composition.PlainTextObject;
 import com.github.seratch.jslack.app_backend.slash_commands.payload.SlashCommandPayloadParser;
 import com.github.seratch.jslack.app_backend.slash_commands.response.SlashCommandResponse;
 import io.zeebe.bpmn.games.GamesApplication;
@@ -24,7 +27,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/slack/command/")
 public class SlashCommands {
 
+  public static final String BASE_URL =
+      "https://raw.githubusercontent.com/saig0/bpmn-games/slack-bot/games/src/main/resources/";
   private static final Logger LOG = LoggerFactory.getLogger(SlashCommands.class);
+  private static final String BPMN_IMAGE_URL = BASE_URL + "explodingKittens.png";
+  private static final String BPMN_XML_URL = BASE_URL + "explodingKittens.bpmn";
 
   private final SlashCommandPayloadParser payloadParser = new SlashCommandPayloadParser();
 
@@ -109,13 +116,24 @@ public class SlashCommands {
 
     final var payload = payloadParser.parse(body);
 
-    final var imageUrl = "https://raw.githubusercontent.com/saig0/bpmn-games/slack-bot/games/src/main/resources/explodingKittens.PNG";
+    final var block1 =
+        SectionBlock.builder()
+            .text(
+                MarkdownTextObject.builder()
+                    .text("The game is well documented as BPMN (" + BPMN_XML_URL + ").")
+                    .build())
+            .build();
+
+    final var block2 =
+        ImageBlock.builder()
+            .title(PlainTextObject.builder().text("Image").build())
+            .imageUrl(BPMN_IMAGE_URL)
+            .altText("the game as BPMN")
+            .build();
 
     return SlashCommandResponse.builder()
         .responseType("ephemeral")
-        .text("The game is well documented as BPMN:")
-        .attachments(List.of(Attachment.builder().imageUrl(imageUrl).build()))
+        .blocks(List.of(block1, block2))
         .build();
   }
-
 }
