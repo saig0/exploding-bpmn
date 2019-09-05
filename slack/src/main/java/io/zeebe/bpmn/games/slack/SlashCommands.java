@@ -2,6 +2,7 @@ package io.zeebe.bpmn.games.slack;
 
 import com.github.seratch.jslack.api.methods.MethodsClient;
 import com.github.seratch.jslack.api.methods.SlackApiException;
+import com.github.seratch.jslack.api.model.Attachment;
 import com.github.seratch.jslack.app_backend.slash_commands.payload.SlashCommandPayloadParser;
 import com.github.seratch.jslack.app_backend.slash_commands.response.SlashCommandResponse;
 import io.zeebe.bpmn.games.GamesApplication;
@@ -101,4 +102,20 @@ public class SlashCommands {
       throw new RuntimeException("Fail to open channel to user: " + userId, e);
     }
   }
+
+  @PostMapping("/how-to-play")
+  public SlashCommandResponse manual(@RequestBody String body) {
+    LOG.debug("Received new command 'how-to-play' with body {}", body);
+
+    final var payload = payloadParser.parse(body);
+
+    final var imageUrl = "https://raw.githubusercontent.com/saig0/bpmn-games/slack-bot/games/src/main/resources/explodingKittens.PNG";
+
+    return SlashCommandResponse.builder()
+        .responseType("ephemeral")
+        .text("The game is well documented as BPMN:")
+        .attachments(List.of(Attachment.builder().imageUrl(imageUrl).build()))
+        .build();
+  }
+
 }
