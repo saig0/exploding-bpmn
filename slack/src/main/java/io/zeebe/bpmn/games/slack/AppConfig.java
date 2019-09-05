@@ -13,8 +13,10 @@ public class AppConfig {
 
   @Autowired private SlackGameStateNotifier gameStateNotifier;
 
+  @Autowired private SlackUserInteraction userInteraction;
+
   @Bean
   public GamesApplication games() {
-    return new GamesApplication(zeebeClient, gameStateNotifier);
+    return new GamesApplication(zeebeClient, gameStateNotifier, userInteraction);
   }
 }

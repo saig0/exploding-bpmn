@@ -1,5 +1,6 @@
 package io.zeebe.bpmn.games;
 
+import io.zeebe.bpmn.games.bot.SimpleBot;
 import io.zeebe.client.ZeebeClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,8 +19,9 @@ public class StandaloneApplication {
     LOG.info("Launch workers");
 
     final var gameListener = new GameStateLogger();
+    final var bot = new SimpleBot();
 
-    final var application = new GamesApplication(zeebeClient, gameListener);
+    final var application = new GamesApplication(zeebeClient, gameListener, bot);
     application.start();
 
     LOG.info("Ready!");

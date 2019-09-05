@@ -26,7 +26,6 @@ import io.zeebe.bpmn.games.user.SelectRandomCard;
 import io.zeebe.bpmn.games.user.ShowTopThree;
 import io.zeebe.bpmn.games.user.ShuffleDeck;
 import io.zeebe.client.ZeebeClient;
-import io.zeebe.client.api.response.WorkflowInstanceEvent;
 import io.zeebe.client.api.worker.JobHandler;
 import java.time.Duration;
 import java.util.Collection;
@@ -40,10 +39,13 @@ public class GamesApplication {
 
   private final ZeebeClient client;
   private final GameListener listener;
+  private final GameInteraction interaction;
 
-  public GamesApplication(ZeebeClient client, GameListener listener) {
+  public GamesApplication(ZeebeClient client, GameListener listener,
+      GameInteraction interaction) {
     this.client = client;
     this.listener = listener;
+    this.interaction = interaction;
   }
 
   public void start() {
@@ -96,7 +98,7 @@ public class GamesApplication {
         Map.of(
             "showTopThreeCards", new ShowTopThree(listener),
             "changeOrder", new ChangeOrder(listener),
-            "selectAction", new SelectAction(listener),
+            "selectAction", new SelectAction(listener, interaction),
             "selectOtherPlayer", new SelectOtherPlayer(listener),
             "selectCardFromPlayer", new SelectCardFromPlayer(listener),
             "chooseRandomCard", new SelectRandomCard(listener),
