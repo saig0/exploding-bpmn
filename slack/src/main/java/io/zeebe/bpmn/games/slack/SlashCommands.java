@@ -5,7 +5,6 @@ import com.github.seratch.jslack.api.methods.SlackApiException;
 import com.github.seratch.jslack.app_backend.slash_commands.payload.SlashCommandPayloadParser;
 import com.github.seratch.jslack.app_backend.slash_commands.response.SlashCommandResponse;
 import io.zeebe.bpmn.games.GamesApplication;
-import io.zeebe.bpmn.games.slack.SlackContext.GameInfo;
 import io.zeebe.bpmn.games.slack.SlackContext.UserInfo;
 import java.io.IOException;
 import java.util.Arrays;
@@ -59,7 +58,10 @@ public class SlashCommands {
 
     final long key = gamesApplication.startNewGame(players.keySet());
 
-    final var playerList = players.values().stream().collect(Collectors.joining(", "));
+    final var playerList =
+        players.keySet().stream()
+            .map(userId -> String.format("<@%s>", userId))
+            .collect(Collectors.joining(", "));
 
     return SlashCommandResponse.builder()
         .responseType("in_channel")
@@ -91,10 +93,6 @@ public class SlashCommands {
       final var response = methodsClient.imOpen(r -> r.user(userId));
 
       final var channelId = response.getChannel().getId();
-
-      LOG.debug("Send private message to {}", userName);
-
-      methodsClient.chatPostMessage(req -> req.channel(channelId).text("Starting new game"));
 
       slackContext.putUser(new UserInfo(userId, userName, channelId));
 
