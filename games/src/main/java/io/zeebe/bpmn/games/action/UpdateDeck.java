@@ -1,5 +1,6 @@
 package io.zeebe.bpmn.games.action;
 
+import io.zeebe.bpmn.games.GameContext;
 import io.zeebe.bpmn.games.GameListener;
 import io.zeebe.bpmn.games.model.Variables;
 import io.zeebe.client.api.response.ActivatedJob;
@@ -24,7 +25,7 @@ public class UpdateDeck implements JobHandler {
     final var updatedDeck = deck.subList(cards.size(), deck.size());
     updatedDeck.addAll(0, cards);
 
-    listener.deckReordered(updatedDeck);
+    listener.deckReordered(GameContext.of(job), updatedDeck);
 
     variables.putDeck(updatedDeck);
 

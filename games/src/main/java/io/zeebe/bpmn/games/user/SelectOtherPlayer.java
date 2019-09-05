@@ -1,11 +1,11 @@
 package io.zeebe.bpmn.games.user;
 
+import io.zeebe.bpmn.games.GameContext;
 import io.zeebe.bpmn.games.GameListener;
 import io.zeebe.bpmn.games.model.Variables;
 import io.zeebe.client.api.response.ActivatedJob;
 import io.zeebe.client.api.worker.JobClient;
 import io.zeebe.client.api.worker.JobHandler;
-import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class SelectOtherPlayer implements JobHandler {
@@ -28,7 +28,7 @@ public class SelectOtherPlayer implements JobHandler {
     final var index = ThreadLocalRandom.current().nextInt(0, playerNames.size());
     final var otherPlayer = playerNames.get(index);
 
-    listener.playerToDrawSelected(currentPlayer, otherPlayer);
+    listener.playerToDrawSelected(GameContext.of(job), currentPlayer, otherPlayer);
 
     variables.putOtherPlayer(otherPlayer);
 

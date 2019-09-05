@@ -1,5 +1,6 @@
 package io.zeebe.bpmn.games.deck;
 
+import io.zeebe.bpmn.games.GameContext;
 import io.zeebe.bpmn.games.GameListener;
 import io.zeebe.bpmn.games.model.Card;
 import io.zeebe.bpmn.games.model.CardType;
@@ -58,7 +59,7 @@ public class BuildDeck implements JobHandler {
 
     Collections.shuffle(deck);
 
-    listener.handCardsDealt(players);
+    listener.handCardsDealt(GameContext.of(job), players);
 
     variables
         .putDeck(deck)

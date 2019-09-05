@@ -1,13 +1,12 @@
 package io.zeebe.bpmn.games.user;
 
+import io.zeebe.bpmn.games.GameContext;
 import io.zeebe.bpmn.games.GameListener;
 import io.zeebe.bpmn.games.model.CardType;
 import io.zeebe.bpmn.games.model.Variables;
 import io.zeebe.client.api.response.ActivatedJob;
 import io.zeebe.client.api.worker.JobClient;
 import io.zeebe.client.api.worker.JobHandler;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class NopeAction implements JobHandler {
@@ -39,7 +38,7 @@ public class NopeAction implements JobHandler {
 
     if (!nopePlayer.equals(currentPlayer) && nopeCard.isPresent() && wantToNope) {
 
-      listener.playerNoped(nopePlayer, playedCards);
+      listener.playerNoped(GameContext.of(job), nopePlayer, playedCards);
 
       jobClient
           .newCompleteCommand(job.getKey())

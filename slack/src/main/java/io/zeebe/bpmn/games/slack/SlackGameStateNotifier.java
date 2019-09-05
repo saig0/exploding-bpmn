@@ -5,11 +5,9 @@ import com.github.seratch.jslack.api.methods.SlackApiException;
 import io.zeebe.bpmn.games.GameListener;
 import io.zeebe.bpmn.games.model.Card;
 import io.zeebe.bpmn.games.model.CardType;
-import io.zeebe.bpmn.games.slack.SlackContext.UserInfo;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -22,10 +20,17 @@ public class SlackGameStateNotifier implements GameListener {
 
   private static final Logger LOG = LoggerFactory.getLogger(SlackGameStateNotifier.class);
 
-  @Autowired private SlackContext slackContext;
+  @Autowired private SlackSession session;
 
   @Autowired private MethodsClient methodsClient;
-  private List<String> users;
+
+  private void newGame(Context context, List<String> userIds) {
+    session.putGame(context.getKey(), userIds);
+  }
+
+  private void gameEnded(Context context) {
+    session.removeGame(context.getKey());
+  }
 
   private void sendMessageTo(String channelId, String message) {
     try {
@@ -37,13 +42,13 @@ public class SlackGameStateNotifier implements GameListener {
     }
   }
 
-  private void sendMessage(Function<String, String> messageForUser) {
-    users.forEach(
+  private void sendMessage(Context context, Function<String, String> messageForUser) {
+
+    final List<String> userIds = session.getUserIdsOfGame(context.getKey());
+
+    userIds.forEach(
         userId -> {
-          final var channelId =
-              Optional.ofNullable(slackContext.getUser(userId))
-                  .map(UserInfo::getChannelId)
-                  .orElseThrow(() -> new RuntimeException("unknown user"));
+          final var channelId = session.getChannelId(userId);
 
           final var message = messageForUser.apply(userId);
 
@@ -64,10 +69,11 @@ public class SlackGameStateNotifier implements GameListener {
   }
 
   @Override
-  public void newGameStarted(List<String> playerNames) {
-    this.users = playerNames;
+  public void newGameStarted(Context context, List<String> playerNames) {
+    newGame(context, playerNames);
 
     sendMessage(
+        context,
         user -> {
           final var otherPlayers =
               playerNames.stream()
@@ -80,8 +86,9 @@ public class SlackGameStateNotifier implements GameListener {
   }
 
   @Override
-  public void handCardsDealt(Map<String, List<Card>> handCards) {
+  public void handCardsDealt(Context context, Map<String, List<Card>> handCards) {
     sendMessage(
+        context,
         user -> {
           final var hand = handCards.get(user);
           return String.format("Your hand cards: %s", formatCards(hand));
@@ -89,8 +96,9 @@ public class SlackGameStateNotifier implements GameListener {
   }
 
   @Override
-  public void nextPlayerSelected(String player, int turns) {
+  public void nextPlayerSelected(Context context, String player, int turns) {
     sendMessage(
+        context,
         user -> {
           if (player.equals(user)) {
             return String.format("You are next for %d turn(s)", turns);
@@ -101,8 +109,9 @@ public class SlackGameStateNotifier implements GameListener {
   }
 
   @Override
-  public void cardsPlayed(String player, List<Card> cards) {
+  public void cardsPlayed(Context context, String player, List<Card> cards) {
     sendMessage(
+        context,
         user -> {
           if (player.equals(user)) {
             return String.format("You played: %s", formatCards(cards));
@@ -113,8 +122,9 @@ public class SlackGameStateNotifier implements GameListener {
   }
 
   @Override
-  public void playerPassed(String player) {
+  public void playerPassed(Context context, String player) {
     sendMessage(
+        context,
         user -> {
           if (player.equals(user)) {
             return "You passed.";
@@ -125,8 +135,9 @@ public class SlackGameStateNotifier implements GameListener {
   }
 
   @Override
-  public void playerDrawnCard(String player, Card card) {
+  public void playerDrawnCard(Context context, String player, Card card) {
     sendMessage(
+        context,
         user -> {
           if (player.equals(user)) {
             return String.format("You draw the card: %s", formatCard(card));
@@ -139,17 +150,18 @@ public class SlackGameStateNotifier implements GameListener {
   }
 
   @Override
-  public void turnEnded(String player, int remainingTurns) {}
+  public void turnEnded(Context context, String player, int remainingTurns) {}
 
   @Override
-  public void cardsDiscarded(String player, List<Card> cards) {
+  public void cardsDiscarded(Context context, String player, List<Card> cards) {
     // sendMessage(user -> String.format("%s discarded %s", formatPlayer(player),
     // formatCards(cards)));
   }
 
   @Override
-  public void playerToDrawSelected(String player, String playerToDrawFrom) {
+  public void playerToDrawSelected(Context context, String player, String playerToDrawFrom) {
     sendMessage(
+        context,
         user -> {
           if (player.equals(user)) {
             return String.format(
@@ -165,8 +177,9 @@ public class SlackGameStateNotifier implements GameListener {
   }
 
   @Override
-  public void cardTakenFrom(String player, String playerTakenFrom, Card card) {
+  public void cardTakenFrom(Context context, String player, String playerTakenFrom, Card card) {
     sendMessage(
+        context,
         user -> {
           if (player.equals(user)) {
             return String.format(
@@ -182,8 +195,9 @@ public class SlackGameStateNotifier implements GameListener {
   }
 
   @Override
-  public void cardChosenFrom(String player, String playerChosenFrom, Card card) {
+  public void cardChosenFrom(Context context, String player, String playerChosenFrom, Card card) {
     sendMessage(
+        context,
         user -> {
           if (player.equals(user)) {
             return String.format(
@@ -199,8 +213,9 @@ public class SlackGameStateNotifier implements GameListener {
   }
 
   @Override
-  public void playerSawTheFuture(String player, List<Card> cards) {
+  public void playerSawTheFuture(Context context, String player, List<Card> cards) {
     sendMessage(
+        context,
         user -> {
           if (player.equals(user)) {
             return String.format(
@@ -213,26 +228,28 @@ public class SlackGameStateNotifier implements GameListener {
   }
 
   @Override
-  public void deckShuffled(List<Card> deck) {
-    sendMessage(user -> "The deck is shuffled.");
+  public void deckShuffled(Context context, List<Card> deck) {
+    sendMessage(context, user -> "The deck is shuffled.");
   }
 
   @Override
-  public void playerAlteredTheFuture(String player, List<Card> cards) {
+  public void playerAlteredTheFuture(Context context, String player, List<Card> cards) {
     sendMessageTo(player, String.format("You altered the future to %s", formatCards(cards)));
   }
 
   @Override
-  public void deckReordered(List<Card> deck) {
-    sendMessage(user -> "The future was altered (the order of the top 3 cards has changed)");
+  public void deckReordered(Context context, List<Card> deck) {
+    sendMessage(
+        context, user -> "The future was altered (the order of the top 3 cards has changed)");
   }
 
   @Override
-  public void handCheckedForDefuse(String player, List<Card> hand) {}
+  public void handCheckedForDefuse(Context context, String player, List<Card> hand) {}
 
   @Override
-  public void playerInsertedCard(String player, Card card, List<Card> deck) {
+  public void playerInsertedCard(Context context, String player, Card card, List<Card> deck) {
     sendMessage(
+        context,
         user -> {
           if (player.equals(user)) {
             final int index = deck.indexOf(card) + 1;
@@ -246,8 +263,9 @@ public class SlackGameStateNotifier implements GameListener {
   }
 
   @Override
-  public void playerExploded(String player) {
+  public void playerExploded(Context context, String player) {
     sendMessage(
+        context,
         user -> {
           if (player.equals(user)) {
             return "You exploded :boom:";
@@ -258,8 +276,9 @@ public class SlackGameStateNotifier implements GameListener {
   }
 
   @Override
-  public void playerWonTheGame(String player) {
+  public void playerWonTheGame(Context context, String player) {
     sendMessage(
+        context,
         user -> {
           if (player.equals(user)) {
             return "You won the game :tada:";
@@ -267,11 +286,14 @@ public class SlackGameStateNotifier implements GameListener {
             return String.format("%s won the game :tada:", formatPlayer(player));
           }
         });
+
+    gameEnded(context);
   }
 
   @Override
-  public void playerNoped(String player, List<Card> nopedCards) {
+  public void playerNoped(Context context, String player, List<Card> nopedCards) {
     sendMessage(
+        context,
         user -> {
           if (player.equals(user)) {
             return String.format("You noped the card(s) %s.", formatCards(nopedCards));

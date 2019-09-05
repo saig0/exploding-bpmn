@@ -1,5 +1,6 @@
 package io.zeebe.bpmn.games.action;
 
+import io.zeebe.bpmn.games.GameContext;
 import io.zeebe.bpmn.games.GameListener;
 import io.zeebe.bpmn.games.model.CardType;
 import io.zeebe.bpmn.games.model.Variables;
@@ -27,7 +28,7 @@ public class CheckForDefuse implements JobHandler {
     final var defuseCard = hand.stream().filter(c -> c.getType() == CardType.DEFUSE).findFirst();
     final var hasDefuseCard = defuseCard.isPresent();
 
-    listener.handCheckedForDefuse(currentPlayer, hand);
+    listener.handCheckedForDefuse(GameContext.of(job), currentPlayer, hand);
 
     variables
         .putCards(defuseCard.map(List::of).orElse(List.of()))

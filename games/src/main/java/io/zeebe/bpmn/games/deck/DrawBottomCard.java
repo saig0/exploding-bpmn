@@ -1,5 +1,6 @@
 package io.zeebe.bpmn.games.deck;
 
+import io.zeebe.bpmn.games.GameContext;
 import io.zeebe.bpmn.games.GameListener;
 import io.zeebe.bpmn.games.model.Variables;
 import io.zeebe.client.api.response.ActivatedJob;
@@ -27,7 +28,7 @@ public class DrawBottomCard implements JobHandler {
 
     handCards.add(card);
 
-    listener.playerDrawnCard(currentPlayer, card);
+    listener.playerDrawnCard(GameContext.of(job), currentPlayer, card);
 
     variables
         .putPlayers(players)

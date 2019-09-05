@@ -1,5 +1,6 @@
 package io.zeebe.bpmn.games.action;
 
+import io.zeebe.bpmn.games.GameContext;
 import io.zeebe.bpmn.games.GameListener;
 import io.zeebe.bpmn.games.model.Variables;
 import io.zeebe.client.api.response.ActivatedJob;
@@ -29,7 +30,7 @@ public class CleanUpAfterExploding implements JobHandler {
     final var handCards = players.remove(currentPlayer);
     discardPile.addAll(handCards);
 
-    listener.playerExploded(currentPlayer);
+    listener.playerExploded(GameContext.of(job), currentPlayer);
 
     variables
         .putPlayers(players)

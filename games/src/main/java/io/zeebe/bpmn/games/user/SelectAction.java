@@ -1,5 +1,6 @@
 package io.zeebe.bpmn.games.user;
 
+import io.zeebe.bpmn.games.GameContext;
 import io.zeebe.bpmn.games.GameListener;
 import io.zeebe.bpmn.games.model.Card;
 import io.zeebe.bpmn.games.model.CardType;
@@ -37,7 +38,7 @@ public class SelectAction implements JobHandler {
 
     if (cardsToPlay.isEmpty()) {
       variables.putAction("pass");
-      listener.playerPassed(player);
+      listener.playerPassed(GameContext.of(job), player);
 
     } else {
 
@@ -45,7 +46,7 @@ public class SelectAction implements JobHandler {
       final var action = card.isCatCard() ? "cat-pair" : card.name().toLowerCase();
 
       variables.putAction(action);
-      listener.cardsPlayed(player, cardsToPlay);
+      listener.cardsPlayed(GameContext.of(job), player, cardsToPlay);
     }
 
     jobClient

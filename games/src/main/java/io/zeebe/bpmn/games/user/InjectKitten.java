@@ -1,5 +1,6 @@
 package io.zeebe.bpmn.games.user;
 
+import io.zeebe.bpmn.games.GameContext;
 import io.zeebe.bpmn.games.GameListener;
 import io.zeebe.bpmn.games.model.Variables;
 import io.zeebe.client.api.response.ActivatedJob;
@@ -35,7 +36,7 @@ public class InjectKitten implements JobHandler {
       deck.add(index, card);
     }
 
-    listener.playerInsertedCard(currentPlayer, card, deck);
+    listener.playerInsertedCard(GameContext.of(job), currentPlayer, card, deck);
 
     variables
         .putPlayers(players)

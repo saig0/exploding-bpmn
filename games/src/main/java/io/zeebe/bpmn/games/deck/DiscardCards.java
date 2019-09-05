@@ -1,5 +1,6 @@
 package io.zeebe.bpmn.games.deck;
 
+import io.zeebe.bpmn.games.GameContext;
 import io.zeebe.bpmn.games.GameListener;
 import io.zeebe.bpmn.games.model.Variables;
 import io.zeebe.client.api.response.ActivatedJob;
@@ -29,7 +30,7 @@ public class DiscardCards implements JobHandler {
     hand.removeAll(cards);
     discardPile.addAll(cards);
 
-    listener.cardsDiscarded(currentPlayer, cards);
+    listener.cardsDiscarded(GameContext.of(job), currentPlayer, cards);
 
     variables
         .putPlayers(players)

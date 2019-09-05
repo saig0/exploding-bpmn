@@ -1,5 +1,6 @@
 package io.zeebe.bpmn.games.action;
 
+import io.zeebe.bpmn.games.GameContext;
 import io.zeebe.bpmn.games.GameListener;
 import io.zeebe.bpmn.games.model.Variables;
 import io.zeebe.client.api.response.ActivatedJob;
@@ -19,7 +20,7 @@ public class AddTurns implements JobHandler {
     final var variables = Variables.from(job);
 
     // when ATTACK was played then it ends the current player turns
-    listener.turnEnded(variables.getNextPlayer(), 0);
+    listener.turnEnded(GameContext.of(job), variables.getNextPlayer(), 0);
 
     // the next player has 2 extra turns
     final int turns = variables.getTurns();

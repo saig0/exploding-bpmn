@@ -1,5 +1,6 @@
 package io.zeebe.bpmn.games.user;
 
+import io.zeebe.bpmn.games.GameContext;
 import io.zeebe.bpmn.games.GameListener;
 import io.zeebe.bpmn.games.model.Variables;
 import io.zeebe.client.api.response.ActivatedJob;
@@ -24,7 +25,7 @@ public class ShowTopThree implements JobHandler {
     final var amount = Math.min(3, deck.size());
     final var cards = deck.subList(0, amount);
 
-    listener.playerSawTheFuture(currentPlayer, cards);
+    listener.playerSawTheFuture(GameContext.of(job), currentPlayer, cards);
 
     jobClient
         .newCompleteCommand(job.getKey())

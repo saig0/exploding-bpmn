@@ -1,5 +1,6 @@
 package io.zeebe.bpmn.games.user;
 
+import io.zeebe.bpmn.games.GameContext;
 import io.zeebe.bpmn.games.GameListener;
 import io.zeebe.bpmn.games.model.Variables;
 import io.zeebe.client.api.response.ActivatedJob;
@@ -28,7 +29,7 @@ public class SelectCardFromPlayer implements JobHandler {
       final int randomCardIndex = ThreadLocalRandom.current().nextInt(0, otherHand.size());
       final var card = otherHand.get(randomCardIndex);
 
-      listener.cardChosenFrom(currentPlayer, otherPlayer, card);
+      listener.cardChosenFrom(GameContext.of(job), currentPlayer, otherPlayer, card);
 
       variables.putCard(card);
     }

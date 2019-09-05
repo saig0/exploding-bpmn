@@ -6,43 +6,47 @@ import java.util.Map;
 
 public interface GameListener {
 
-  void newGameStarted(List<String> playerNames);
+  void newGameStarted(Context context, List<String> playerNames);
 
-  void handCardsDealt(Map<String, List<Card>> handCards);
+  void handCardsDealt(Context context, Map<String, List<Card>> handCards);
 
-  void nextPlayerSelected(String player, int turns);
+  void nextPlayerSelected(Context context, String player, int turns);
 
-  void cardsPlayed(String player, List<Card> cards);
+  void cardsPlayed(Context context, String player, List<Card> cards);
 
-  void playerPassed(String player);
+  void playerPassed(Context context, String player);
 
-  void playerDrawnCard(String player, Card card);
+  void playerDrawnCard(Context context, String player, Card card);
 
-  void turnEnded(String player, int remainingTurns);
+  void turnEnded(Context context, String player, int remainingTurns);
 
-  void cardsDiscarded(String player, List<Card> cards);
+  void cardsDiscarded(Context context, String player, List<Card> cards);
 
-  void playerToDrawSelected(String player, String playerToDrawFrom);
+  void playerToDrawSelected(Context context, String player, String playerToDrawFrom);
 
-  void cardTakenFrom(String player, String playerTakenFrom, Card card);
+  void cardTakenFrom(Context context, String player, String playerTakenFrom, Card card);
 
-  void cardChosenFrom(String player, String playerChosenFrom, Card card);
+  void cardChosenFrom(Context context, String player, String playerChosenFrom, Card card);
 
-  void playerSawTheFuture(String player, List<Card> cards);
+  void playerSawTheFuture(Context context, String player, List<Card> cards);
 
-  void deckShuffled(List<Card> deck);
+  void deckShuffled(Context context, List<Card> deck);
 
-  void playerAlteredTheFuture(String player, List<Card> cards);
+  void playerAlteredTheFuture(Context context, String player, List<Card> cards);
 
-  void deckReordered(List<Card> deck);
+  void deckReordered(Context context, List<Card> deck);
 
-  void handCheckedForDefuse(String player, List<Card> hand);
+  void handCheckedForDefuse(Context context, String player, List<Card> hand);
 
-  void playerInsertedCard(String player, Card card, List<Card> deck);
+  void playerInsertedCard(Context context, String player, Card card, List<Card> deck);
 
-  void playerExploded(String player);
+  void playerExploded(Context context, String player);
 
-  void playerWonTheGame(String player);
+  void playerWonTheGame(Context context, String player);
 
-  void playerNoped(String player, List<Card> nopedCards);
+  void playerNoped(Context context, String player, List<Card> nopedCards);
+
+  interface Context {
+    long getKey();
+  }
 }

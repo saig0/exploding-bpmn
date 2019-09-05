@@ -1,5 +1,6 @@
 package io.zeebe.bpmn.games.action;
 
+import io.zeebe.bpmn.games.GameContext;
 import io.zeebe.bpmn.games.GameListener;
 import io.zeebe.bpmn.games.model.Variables;
 import io.zeebe.client.api.response.ActivatedJob;
@@ -27,7 +28,7 @@ public class SelectPlayer implements JobHandler {
 
     final int turns = variables.getTurns();
 
-    listener.nextPlayerSelected(nextPlayer, turns);
+    listener.nextPlayerSelected(GameContext.of(job), nextPlayer, turns);
 
     variables
         .putRound(round + 1)

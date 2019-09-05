@@ -1,6 +1,6 @@
 package io.zeebe.bpmn.games.user;
 
-import com.google.common.base.Strings;
+import io.zeebe.bpmn.games.GameContext;
 import io.zeebe.bpmn.games.GameListener;
 import io.zeebe.bpmn.games.model.Variables;
 import io.zeebe.client.api.response.ActivatedJob;
@@ -22,7 +22,7 @@ public class Celebration implements JobHandler {
     final var playerNames = variables.getPlayerNames();
     final var winner = playerNames.get(0);
 
-    listener.playerWonTheGame(winner);
+    listener.playerWonTheGame(GameContext.of(job), winner);
 
     jobClient.newCompleteCommand(job.getKey())
         .send()

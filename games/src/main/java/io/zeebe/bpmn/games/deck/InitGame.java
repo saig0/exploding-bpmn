@@ -1,5 +1,6 @@
 package io.zeebe.bpmn.games.deck;
 
+import io.zeebe.bpmn.games.GameContext;
 import io.zeebe.bpmn.games.GameListener;
 import io.zeebe.bpmn.games.model.Variables;
 import io.zeebe.client.api.response.ActivatedJob;
@@ -29,7 +30,7 @@ public class InitGame implements JobHandler {
           String.format("Expected between 2 and 10 players but was {}", playerCount));
     }
 
-    listener.newGameStarted(playerNames);
+    listener.newGameStarted(GameContext.of(job), playerNames);
 
     variables
         .putRound(0)

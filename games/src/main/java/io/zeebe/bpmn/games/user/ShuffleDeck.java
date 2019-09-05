@@ -1,5 +1,6 @@
 package io.zeebe.bpmn.games.user;
 
+import io.zeebe.bpmn.games.GameContext;
 import io.zeebe.bpmn.games.GameListener;
 import io.zeebe.bpmn.games.model.Variables;
 import io.zeebe.client.api.response.ActivatedJob;
@@ -23,7 +24,7 @@ public class ShuffleDeck implements JobHandler {
 
     Collections.shuffle(deck);
 
-    listener.deckShuffled(deck);
+    listener.deckShuffled(GameContext.of(job), deck);
 
     variables.putDeck(deck);
 

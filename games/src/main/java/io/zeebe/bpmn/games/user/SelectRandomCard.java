@@ -1,5 +1,6 @@
 package io.zeebe.bpmn.games.user;
 
+import io.zeebe.bpmn.games.GameContext;
 import io.zeebe.bpmn.games.GameListener;
 import io.zeebe.bpmn.games.model.Variables;
 import io.zeebe.client.api.response.ActivatedJob;
@@ -32,7 +33,7 @@ public class SelectRandomCard implements JobHandler {
 
       playersHand.add(card);
 
-      listener.cardTakenFrom(currentPlayer, otherPlayer, card);
+      listener.cardTakenFrom(GameContext.of(job), currentPlayer, otherPlayer, card);
     }
 
     variables.putPlayers(players);

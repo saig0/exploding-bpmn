@@ -5,11 +5,10 @@ import com.github.seratch.jslack.api.methods.SlackApiException;
 import com.github.seratch.jslack.app_backend.slash_commands.payload.SlashCommandPayloadParser;
 import com.github.seratch.jslack.app_backend.slash_commands.response.SlashCommandResponse;
 import io.zeebe.bpmn.games.GamesApplication;
-import io.zeebe.bpmn.games.slack.SlackContext.UserInfo;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -34,7 +33,7 @@ public class SlashCommands {
 
   @Autowired private GamesApplication gamesApplication;
 
-  @Autowired private SlackContext slackContext;
+  @Autowired private SlackSession session;
 
   @PostMapping("/new-game")
   public SlashCommandResponse newGame(@RequestBody String body) {
@@ -43,23 +42,23 @@ public class SlashCommands {
     final var payload = payloadParser.parse(body);
     final var text = payload.getText();
 
-    final Map<String, String> players = getPlayerNames(text);
+    final List<String> userIds = getUserIds(text);
 
-    if (players.size() < 2 || players.size() > 10) {
+    if (userIds.size() < 2 || userIds.size() > 10) {
       return SlashCommandResponse.builder()
           .responseType("ephemeral")
           .text("You can play the game with 2 to 10 players. Let's try again.")
           .build();
     }
 
-    LOG.debug("Start new game with players {}", players);
+    LOG.debug("Start new game with players {}", userIds);
 
-    players.entrySet().forEach(p -> sendPrivateMessage(p.getKey(), p.getValue()));
+    userIds.forEach(this::openConversation);
 
-    final long key = gamesApplication.startNewGame(players.keySet());
+    gamesApplication.startNewGame(userIds);
 
     final var playerList =
-        players.keySet().stream()
+        userIds.stream()
             .map(userId -> String.format("<@%s>", userId))
             .collect(Collectors.joining(", "));
 
@@ -69,8 +68,8 @@ public class SlashCommands {
         .build();
   }
 
-  private HashMap<String, String> getPlayerNames(String text) {
-    final var players = new HashMap<String, String>();
+  private List<String> getUserIds(String text) {
+    final var userIds = new ArrayList<String>();
 
     final var playerNames = text.split("\\s|,");
     Arrays.stream(playerNames)
@@ -81,23 +80,25 @@ public class SlashCommands {
                 final var userId = matcher.group(1);
                 final var userName = matcher.group(2);
 
-                players.put(userId, userName);
+                userIds.add(userId);
               }
             });
 
-    return players;
+    return userIds;
   }
 
-  private void sendPrivateMessage(String userId, String userName) {
+  private void openConversation(String userId) {
     try {
+
       final var response = methodsClient.imOpen(r -> r.user(userId));
 
-      final var channelId = response.getChannel().getId();
+      if (!response.isOk()) {
+        throw new RuntimeException(
+            "Fail to open channel to user: " + userId + ", caused by " + response.getError());
+      }
 
-      slackContext.putUser(new UserInfo(userId, userName, channelId));
-
-    } catch (SlackApiException | IOException e) {
-      throw new RuntimeException(e);
+    } catch (IOException | SlackApiException e) {
+      throw new RuntimeException("Fail to open channel to user: " + userId, e);
     }
   }
 }
