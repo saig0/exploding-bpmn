@@ -4,6 +4,7 @@ import com.github.seratch.jslack.api.methods.MethodsClient;
 import com.github.seratch.jslack.api.methods.SlackApiException;
 import io.zeebe.bpmn.games.GameListener;
 import io.zeebe.bpmn.games.model.Card;
+import io.zeebe.bpmn.games.model.CardType;
 import io.zeebe.bpmn.games.slack.SlackContext.UserInfo;
 import java.io.IOException;
 import java.util.List;
@@ -129,6 +130,8 @@ public class SlackGameStateNotifier implements GameListener {
         user -> {
           if (player.equals(user)) {
             return String.format("You draw the card: %s", formatCard(card));
+          } else if (card.getType() == CardType.EXPLODING) {
+            return String.format("%s draw the card: %s", formatPlayer(player), formatCard(card));
           } else {
             return String.format("%s draw a card.", formatPlayer(player));
           }
@@ -140,7 +143,8 @@ public class SlackGameStateNotifier implements GameListener {
 
   @Override
   public void cardsDiscarded(String player, List<Card> cards) {
-    sendMessage(user -> String.format("%s discarded %s", formatPlayer(player), formatCards(cards)));
+    // sendMessage(user -> String.format("%s discarded %s", formatPlayer(player),
+    // formatCards(cards)));
   }
 
   @Override
@@ -215,11 +219,7 @@ public class SlackGameStateNotifier implements GameListener {
 
   @Override
   public void playerAlteredTheFuture(String player, List<Card> cards) {
-    sendMessageTo(
-        player,
-        String.format(
-            "You altered the future to %s",
-            formatCards(cards)));
+    sendMessageTo(player, String.format("You altered the future to %s", formatCards(cards)));
   }
 
   @Override
