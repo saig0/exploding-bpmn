@@ -1,3 +1,4 @@
+
 ## Slack Integration
 
 1. Creating a new Slack App: https://api.slack.com/apps
