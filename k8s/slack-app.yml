@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: slack-app
+  labels:
+    app: slack-app
+spec:
+  selector:
+    matchLabels:
+      app: slack-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: slack-app
+    spec:
+      containers:
+      - name: slack-app
+        image: gcr.io/zeebe-io/slack-app:latest
+        imagePullPolicy: Always
+        # https://kubernetes.io/docs/concepts/configuration/secret/#using-secrets-as-environment-variables
+        env:
+          - name: CLOUD_CLIENTID
+            valueFrom:
+              secretKeyRef:
+                name: slackAppSecrets
+                value: clientId
+          - name: CLOUD_CLIENTSECRET
+            valueFrom:
+              secretKeyRef:
+                name: slackAppSecrets
+                value: clientSecret
+          - name: CLOUD_AUTHSERVER
+            valueFrom:
+              secretKeyRef:
+                name: slackAppSecrets
+                value: authServer
+          - name: CLOUD_CONTACTPOINT
+            valueFrom:
+              secretKeyRef:
+                name: slackAppSecrets
+                value: contactPoint
+          - name: SLACK_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: slackAppSecrets
+                value: slackToken
