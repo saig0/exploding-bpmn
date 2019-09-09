@@ -13,9 +13,15 @@ import java.util.stream.Collectors;
 public class SimpleBot implements GameInteraction {
 
   @Override
-  public CompletableFuture<List<Card>> selectCardsToPlay(String player,
-      List<Card> handCards) {
+  public CompletableFuture<List<Card>> selectCardsToPlay(String player, List<Card> handCards) {
     return CompletableFuture.completedFuture(selectCards(handCards));
+  }
+
+  @Override
+  public CompletableFuture<Boolean> nopeThePlayedCard(String player) {
+    final var wantToNope = ThreadLocalRandom.current().nextDouble() > 0.5;
+
+    return CompletableFuture.completedFuture(wantToNope);
   }
 
   private List<Card> selectCards(List<Card> handCards) {

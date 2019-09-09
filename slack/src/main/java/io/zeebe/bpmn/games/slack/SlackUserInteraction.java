@@ -19,6 +19,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -26,8 +29,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class SlackUserInteraction implements GameInteraction {
 
+  private final ScheduledExecutorService executorService =
+      Executors.newSingleThreadScheduledExecutor();
   @Autowired private SlackSession session;
-
   @Autowired private MethodsClient methodsClient;
 
   @Override
@@ -161,6 +165,81 @@ public class SlackUserInteraction implements GameInteraction {
         });
 
     return future;
+  }
+
+  @Override
+  public CompletableFuture<Boolean> nopeThePlayedCard(String player) {
+    final var channelId = session.getChannelId(player);
+
+    final var block1 =
+        SectionBlock.builder()
+            .text(MarkdownTextObject.builder().text("Do you want to NOPE the card?").build())
+            .build();
+
+    final var nopeButton =
+        ButtonElement.builder()
+            .text(PlainTextObject.builder().text("NOPE!").build())
+            .value("nope")
+            .actionId("nope")
+            .style("primary")
+            .build();
+
+    final var skipButton =
+        ButtonElement.builder()
+            .text(PlainTextObject.builder().text("Skip").build())
+            .value("skip")
+            .actionId("skip")
+            .build();
+
+    final var block2 = ActionsBlock.builder().elements(List.of(nopeButton, skipButton)).build();
+
+    final var future = new CompletableFuture<Boolean>();
+
+    try {
+
+      final var resp =
+          methodsClient.chatPostMessage(
+              req -> req.channel(channelId).blocks(List.of(block1, block2)));
+
+      final var messageTs = resp.getTs();
+
+      executorService.schedule(
+          () -> removeMessage(future, channelId, messageTs), 5, TimeUnit.SECONDS);
+
+    } catch (SlackApiException | IOException e) {
+      throw new RuntimeException(e);
+    }
+
+    session.putPendingAction(
+        channelId,
+        action -> {
+          final String actionValue = action.getValue();
+
+          if (actionValue.equals("nope")) {
+            future.complete(true);
+
+          } else {
+            future.complete(false);
+          }
+
+          return ActionResponse.builder().responseType("ephemeral").deleteOriginal(true).build();
+        });
+
+    return future;
+  }
+
+  private void removeMessage(
+      CompletableFuture<Boolean> future, String channelId, String messageTs) {
+
+    if (future.isDone()) {
+      return;
+    }
+
+    try {
+      methodsClient.chatDelete(req -> req.channel(channelId).ts(messageTs));
+    } catch (SlackApiException | IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   private ButtonElement buildActionButton(Card card) {

@@ -8,6 +8,6 @@ public interface GameInteraction {
 
   CompletableFuture<List<Card>> selectCardsToPlay(String player, List<Card> handCards);
 
-
+  CompletableFuture<Boolean> nopeThePlayedCard(String player);
 
 }

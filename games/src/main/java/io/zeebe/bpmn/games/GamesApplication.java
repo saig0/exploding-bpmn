@@ -103,7 +103,7 @@ public class GamesApplication {
             "selectCardFromPlayer", new SelectCardFromPlayer(listener),
             "chooseRandomCard", new SelectRandomCard(listener),
             "celebrate", new Celebration(listener),
-            "play-nope", new NopeAction(listener)));
+            "play-nope", new NopeAction(listener, interaction)));
   }
 
   public long startNewGame(Collection<String> playerNames) {
