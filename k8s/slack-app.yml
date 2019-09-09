@@ -23,25 +23,25 @@ spec:
           - name: CLOUD_CLIENTID
             valueFrom:
               secretKeyRef:
-                name: slack-app-secrets
-                value: clientId
+                name: slack-app-secret
+                key: clientId
           - name: CLOUD_CLIENTSECRET
             valueFrom:
               secretKeyRef:
-                name: slack-app-secrets
-                value: clientSecret
+                name: slack-app-secret
+                key: clientSecret
           - name: CLOUD_AUTHSERVER
             valueFrom:
               secretKeyRef:
-                name: slack-app-secrets
-                value: authServer
+                name: slack-app-secret
+                key: authServer
           - name: CLOUD_CONTACTPOINT
             valueFrom:
               secretKeyRef:
-                name: slack-app-secrets
-                value: contactPoint
+                name: slack-app-secret
+                key: contactPoint
           - name: SLACK_TOKEN
             valueFrom:
               secretKeyRef:
-                name: slack-app-secrets
-                value: slackToken
+                name: slack-app-secret
+                key: slackToken
