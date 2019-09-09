@@ -31,7 +31,11 @@ public class SlackGameStateNotifier implements GameListener {
   private void sendMessageTo(String channelId, String message) {
     try {
 
-      methodsClient.chatPostMessage(req -> req.channel(channelId).text(message));
+      final var resp = methodsClient.chatPostMessage(req -> req.channel(channelId).text(message));
+
+      if (!resp.isOk()) {
+        LOG.warn("Failed to send message: {}", resp);
+      }
 
     } catch (SlackApiException | IOException e) {
       throw new RuntimeException(e);

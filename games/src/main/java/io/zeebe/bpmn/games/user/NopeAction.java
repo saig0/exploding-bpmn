@@ -10,6 +10,7 @@ import io.zeebe.client.api.response.ActivatedJob;
 import io.zeebe.client.api.worker.JobClient;
 import io.zeebe.client.api.worker.JobHandler;
 import java.util.List;
+import java.util.Optional;
 
 public class NopeAction implements JobHandler {
 
@@ -29,15 +30,17 @@ public class NopeAction implements JobHandler {
 
     final var currentPlayer = variables.getNextPlayer();
     final var nopePlayer = variables.getNopePlayer();
+    final var nopedPlayer = Optional.ofNullable(variables.getNopedPlayer());
 
     final var players = variables.getPlayers();
     final var playersHand = players.get(nopePlayer);
 
     final var nopeCard = playersHand.stream().filter(c -> c.getType() == CardType.NOPE).findFirst();
 
-    // final var wantToNope = ThreadLocalRandom.current().nextDouble() > 0.5;
+    // don't nope your self
+    // don't nope if you played the last nope
 
-    if (!nopePlayer.equals(currentPlayer) && nopeCard.isPresent()) {
+    if (!nopePlayer.equals(nopedPlayer.orElse(currentPlayer)) && nopeCard.isPresent()) {
 
       interaction
           .nopeThePlayedCard(nopePlayer)

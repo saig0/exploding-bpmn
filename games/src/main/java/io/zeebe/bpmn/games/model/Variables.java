@@ -160,6 +160,15 @@ public class Variables {
     return this;
   }
 
+  public String getNopedPlayer() {
+    return (String) jobVariables.get("nopedPlayer");
+  }
+
+  public Variables putNopedPlayer(String nopedPlayer) {
+    resultVariables.put("nopedPlayer", nopedPlayer);
+    return this;
+  }
+
   public boolean hasDefuseCard() {
     return (boolean) resultVariables.get("hasDefuse");
   }

@@ -403,6 +403,11 @@
         <bpmn:sequenceFlow id="SequenceFlow_0nqg4vp" sourceRef="ServiceTask_00hrqz4" targetRef="ServiceTask_196c86h" />
       </bpmn:subProcess>
       <bpmn:boundaryEvent id="BoundaryEvent_1ua62l3" name="nope" attachedToRef="ServiceTask_06iz61u">
+        <bpmn:extensionElements>
+          <zeebe:ioMapping>
+            <zeebe:output source="nopePlayer" target="nopedPlayer" />
+          </zeebe:ioMapping>
+        </bpmn:extensionElements>
         <bpmn:outgoing>SequenceFlow_0uqsi6p</bpmn:outgoing>
         <bpmn:messageEventDefinition messageRef="Message_039oztv" />
       </bpmn:boundaryEvent>
@@ -453,6 +458,11 @@
         <bpmn:sequenceFlow id="SequenceFlow_0m70l72" sourceRef="StartEvent_1ed53ph" targetRef="ServiceTask_182zsnk" />
       </bpmn:subProcess>
       <bpmn:boundaryEvent id="BoundaryEvent_0jdshqf" name="nope" attachedToRef="SubProcess_11b0053">
+        <bpmn:extensionElements>
+          <zeebe:ioMapping>
+            <zeebe:output source="nopePlayer" target="nopedPlayer" />
+          </zeebe:ioMapping>
+        </bpmn:extensionElements>
         <bpmn:outgoing>SequenceFlow_170d6iy</bpmn:outgoing>
         <bpmn:messageEventDefinition id="MessageEventDefinition_13uomuj" messageRef="Message_03mmodp" />
       </bpmn:boundaryEvent>
