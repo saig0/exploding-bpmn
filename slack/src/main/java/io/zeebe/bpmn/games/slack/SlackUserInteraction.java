@@ -16,6 +16,7 @@ import io.zeebe.bpmn.games.model.Card;
 import io.zeebe.bpmn.games.model.CardType;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,14 +102,30 @@ public class SlackUserInteraction implements GameInteraction {
             cards = List.of(card);
           }
 
-          future.complete(cards);
+          final var notValidCard = cards.stream()
+              .filter(c -> c.getType() == CardType.DEFUSE || c.getType() == CardType.NOPE)
+              .findFirst();
 
-          return ActionResponse.builder()
-              .responseType("ephemeral")
-              //.text(String.format("Action '%s' has been accepted.", action.getActionId()))
-              .deleteOriginal(true)
-              //.replaceOriginal(false)
-              .build();
+          if (notValidCard.isPresent()) {
+            // don't complete future
+
+            return ActionResponse.builder()
+                .responseType("ephemeral")
+                .text(String.format("You can't play *%s*. Choose another card.", notValidCard.get().getType().name()))
+                .deleteOriginal(false)
+                .build();
+
+          } else {
+            future.complete(cards);
+
+            return ActionResponse.builder()
+                .responseType("ephemeral")
+                //.text(String.format("Action '%s' has been accepted.", action.getActionId()))
+                .deleteOriginal(true)
+                //.replaceOriginal(false)
+                .build();
+          }
+
         });
 
     return future;
