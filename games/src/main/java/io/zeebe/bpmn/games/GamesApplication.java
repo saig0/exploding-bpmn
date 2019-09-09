@@ -125,7 +125,7 @@ public class GamesApplication {
           .newWorker()
           .jobType(jobTypeHandler.getKey())
           .handler(jobTypeHandler.getValue())
-          .timeout(Duration.ofSeconds(5))
+          .timeout(Duration.ofMinutes(5))
           .open();
     }
   }

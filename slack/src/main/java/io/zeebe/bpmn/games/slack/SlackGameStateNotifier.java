@@ -57,7 +57,7 @@ public class SlackGameStateNotifier implements GameListener {
   }
 
   private String formatCard(Card card) {
-    return card.getType().name();
+    return "*" + card.getType().name() + "*";
   }
 
   private String formatCards(List<Card> cards) {
@@ -91,7 +91,7 @@ public class SlackGameStateNotifier implements GameListener {
         context,
         user -> {
           final var hand = handCards.get(user);
-          return String.format("Your hand cards: %s", formatCards(hand));
+          return String.format("Your hand: %s", formatCards(hand));
         });
   }
 
@@ -114,7 +114,7 @@ public class SlackGameStateNotifier implements GameListener {
         context,
         user -> {
           if (player.equals(user)) {
-            return String.format("You played: %s", formatCards(cards));
+            return String.format("You played %s", formatCards(cards));
           } else {
             return String.format("%s played %s.", formatPlayer(player), formatCards(cards));
           }
@@ -140,9 +140,9 @@ public class SlackGameStateNotifier implements GameListener {
         context,
         user -> {
           if (player.equals(user)) {
-            return String.format("You draw the card: %s", formatCard(card));
+            return String.format("You draw %s", formatCard(card));
           } else if (card.getType() == CardType.EXPLODING) {
-            return String.format("%s draw the card: %s", formatPlayer(player), formatCard(card));
+            return String.format("%s draw %s", formatPlayer(player), formatCard(card));
           } else {
             return String.format("%s draw a card.", formatPlayer(player));
           }
@@ -153,10 +153,7 @@ public class SlackGameStateNotifier implements GameListener {
   public void turnEnded(Context context, String player, int remainingTurns) {}
 
   @Override
-  public void cardsDiscarded(Context context, String player, List<Card> cards) {
-    // sendMessage(user -> String.format("%s discarded %s", formatPlayer(player),
-    // formatCards(cards)));
-  }
+  public void cardsDiscarded(Context context, String player, List<Card> cards) {}
 
   @Override
   public void playerToDrawSelected(Context context, String player, String playerToDrawFrom) {
@@ -183,10 +180,9 @@ public class SlackGameStateNotifier implements GameListener {
         user -> {
           if (player.equals(user)) {
             return String.format(
-                "You took the card %s from %s.", formatCard(card), formatPlayer(playerTakenFrom));
+                "You took %s from %s.", formatCard(card), formatPlayer(playerTakenFrom));
           } else if (playerTakenFrom.equals(user)) {
-            return String.format(
-                "%s took the card %s from you.", formatPlayer(player), formatCard(card));
+            return String.format("%s took %s from you.", formatPlayer(player), formatCard(card));
           } else {
             return String.format(
                 "%s took a card form %s.", formatPlayer(player), formatPlayer(playerTakenFrom));
@@ -201,10 +197,9 @@ public class SlackGameStateNotifier implements GameListener {
         user -> {
           if (player.equals(user)) {
             return String.format(
-                "You got the card %s from %s.", formatCard(card), formatPlayer(playerChosenFrom));
+                "You got %s from %s.", formatCard(card), formatPlayer(playerChosenFrom));
           } else if (playerChosenFrom.equals(user)) {
-            return String.format(
-                "%s got the card %s from you.", formatPlayer(player), formatCard(card));
+            return String.format("%s got %s from you.", formatPlayer(player), formatCard(card));
           } else {
             return String.format(
                 "%s got a card form %s.", formatPlayer(player), formatPlayer(playerChosenFrom));
@@ -254,10 +249,10 @@ public class SlackGameStateNotifier implements GameListener {
           if (player.equals(user)) {
             final int index = deck.indexOf(card) + 1;
             return String.format(
-                "You inserted the card %s into the deck at position %d.", formatCard(card), index);
+                "You inserted %s into the deck at position %d.", formatCard(card), index);
           } else {
             return String.format(
-                "%s inserted the card %s into the deck.", formatPlayer(player), formatCard(card));
+                "%s inserted %s into the deck.", formatPlayer(player), formatCard(card));
           }
         });
   }
@@ -296,10 +291,9 @@ public class SlackGameStateNotifier implements GameListener {
         context,
         user -> {
           if (player.equals(user)) {
-            return String.format("You noped the card(s) %s.", formatCards(nopedCards));
+            return String.format("You noped %s.", formatCards(nopedCards));
           } else {
-            return String.format(
-                "%s noped the card(s) %s.", formatPlayer(player), formatCards(nopedCards));
+            return String.format("%s noped %s.", formatPlayer(player), formatCards(nopedCards));
           }
         });
   }

@@ -44,37 +44,4 @@ public class SlackApplication {
     LOG.info("Ready!");
   }
 
-  private static void blockKitMessage(String url) {
-    ButtonElement button =
-        ButtonElement.builder()
-            .text(PlainTextObject.builder().emoji(true).text("Farmhouse").build())
-            .value("click_me_123")
-            .actionId("action-123")
-            .build();
-
-    LayoutBlock block = ActionsBlock.builder().elements(Arrays.asList(button)).build();
-
-    List<LayoutBlock> blocks = Arrays.asList(block);
-
-    Payload payload = Payload.builder().blocks(blocks).build();
-
-    Slack slack = Slack.getInstance();
-    try {
-      WebhookResponse response = slack.send(url, payload);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-
-  private static void simpleMessage(String url) {
-    Payload payload = Payload.builder().text("Hello World!").build();
-
-    Slack slack = Slack.getInstance();
-    try {
-      WebhookResponse response = slack.send(url, payload);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    // response.code, response.message, response.body
-  }
 }

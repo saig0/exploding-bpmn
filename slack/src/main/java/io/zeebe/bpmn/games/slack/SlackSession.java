@@ -2,11 +2,17 @@ package io.zeebe.bpmn.games.slack;
 
 import com.github.seratch.jslack.api.methods.MethodsClient;
 import com.github.seratch.jslack.api.methods.SlackApiException;
+import com.github.seratch.jslack.app_backend.interactive_messages.payload.BlockActionPayload;
+import com.github.seratch.jslack.app_backend.interactive_messages.response.ActionResponse;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +25,8 @@ public class SlackSession {
 
   private final Map<String, String> channelIdByUserId = new HashMap<>();
   private final Map<Long, GameInfo> games = new HashMap<>();
+
+  private final Map<String, Function<BlockActionPayload.Action, ActionResponse>> pendingActions = new HashMap<>();
 
   @Autowired private MethodsClient methodsClient;
 
@@ -49,6 +57,18 @@ public class SlackSession {
 
   public void removeGame(long key) {
     games.remove(key);
+  }
+
+  public void putPendingAction(String channelId, Function<BlockActionPayload.Action, ActionResponse> action) {
+    pendingActions.put(channelId, action);
+  }
+
+  public Optional<Function<BlockActionPayload.Action, ActionResponse>> getPendingAction(String channelId) {
+    return Optional.ofNullable(pendingActions.get(channelId));
+  }
+
+  public void removePendingAction(String channelId) {
+    pendingActions.remove(channelId);
   }
 
   public static class GameInfo {

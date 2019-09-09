@@ -10,6 +10,7 @@
     * Setting request url to `${BASE_URL}/slack/action`
 7. Enable Slash Commands 
     * New command `/new-game` with request url `${BASE_URL}/slack/command/new-game`
+    * New command `/how-to-play` with request url `${BASE_URL}/slack/command/how-to-play`
     
     
 ## Development
