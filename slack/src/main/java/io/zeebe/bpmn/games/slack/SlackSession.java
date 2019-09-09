@@ -9,9 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.Callable;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,7 +23,8 @@ public class SlackSession {
   private final Map<String, String> channelIdByUserId = new HashMap<>();
   private final Map<Long, GameInfo> games = new HashMap<>();
 
-  private final Map<String, Function<BlockActionPayload.Action, ActionResponse>> pendingActions = new HashMap<>();
+  private final Map<String, Function<BlockActionPayload.Action, ActionResponse>> pendingActions =
+      new HashMap<>();
 
   @Autowired private MethodsClient methodsClient;
 
@@ -51,19 +49,27 @@ public class SlackSession {
         .orElseThrow(() -> new RuntimeException("no game found for key: " + key));
   }
 
-  public void putGame(long key, List<String> userIds) {
-    games.put(key, new GameInfo(userIds));
+  public String getGameChannelId(long key) {
+    return Optional.ofNullable(games.get(key))
+        .map(GameInfo::getChannelId)
+        .orElseThrow(() -> new RuntimeException("no game found for key: " + key));
+  }
+
+  public void putGame(long key, String channelId, List<String> userIds) {
+    games.put(key, new GameInfo(channelId, userIds));
   }
 
   public void removeGame(long key) {
     games.remove(key);
   }
 
-  public void putPendingAction(String channelId, Function<BlockActionPayload.Action, ActionResponse> action) {
+  public void putPendingAction(
+      String channelId, Function<BlockActionPayload.Action, ActionResponse> action) {
     pendingActions.put(channelId, action);
   }
 
-  public Optional<Function<BlockActionPayload.Action, ActionResponse>> getPendingAction(String channelId) {
+  public Optional<Function<BlockActionPayload.Action, ActionResponse>> getPendingAction(
+      String channelId) {
     return Optional.ofNullable(pendingActions.get(channelId));
   }
 
@@ -73,14 +79,20 @@ public class SlackSession {
 
   public static class GameInfo {
 
+    private final String channelId;
     private final List<String> userIds;
 
-    public GameInfo(List<String> userIds) {
+    public GameInfo(String channelId, List<String> userIds) {
+      this.channelId = channelId;
       this.userIds = userIds;
     }
 
     public List<String> getUserIds() {
       return userIds;
+    }
+
+    public String getChannelId() {
+      return channelId;
     }
   }
 }

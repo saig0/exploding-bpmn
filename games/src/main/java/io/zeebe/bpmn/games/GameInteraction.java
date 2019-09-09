@@ -8,4 +8,6 @@ public interface GameInteraction {
 
   CompletableFuture<List<Card>> selectCardsToPlay(String player, List<Card> handCards);
 
+
+
 }

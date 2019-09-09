@@ -63,7 +63,9 @@ public class SlashCommands {
 
     userIds.forEach(this::openConversation);
 
-    gamesApplication.startNewGame(userIds);
+    final var key = gamesApplication.startNewGame(userIds);
+
+    session.putGame(key, payload.getChannelId(), userIds);
 
     final var playerList =
         userIds.stream()

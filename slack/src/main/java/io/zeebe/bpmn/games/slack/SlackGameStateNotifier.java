@@ -24,10 +24,6 @@ public class SlackGameStateNotifier implements GameListener {
 
   @Autowired private MethodsClient methodsClient;
 
-  private void newGame(Context context, List<String> userIds) {
-    session.putGame(context.getKey(), userIds);
-  }
-
   private void gameEnded(Context context) {
     session.removeGame(context.getKey());
   }
@@ -70,8 +66,6 @@ public class SlackGameStateNotifier implements GameListener {
 
   @Override
   public void newGameStarted(Context context, List<String> playerNames) {
-    newGame(context, playerNames);
-
     sendMessage(
         context,
         user -> {
@@ -281,6 +275,16 @@ public class SlackGameStateNotifier implements GameListener {
             return String.format("%s won the game :tada:", formatPlayer(player));
           }
         });
+
+    final String losers =
+        session.getUserIdsOfGame(context.getKey()).stream()
+            .filter(user -> !user.equals(player))
+            .map(this::formatPlayer)
+            .collect(Collectors.joining(", "));
+
+    sendMessageTo(
+        session.getGameChannelId(context.getKey()),
+        String.format(":tada: %s won against %s :boom:", formatPlayer(player), losers));
 
     gameEnded(context);
   }

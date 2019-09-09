@@ -61,6 +61,8 @@ public class SlackActions {
                     final var apiResponse =
                         responseSender.send(payload.getResponseUrl(), responseMessage);
 
+
+
                     if (apiResponse.getCode() != 200) {
                       LOG.error(
                           "Got an error from Slack Platform (response: {})", apiResponse.getBody());
@@ -74,6 +76,8 @@ public class SlackActions {
                     return; // 500
                   }
                 });
+
+        session.removePendingAction(payload.getChannel().getId());
       }
 
     } else {
