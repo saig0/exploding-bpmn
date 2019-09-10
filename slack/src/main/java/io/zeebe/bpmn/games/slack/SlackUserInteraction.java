@@ -283,7 +283,7 @@ public class SlackUserInteraction implements GameInteraction {
                   return ButtonElement.builder()
                       .text(plainText)
                       .value(player)
-                      .actionId("select_player-" + otherPlayer)
+                      .actionId("select_player" + otherPlayer)
                       .build();
                 })
             .collect(Collectors.toList());
@@ -307,6 +307,47 @@ public class SlackUserInteraction implements GameInteraction {
         action -> {
           final String selectedPlayer = action.getValue();
           future.complete(selectedPlayer);
+
+          return ActionResponse.builder().responseType("ephemeral").deleteOriginal(true).build();
+        });
+
+    return future;
+  }
+
+  @Override
+  public CompletableFuture<Card> selectCardToGive(String player, List<Card> handCards) {
+    final var channelId = session.getChannelId(player);
+
+    final var block1 =
+        SectionBlock.builder()
+            .text(MarkdownTextObject.builder().text("Choose a card to give away:").build())
+            .build();
+
+    final List<BlockElement> cardButtons =
+        handCards.stream()
+            .map(card -> buildActionButton("select_card", List.of(card)))
+            .collect(Collectors.toList());
+
+    final var block2 = ActionsBlock.builder().elements(cardButtons).build();
+
+    final var future = new CompletableFuture<Card>();
+
+    try {
+
+      final var resp =
+          methodsClient.chatPostMessage(
+              req -> req.channel(channelId).blocks(List.of(block1, block2)));
+
+    } catch (SlackApiException | IOException e) {
+      throw new RuntimeException(e);
+    }
+
+    session.putPendingAction(
+        channelId,
+        action -> {
+
+          final var selectedCard = getCardsFromActionValue(action.getValue()).get(0);
+          future.complete(selectedCard);
 
           return ActionResponse.builder().responseType("ephemeral").deleteOriginal(true).build();
         });

@@ -100,7 +100,7 @@ public class GamesApplication {
             "changeOrder", new ChangeOrder(listener, interaction),
             "selectAction", new SelectAction(listener, interaction),
             "selectOtherPlayer", new SelectOtherPlayer(listener, interaction),
-            "selectCardFromPlayer", new SelectCardFromPlayer(listener),
+            "selectCardFromPlayer", new SelectCardFromPlayer(listener, interaction),
             "chooseRandomCard", new SelectRandomCard(listener),
             "celebrate", new Celebration(listener),
             "play-nope", new NopeAction(listener, interaction)));

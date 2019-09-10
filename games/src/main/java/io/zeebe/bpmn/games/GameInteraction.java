@@ -14,4 +14,6 @@ public interface GameInteraction {
 
   CompletableFuture<String> selectPlayer(String player, List<String> otherPlayers);
 
+  CompletableFuture<Card> selectCardToGive(String player, List<Card> handCards);
+
 }

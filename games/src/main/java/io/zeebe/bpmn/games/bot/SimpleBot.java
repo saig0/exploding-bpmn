@@ -95,4 +95,13 @@ public class SimpleBot implements GameInteraction {
 
     return CompletableFuture.completedFuture(otherPlayer);
   }
+
+  @Override
+  public CompletableFuture<Card> selectCardToGive(String player, List<Card> handCards) {
+
+    final int randomCardIndex = ThreadLocalRandom.current().nextInt(0, handCards.size());
+    final var card = handCards.get(randomCardIndex);
+
+    return CompletableFuture.completedFuture(card);
+  }
 }
