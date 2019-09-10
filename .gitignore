@@ -19,3 +19,5 @@ trace.out
 .logs/
 *.iml
 target/
+
+slack-app-secret.yml
