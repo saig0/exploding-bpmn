@@ -33,6 +33,7 @@ public class SlackUserInteraction implements GameInteraction {
 
   private final ScheduledExecutorService executorService =
       Executors.newSingleThreadScheduledExecutor();
+
   @Autowired private SlackSession session;
   @Autowired private MethodsClient methodsClient;
 
@@ -256,6 +257,56 @@ public class SlackUserInteraction implements GameInteraction {
         action -> {
           final List<Card> alteredFuture = getCardsFromActionValue(action.getValue());
           future.complete(alteredFuture);
+
+          return ActionResponse.builder().responseType("ephemeral").deleteOriginal(true).build();
+        });
+
+    return future;
+  }
+
+  @Override
+  public CompletableFuture<String> selectPlayer(String player, List<String> otherPlayers) {
+    final var channelId = session.getChannelId(player);
+
+    final var block1 =
+        SectionBlock.builder()
+            .text(MarkdownTextObject.builder().text("Choose a player to draw a card from:").build())
+            .build();
+
+    final List<BlockElement> playerButtons =
+        otherPlayers.stream()
+            .map(
+                otherPlayer -> {
+                  final var plainText =
+                      PlainTextObject.builder().text(SlackUtil.formatPlayer(otherPlayer)).build();
+
+                  return ButtonElement.builder()
+                      .text(plainText)
+                      .value(player)
+                      .actionId("select_player-" + otherPlayer)
+                      .build();
+                })
+            .collect(Collectors.toList());
+
+    final var block2 = ActionsBlock.builder().elements(playerButtons).build();
+
+    final var future = new CompletableFuture<String>();
+
+    try {
+
+      final var resp =
+          methodsClient.chatPostMessage(
+              req -> req.channel(channelId).blocks(List.of(block1, block2)));
+
+    } catch (SlackApiException | IOException e) {
+      throw new RuntimeException(e);
+    }
+
+    session.putPendingAction(
+        channelId,
+        action -> {
+          final String selectedPlayer = action.getValue();
+          future.complete(selectedPlayer);
 
           return ActionResponse.builder().responseType("ephemeral").deleteOriginal(true).build();
         });

@@ -99,7 +99,7 @@ public class GamesApplication {
             "showTopThreeCards", new ShowTopThree(listener),
             "changeOrder", new ChangeOrder(listener, interaction),
             "selectAction", new SelectAction(listener, interaction),
-            "selectOtherPlayer", new SelectOtherPlayer(listener),
+            "selectOtherPlayer", new SelectOtherPlayer(listener, interaction),
             "selectCardFromPlayer", new SelectCardFromPlayer(listener),
             "chooseRandomCard", new SelectRandomCard(listener),
             "celebrate", new Celebration(listener),

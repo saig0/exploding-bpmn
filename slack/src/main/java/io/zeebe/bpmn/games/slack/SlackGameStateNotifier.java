@@ -1,5 +1,9 @@
 package io.zeebe.bpmn.games.slack;
 
+import static io.zeebe.bpmn.games.slack.SlackUtil.formatCard;
+import static io.zeebe.bpmn.games.slack.SlackUtil.formatCards;
+import static io.zeebe.bpmn.games.slack.SlackUtil.formatPlayer;
+
 import com.github.seratch.jslack.api.methods.MethodsClient;
 import com.github.seratch.jslack.api.methods.SlackApiException;
 import io.zeebe.bpmn.games.GameListener;
@@ -56,18 +60,6 @@ public class SlackGameStateNotifier implements GameListener {
         });
   }
 
-  private String formatCard(Card card) {
-    return "*" + card.getType().name() + "*";
-  }
-
-  private String formatCards(List<Card> cards) {
-    return cards.stream().map(this::formatCard).collect(Collectors.joining(", "));
-  }
-
-  private String formatPlayer(String userId) {
-    return String.format("<@%s>", userId);
-  }
-
   @Override
   public void newGameStarted(Context context, List<String> playerNames) {
     sendMessage(
@@ -76,7 +68,7 @@ public class SlackGameStateNotifier implements GameListener {
           final var otherPlayers =
               playerNames.stream()
                   .filter(player -> !player.equals(user))
-                  .map(this::formatPlayer)
+                  .map(SlackUtil::formatPlayer)
                   .collect(Collectors.joining(", "));
 
           return String.format("New game :boom: :cat2: with %s", otherPlayers);
@@ -284,7 +276,7 @@ public class SlackGameStateNotifier implements GameListener {
     final String losers =
         session.getUserIdsOfGame(context.getKey()).stream()
             .filter(user -> !user.equals(player))
-            .map(this::formatPlayer)
+            .map(SlackUtil::formatPlayer)
             .collect(Collectors.joining(", "));
 
     sendMessageTo(

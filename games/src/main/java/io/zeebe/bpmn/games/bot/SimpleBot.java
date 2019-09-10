@@ -86,4 +86,13 @@ public class SimpleBot implements GameInteraction {
 
     return CompletableFuture.completedFuture(alteredFuture);
   }
+
+  @Override
+  public CompletableFuture<String> selectPlayer(String player, List<String> otherPlayers) {
+
+     final var index = ThreadLocalRandom.current().nextInt(0, otherPlayers.size());
+     final var otherPlayer = otherPlayers.get(index);
+
+    return CompletableFuture.completedFuture(otherPlayer);
+  }
 }
