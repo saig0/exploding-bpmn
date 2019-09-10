@@ -18,8 +18,12 @@ spec:
       - name: slack-app
         image: gcr.io/zeebe-io/slack-app:latest
         imagePullPolicy: Always
+        ports:
+          - containerPort: 8080
         # https://kubernetes.io/docs/concepts/configuration/secret/#using-secrets-as-environment-variables
         env:
+          - name: SPRING_PROFILES_ACTIVE
+            value: "cloud"
           - name: CLOUD_CLIENTID
             valueFrom:
               secretKeyRef:
@@ -53,7 +57,7 @@ metadata:
   name: slack-app-svc
 spec:
   ports:
-  - port: 80
+  - port: 8080
     targetPort: 8080
     protocol: TCP
     name: http
