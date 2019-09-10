@@ -227,7 +227,8 @@ public class SlackGameStateNotifier implements GameListener {
 
   @Override
   public void playerAlteredTheFuture(Context context, String player, List<Card> cards) {
-    sendMessageTo(player, String.format("You altered the future to %s", formatCards(cards)));
+    final var channelId = session.getChannelId(player);
+    sendMessageTo(channelId, String.format("You altered the future to %s", formatCards(cards)));
   }
 
   @Override
