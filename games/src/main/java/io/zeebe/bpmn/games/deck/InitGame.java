@@ -6,6 +6,7 @@ import io.zeebe.bpmn.games.model.Variables;
 import io.zeebe.client.api.response.ActivatedJob;
 import io.zeebe.client.api.worker.JobClient;
 import io.zeebe.client.api.worker.JobHandler;
+import java.util.Collections;
 import java.util.Optional;
 
 public class InitGame implements JobHandler {
@@ -30,9 +31,13 @@ public class InitGame implements JobHandler {
           String.format("Expected between 2 and 10 players but was {}", playerCount));
     }
 
+    // start with a random player
+    Collections.shuffle(playerNames);
+
     listener.newGameStarted(GameContext.of(job), playerNames);
 
     variables
+        .putPlayerNames(playerNames)
         .putRound(0)
         .putTurns(1)
         .putCorrelationKey(String.valueOf(job.getWorkflowInstanceKey()));

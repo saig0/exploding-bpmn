@@ -61,7 +61,7 @@ public class SlashCommands {
 
     LOG.debug("Start new game with players {}", userIds);
 
-    userIds.forEach(this::openConversation);
+    userIds.stream().filter(userId -> !SlackUtil.isBot(userId)).forEach(this::openConversation);
 
     final var key = gamesApplication.startNewGame(userIds);
 
@@ -69,7 +69,7 @@ public class SlashCommands {
 
     final var playerList =
         userIds.stream()
-            .map(userId -> String.format("<@%s>", userId))
+            .map(SlackUtil::formatPlayer)
             .collect(Collectors.joining(", "));
 
     return SlashCommandResponse.builder()
@@ -91,6 +91,9 @@ public class SlashCommands {
                 final var userName = matcher.group(2);
 
                 userIds.add(userId);
+
+              } else if (SlackUtil.isBot(name)) {
+                userIds.add(name);
               }
             });
 

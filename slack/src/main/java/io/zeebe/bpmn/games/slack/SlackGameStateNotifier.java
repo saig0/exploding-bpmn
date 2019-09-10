@@ -50,14 +50,16 @@ public class SlackGameStateNotifier implements GameListener {
 
     final List<String> userIds = session.getUserIdsOfGame(context.getKey());
 
-    userIds.forEach(
-        userId -> {
-          final var channelId = session.getChannelId(userId);
+    userIds.stream()
+        .filter(userId -> !SlackUtil.isBot(userId))
+        .forEach(
+            userId -> {
+              final var channelId = session.getChannelId(userId);
 
-          final var message = messageForUser.apply(userId);
+              final var message = messageForUser.apply(userId);
 
-          sendMessageTo(channelId, message);
-        });
+              sendMessageTo(channelId, message);
+            });
   }
 
   @Override

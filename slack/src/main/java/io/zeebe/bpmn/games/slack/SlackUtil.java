@@ -15,6 +15,15 @@ public class SlackUtil {
   }
 
   public static String formatPlayer(String userId) {
-    return String.format("<@%s>", userId);
+    if (!isBot(userId)) {
+      return String.format("<@%s>", userId);
+    } else {
+      return String.format("_%s_", userId);
+    }
   }
+
+  public static boolean isBot(String userId) {
+    return userId.startsWith("bot_");
+  }
+
 }
