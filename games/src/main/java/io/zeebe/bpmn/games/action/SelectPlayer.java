@@ -33,7 +33,8 @@ public class SelectPlayer implements JobHandler {
     variables
         .putRound(round + 1)
         .putNextPlayer(nextPlayer)
-        .putTurnArray(turns);  // used for multi-instance
+        .putTurnArray(turns)  // used for multi-instance
+        .putNopedPlayer(null);
 
     jobClient
         .newCompleteCommand(job.getKey())
