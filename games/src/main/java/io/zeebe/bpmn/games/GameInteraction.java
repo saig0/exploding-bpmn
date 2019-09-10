@@ -16,4 +16,7 @@ public interface GameInteraction {
 
   CompletableFuture<Card> selectCardToGive(String player, List<Card> handCards);
 
+  CompletableFuture<Integer> selectPositionToInsertCard(String player,
+      Card card, int deckSize);
+
 }

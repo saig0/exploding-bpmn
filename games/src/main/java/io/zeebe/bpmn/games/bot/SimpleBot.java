@@ -26,6 +26,42 @@ public class SimpleBot implements GameInteraction {
     return CompletableFuture.completedFuture(wantToNope);
   }
 
+  @Override
+  public CompletableFuture<List<Card>> alterTheFuture(String player, List<Card> cards) {
+
+    final var alteredFuture = new ArrayList<>(cards);
+    Collections.shuffle(alteredFuture);
+
+    return CompletableFuture.completedFuture(alteredFuture);
+  }
+
+  @Override
+  public CompletableFuture<String> selectPlayer(String player, List<String> otherPlayers) {
+
+    final var index = ThreadLocalRandom.current().nextInt(0, otherPlayers.size());
+    final var otherPlayer = otherPlayers.get(index);
+
+    return CompletableFuture.completedFuture(otherPlayer);
+  }
+
+  @Override
+  public CompletableFuture<Card> selectCardToGive(String player, List<Card> handCards) {
+
+    final int randomCardIndex = ThreadLocalRandom.current().nextInt(0, handCards.size());
+    final var card = handCards.get(randomCardIndex);
+
+    return CompletableFuture.completedFuture(card);
+  }
+
+  @Override
+  public CompletableFuture<Integer> selectPositionToInsertCard(
+      String player, Card card, int deckSize) {
+
+    final int index = ThreadLocalRandom.current().nextInt(0, deckSize);
+
+    return CompletableFuture.completedFuture(index);
+  }
+
   private List<Card> selectCards(List<Card> handCards) {
 
     final boolean playCard = ThreadLocalRandom.current().nextDouble() < 0.25;
@@ -76,32 +112,5 @@ public class SimpleBot implements GameInteraction {
                 });
 
     return twoSameCatCards.or(() -> feralAndOtherCat).or(() -> actionCard).orElse(List.of());
-  }
-
-  @Override
-  public CompletableFuture<List<Card>> alterTheFuture(String player, List<Card> cards) {
-
-    final var alteredFuture = new ArrayList<>(cards);
-    Collections.shuffle(alteredFuture);
-
-    return CompletableFuture.completedFuture(alteredFuture);
-  }
-
-  @Override
-  public CompletableFuture<String> selectPlayer(String player, List<String> otherPlayers) {
-
-     final var index = ThreadLocalRandom.current().nextInt(0, otherPlayers.size());
-     final var otherPlayer = otherPlayers.get(index);
-
-    return CompletableFuture.completedFuture(otherPlayer);
-  }
-
-  @Override
-  public CompletableFuture<Card> selectCardToGive(String player, List<Card> handCards) {
-
-    final int randomCardIndex = ThreadLocalRandom.current().nextInt(0, handCards.size());
-    final var card = handCards.get(randomCardIndex);
-
-    return CompletableFuture.completedFuture(card);
   }
 }

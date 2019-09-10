@@ -82,7 +82,7 @@ public class GamesApplication {
             "drawTopCard",
             new DrawTopCard(listener),
             "injectKitten",
-            new InjectKitten(listener)));
+            new InjectKitten(listener, interaction)));
 
     // actions
     installWorkers(

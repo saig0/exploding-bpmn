@@ -22,9 +22,11 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -345,9 +347,83 @@ public class SlackUserInteraction implements GameInteraction {
     session.putPendingAction(
         channelId,
         action -> {
-
           final var selectedCard = getCardsFromActionValue(action.getValue()).get(0);
           future.complete(selectedCard);
+
+          return ActionResponse.builder().responseType("ephemeral").deleteOriginal(true).build();
+        });
+
+    return future;
+  }
+
+  @Override
+  public CompletableFuture<Integer> selectPositionToInsertCard(
+      String player, Card card, int deckSize) {
+    final var channelId = session.getChannelId(player);
+
+    final var text = String.format("Choose where to insert %s in the deck (%d cards):", SlackUtil.formatCard(card), deckSize);
+
+    final var block1 =
+        SectionBlock.builder().text(MarkdownTextObject.builder().text(text).build()).build();
+
+    final List<BlockElement> positionButtons = new ArrayList<>();
+
+    positionButtons.add(
+        ButtonElement.builder()
+            .text(PlainTextObject.builder().text("top").build())
+            .value(String.valueOf(0))
+            .actionId("select_index-top")
+            .style("primary")
+            .build());
+
+    positionButtons.add(
+        ButtonElement.builder()
+            .text(PlainTextObject.builder().text("bottom").build())
+            .value(String.valueOf(deckSize))
+            .actionId("select_index-bottom")
+            .build());
+
+    if (deckSize > 1) {
+      positionButtons.add(
+          ButtonElement.builder()
+              .text(PlainTextObject.builder().text("random").build())
+              .value(String.valueOf(ThreadLocalRandom.current().nextInt(deckSize)))
+              .actionId("select_index-random")
+              .build());
+    }
+
+    IntStream
+        .range(1, deckSize)
+        .forEach(index -> {
+          final var button = ButtonElement.builder()
+              .text(PlainTextObject.builder().text(String.format("top %d card", index)).build())
+              .value(String.valueOf(index))
+              .actionId("select_index-" + index)
+              .build();
+
+          positionButtons.add(button);
+        });
+
+    final var block2 = ActionsBlock.builder().elements(positionButtons).build();
+
+    final var future = new CompletableFuture<Integer>();
+
+    try {
+
+      final var resp =
+          methodsClient.chatPostMessage(
+              req -> req.channel(channelId).blocks(List.of(block1, block2)));
+
+    } catch (SlackApiException | IOException e) {
+      throw new RuntimeException(e);
+    }
+
+    session.putPendingAction(
+        channelId,
+        action -> {
+          final var actionValue = action.getValue();
+          final var index = Integer.parseInt(actionValue);
+          future.complete(index);
 
           return ActionResponse.builder().responseType("ephemeral").deleteOriginal(true).build();
         });
