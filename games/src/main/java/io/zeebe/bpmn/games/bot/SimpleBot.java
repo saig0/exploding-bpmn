@@ -3,6 +3,8 @@ package io.zeebe.bpmn.games.bot;
 import io.zeebe.bpmn.games.GameInteraction;
 import io.zeebe.bpmn.games.model.Card;
 import io.zeebe.bpmn.games.model.CardType;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -74,5 +76,14 @@ public class SimpleBot implements GameInteraction {
                 });
 
     return twoSameCatCards.or(() -> feralAndOtherCat).or(() -> actionCard).orElse(List.of());
+  }
+
+  @Override
+  public CompletableFuture<List<Card>> alterTheFuture(String player, List<Card> cards) {
+
+    final var alteredFuture = new ArrayList<>(cards);
+    Collections.shuffle(alteredFuture);
+
+    return CompletableFuture.completedFuture(alteredFuture);
   }
 }

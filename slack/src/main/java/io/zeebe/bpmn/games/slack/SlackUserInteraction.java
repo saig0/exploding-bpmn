@@ -16,12 +16,14 @@ import io.zeebe.bpmn.games.model.CardType;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -76,7 +78,8 @@ public class SlackUserInteraction implements GameInteraction {
 
     if (feralCats.size() == 1) {
       final var feralCat = feralCats.get(0);
-      nonFeralCats.forEach(cat -> cardButtons.add(buildActionButton(feralCat, cat)));
+      nonFeralCats.forEach(
+          cat -> cardButtons.add(buildActionButton("play_card", List.of(feralCat, cat))));
 
       nonPlayableCards.removeAll(feralCats);
       nonPlayableCards.removeAll(nonFeralCats);
@@ -88,7 +91,8 @@ public class SlackUserInteraction implements GameInteraction {
             .map(e -> e.getValue())
             .collect(Collectors.toList());
 
-    twoSameCatCards.forEach(cats -> cardButtons.add(buildActionButton(cats.get(0), cats.get(1))));
+    twoSameCatCards.forEach(
+        cats -> cardButtons.add(buildActionButton("play_card", List.of(cats.get(0), cats.get(1)))));
     twoSameCatCards.forEach(nonPlayableCards::removeAll);
 
     final List<Card> actionCards =
@@ -97,7 +101,7 @@ public class SlackUserInteraction implements GameInteraction {
             .filter(card -> !card.getType().isCatCard())
             .collect(Collectors.toList());
 
-    actionCards.forEach(card -> cardButtons.add(buildActionButton(card)));
+    actionCards.forEach(card -> cardButtons.add(buildActionButton("play_card", List.of(card))));
     nonPlayableCards.removeAll(actionCards);
 
     final var block2 = ActionsBlock.builder().elements(cardButtons).build();
@@ -139,19 +143,8 @@ public class SlackUserInteraction implements GameInteraction {
           final List<Card> cards;
           if (actionValue.equals("pass")) {
             cards = List.of();
-
           } else {
-            cards =
-                Arrays.stream(actionValue.split("\\+"))
-                    .map(
-                        value -> {
-                          final var cardIdAndType = value.split("-");
-                          final var cardId = cardIdAndType[0];
-                          final var cardType = cardIdAndType[1];
-
-                          return new Card(Integer.parseInt(cardId), CardType.valueOf(cardType));
-                        })
-                    .collect(Collectors.toList());
+            cards = getCardsFromActionValue(actionValue);
           }
 
           future.complete(cards);
@@ -217,7 +210,6 @@ public class SlackUserInteraction implements GameInteraction {
 
           if (actionValue.equals("nope")) {
             future.complete(true);
-
           } else {
             future.complete(false);
           }
@@ -226,6 +218,95 @@ public class SlackUserInteraction implements GameInteraction {
         });
 
     return future;
+  }
+
+  @Override
+  public CompletableFuture<List<Card>> alterTheFuture(String player, List<Card> cards) {
+    final var channelId = session.getChannelId(player);
+
+    final var block1 =
+        SectionBlock.builder()
+            .text(MarkdownTextObject.builder().text("Select the future you like").build())
+            .build();
+
+    final var permutations = permutations(cards);
+    final var possibleFutures = distinct(permutations);
+
+    final List<BlockElement> futureButtons =
+        possibleFutures.stream()
+            .map(f -> buildActionButton("alter_the_future", f))
+            .collect(Collectors.toList());
+
+    final var block2 = ActionsBlock.builder().elements(futureButtons).build();
+
+    try {
+
+      final var resp =
+          methodsClient.chatPostMessage(
+              req -> req.channel(channelId).blocks(List.of(block1, block2)));
+
+    } catch (SlackApiException | IOException e) {
+      throw new RuntimeException(e);
+    }
+
+    final var future = new CompletableFuture<List<Card>>();
+
+    session.putPendingAction(
+        channelId,
+        action -> {
+          final List<Card> alteredFuture = getCardsFromActionValue(action.getValue());
+          future.complete(alteredFuture);
+
+          return ActionResponse.builder().responseType("ephemeral").deleteOriginal(true).build();
+        });
+
+    return future;
+  }
+
+  private <T> List<List<T>> permutations(List<T> list) {
+    if (list.isEmpty()) {
+      return List.of(list);
+    } else if (list.size() == 1) {
+      return List.of(list.subList(0, 1));
+    } else if (list.size() == 2) {
+      final var reverseList = new ArrayList<>(list.subList(0, 2));
+      Collections.reverse(reverseList);
+      return List.of(list, reverseList);
+    } else {
+      final var result = new ArrayList<List<T>>();
+
+      for (int i = 0; i < list.size(); i++) {
+
+        final var other = new ArrayList<>(list);
+        final T element = other.remove(i);
+
+        final List<List<T>> ps = new ArrayList<>(permutations(other));
+        for (int j = 0; j < ps.size(); j++) {
+          final List<T> p = new ArrayList<>(ps.get(j));
+          p.add(0, element);
+
+          result.add(p);
+        }
+      }
+
+      return result;
+    }
+  }
+
+  private List<List<Card>> distinct(List<List<Card>> list) {
+    final List<List<Card>> result = new ArrayList<>();
+
+    final Function<List<Card>, List<CardType>> f =
+        l -> l.stream().map(Card::getType).collect(Collectors.toList());
+
+    list.forEach(
+        l -> {
+          if (result.stream().noneMatch(r -> f.apply(r).equals(f.apply(l)))) {
+            result.add(l);
+          }
+        });
+
+    return result;
   }
 
   private void removeMessage(
@@ -242,23 +323,30 @@ public class SlackUserInteraction implements GameInteraction {
     }
   }
 
-  private ButtonElement buildActionButton(Card card) {
-    final var text = PlainTextObject.builder().emoji(true).text(card.getType().name()).build();
-    final var value = card.getId() + "-" + card.getType();
-
-    return ButtonElement.builder().text(text).value(value).actionId("play-card-" + value).build();
-  }
-
-  private ButtonElement buildActionButton(Card card1, Card card2) {
-    final var text =
-        PlainTextObject.builder()
-            .text(String.format("%s & %s", card1.getType().name(), card2.getType().name()))
-            .build();
+  private ButtonElement buildActionButton(String action, List<Card> cards) {
+    final var plainText =
+        cards.stream().map(card -> card.getType().name()).collect(Collectors.joining(" & "));
 
     final var value =
-        String.format(
-            "%d-%s+%d-%s", card1.getId(), card1.getType(), card2.getId(), card2.getType());
+        cards.stream()
+            .map(card -> String.format("%d-%s", card.getId(), card.getType()))
+            .collect(Collectors.joining("+"));
 
-    return ButtonElement.builder().text(text).value(value).actionId("play-card-" + value).build();
+    final var text = PlainTextObject.builder().text(plainText).build();
+
+    return ButtonElement.builder().text(text).value(value).actionId(action + "-" + value).build();
+  }
+
+  private List<Card> getCardsFromActionValue(String actionValue) {
+    return Arrays.stream(actionValue.split("\\+"))
+        .map(
+            value -> {
+              final var cardIdAndType = value.split("-");
+              final var cardId = cardIdAndType[0];
+              final var cardType = cardIdAndType[1];
+
+              return new Card(Integer.parseInt(cardId), CardType.valueOf(cardType));
+            })
+        .collect(Collectors.toList());
   }
 }

@@ -97,7 +97,7 @@ public class GamesApplication {
     installWorkers(
         Map.of(
             "showTopThreeCards", new ShowTopThree(listener),
-            "changeOrder", new ChangeOrder(listener),
+            "changeOrder", new ChangeOrder(listener, interaction),
             "selectAction", new SelectAction(listener, interaction),
             "selectOtherPlayer", new SelectOtherPlayer(listener),
             "selectCardFromPlayer", new SelectCardFromPlayer(listener),

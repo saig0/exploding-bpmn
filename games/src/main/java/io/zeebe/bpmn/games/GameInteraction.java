@@ -10,4 +10,6 @@ public interface GameInteraction {
 
   CompletableFuture<Boolean> nopeThePlayedCard(String player);
 
+  CompletableFuture<List<Card>> alterTheFuture(String player, List<Card> cards);
+
 }
