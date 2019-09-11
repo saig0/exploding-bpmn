@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SlashCommands {
 
   public static final String BASE_URL =
-      "https://raw.githubusercontent.com/saig0/bpmn-games/slack-bot/games/src/main/resources/";
+      "https://raw.githubusercontent.com/saig0/bpmn-games/master/games/src/main/resources/";
   private static final Logger LOG = LoggerFactory.getLogger(SlashCommands.class);
   private static final String BPMN_IMAGE_URL = BASE_URL + "explodingKittens.png";
   private static final String BPMN_XML_URL = BASE_URL + "explodingKittens.bpmn";
@@ -149,7 +149,7 @@ public class SlashCommands {
 
     final BiFunction<CardType, String, String> f =
         (card, descr) ->
-            String.format("- %s : %s\n", SlackUtil.formatCard(new Card(0, card)), descr);
+            String.format("- %s : %s\n", SlackUtil.formatCardType(card), descr);
 
     blocks.add(
         SectionBlock.builder()

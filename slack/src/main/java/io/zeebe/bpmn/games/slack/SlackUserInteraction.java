@@ -50,7 +50,10 @@ public class SlackUserInteraction implements GameInteraction {
 
     final var block1 =
         SectionBlock.builder()
-            .text(MarkdownTextObject.builder().text("Choose one of the cards to play, or pass.").build())
+            .text(
+                MarkdownTextObject.builder()
+                    .text("Choose one of the cards to play, or pass.")
+                    .build())
             .build();
     blocks.add(block1);
 
@@ -120,10 +123,7 @@ public class SlackUserInteraction implements GameInteraction {
                   MarkdownTextObject.builder()
                       .text(
                           String.format(
-                              "Not playable cards: %s",
-                              nonPlayableCards.stream()
-                                  .map(card -> String.format("*%s*", card.getType().name()))
-                                  .collect(Collectors.joining(", "))))
+                              "Not playable cards: %s", SlackUtil.formatCards(nonPlayableCards)))
                       .build())
               .build();
 
@@ -176,7 +176,7 @@ public class SlackUserInteraction implements GameInteraction {
 
     final var nopeButton =
         ButtonElement.builder()
-            .text(PlainTextObject.builder().text("NOPE!").build())
+            .text(PlainTextObject.builder().text(SlackUtil.formatCardTypePlain(CardType.NOPE)).build())
             .value("nope")
             .actionId("nope")
             .style("primary")
@@ -248,17 +248,14 @@ public class SlackUserInteraction implements GameInteraction {
               final var button = buildActionButton("alter_the_future", future);
               button.setText(PlainTextObject.builder().text("Choose").build());
 
-              final var playerBlock =
-                  SectionBlock.builder().text(text).accessory(button).build();
+              final var playerBlock = SectionBlock.builder().text(text).accessory(button).build();
 
               blocks.add(playerBlock);
             });
 
     try {
 
-      final var resp =
-          methodsClient.chatPostMessage(
-              req -> req.channel(channelId).blocks(blocks));
+      final var resp = methodsClient.chatPostMessage(req -> req.channel(channelId).blocks(blocks));
 
     } catch (SlackApiException | IOException e) {
       throw new RuntimeException(e);
@@ -302,8 +299,7 @@ public class SlackUserInteraction implements GameInteraction {
                       .actionId("select_player" + otherPlayer)
                       .build();
 
-              final var playerBlock =
-                  SectionBlock.builder().text(text).accessory(button).build();
+              final var playerBlock = SectionBlock.builder().text(text).accessory(button).build();
 
               blocks.add(playerBlock);
             });
@@ -513,8 +509,7 @@ public class SlackUserInteraction implements GameInteraction {
   }
 
   private ButtonElement buildActionButton(String action, List<Card> cards) {
-    final var plainText =
-        cards.stream().map(card -> card.getType().name()).collect(Collectors.joining(" & "));
+    final var plainText = SlackUtil.formatButtonCards(cards);
 
     final var value =
         cards.stream()
