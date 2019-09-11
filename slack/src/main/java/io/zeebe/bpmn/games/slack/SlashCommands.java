@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SlashCommands {
 
   public static final String BASE_URL =
-      "https://raw.githubusercontent.com/saig0/bpmn-games/slack-bot/games/src/main/resources/";
+      "https://raw.githubusercontent.com/saig0/bpmn-games/master/games/src/main/resources/";
   private static final Logger LOG = LoggerFactory.getLogger(SlashCommands.class);
   private static final String BPMN_IMAGE_URL = BASE_URL + "explodingKittens.png";
   private static final String BPMN_XML_URL = BASE_URL + "explodingKittens.bpmn";

@@ -50,7 +50,7 @@ public class SlackUserInteraction implements GameInteraction {
 
     final var block1 =
         SectionBlock.builder()
-            .text(MarkdownTextObject.builder().text("Choose one of the cards to play").build())
+            .text(MarkdownTextObject.builder().text("Choose one of the cards to play, or pass.").build())
             .build();
     blocks.add(block1);
 
@@ -229,26 +229,36 @@ public class SlackUserInteraction implements GameInteraction {
   public CompletableFuture<List<Card>> alterTheFuture(String player, List<Card> cards) {
     final var channelId = session.getChannelId(player);
 
-    final var block1 =
-        SectionBlock.builder()
-            .text(MarkdownTextObject.builder().text("Select the future you like").build())
-            .build();
-
     final var permutations = permutations(cards);
     final var possibleFutures = distinct(permutations);
 
-    final List<BlockElement> futureButtons =
-        possibleFutures.stream()
-            .map(f -> buildActionButton("alter_the_future", f))
-            .collect(Collectors.toList());
+    final var blocks = new ArrayList<LayoutBlock>();
 
-    final var block2 = ActionsBlock.builder().elements(futureButtons).build();
+    blocks.add(
+        SectionBlock.builder()
+            .text(MarkdownTextObject.builder().text("Choose the future you like:").build())
+            .build());
+
+    possibleFutures.stream()
+        .forEach(
+            future -> {
+              final var text =
+                  MarkdownTextObject.builder().text(SlackUtil.formatCards(future)).build();
+
+              final var button = buildActionButton("alter_the_future", future);
+              button.setText(PlainTextObject.builder().text("Choose").build());
+
+              final var playerBlock =
+                  SectionBlock.builder().text(text).accessory(button).build();
+
+              blocks.add(playerBlock);
+            });
 
     try {
 
       final var resp =
           methodsClient.chatPostMessage(
-              req -> req.channel(channelId).blocks(List.of(block1, block2)));
+              req -> req.channel(channelId).blocks(blocks));
 
     } catch (SlackApiException | IOException e) {
       throw new RuntimeException(e);
