@@ -2,17 +2,22 @@ package io.zeebe.bpmn.games.slack;
 
 import com.github.seratch.jslack.api.methods.MethodsClient;
 import com.github.seratch.jslack.api.methods.SlackApiException;
+import com.github.seratch.jslack.api.model.block.DividerBlock;
 import com.github.seratch.jslack.api.model.block.ImageBlock;
+import com.github.seratch.jslack.api.model.block.LayoutBlock;
 import com.github.seratch.jslack.api.model.block.SectionBlock;
 import com.github.seratch.jslack.api.model.block.composition.MarkdownTextObject;
 import com.github.seratch.jslack.api.model.block.composition.PlainTextObject;
 import com.github.seratch.jslack.app_backend.slash_commands.payload.SlashCommandPayloadParser;
 import com.github.seratch.jslack.app_backend.slash_commands.response.SlashCommandResponse;
 import io.zeebe.bpmn.games.GamesApplication;
+import io.zeebe.bpmn.games.model.Card;
+import io.zeebe.bpmn.games.model.CardType;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
@@ -29,7 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SlashCommands {
 
   public static final String BASE_URL =
-      "https://raw.githubusercontent.com/saig0/bpmn-games/master/games/src/main/resources/";
+      "https://raw.githubusercontent.com/saig0/bpmn-games/slack-bot/games/src/main/resources/";
   private static final Logger LOG = LoggerFactory.getLogger(SlashCommands.class);
   private static final String BPMN_IMAGE_URL = BASE_URL + "explodingKittens.png";
   private static final String BPMN_XML_URL = BASE_URL + "explodingKittens.bpmn";
@@ -45,8 +50,7 @@ public class SlashCommands {
   @Autowired private SlackSession session;
 
   @GetMapping("/hello")
-  public String helloSlackApp()
-  {
+  public String helloSlackApp() {
     return "Hello user!";
   }
 
@@ -75,9 +79,7 @@ public class SlashCommands {
     session.putGame(key, payload.getChannelId(), userIds);
 
     final var playerList =
-        userIds.stream()
-            .map(SlackUtil::formatPlayer)
-            .collect(Collectors.joining(", "));
+        userIds.stream().map(SlackUtil::formatPlayer).collect(Collectors.joining(", "));
 
     return SlashCommandResponse.builder()
         .responseType("in_channel")
@@ -128,24 +130,50 @@ public class SlashCommands {
 
     final var payload = payloadParser.parse(body);
 
-    final var block1 =
+    final var blocks = new ArrayList<LayoutBlock>();
+
+    blocks.add(
         SectionBlock.builder()
             .text(
                 MarkdownTextObject.builder()
                     .text("The game is well documented as BPMN (" + BPMN_XML_URL + ").")
                     .build())
-            .build();
+            .build());
 
-    final var block2 =
+    blocks.add(
         ImageBlock.builder()
-            .title(PlainTextObject.builder().text("Image").build())
+            .title(PlainTextObject.builder().text("Here is the image:").build())
             .imageUrl(BPMN_IMAGE_URL)
             .altText("the game as BPMN")
-            .build();
+            .build());
 
-    return SlashCommandResponse.builder()
-        .responseType("ephemeral")
-        .blocks(List.of(block1, block2))
-        .build();
+    final BiFunction<CardType, String, String> f =
+        (card, descr) ->
+            String.format("- %s : %s\n", SlackUtil.formatCard(new Card(0, card)), descr);
+
+    blocks.add(
+        SectionBlock.builder()
+            .text(
+                MarkdownTextObject.builder()
+                    .text(
+                        "Card descriptions:\n\n"
+                            + f.apply(CardType.EXPLODING, "game over")
+                            + f.apply(CardType.DEFUSE, "save you once from exploding")
+                            + f.apply(CardType.SEE_THE_FUTURE, "see the top 3 cards")
+                            + f.apply(
+                                CardType.ALTER_THE_FUTURE, "change the order of the top 3 cards")
+                            + f.apply(CardType.FAVOR, "get a card from a player")
+                            + f.apply(CardType.SHUFFLE, "shuffle the deck")
+                            + f.apply(CardType.SKIP, "end your turn (without drawing a card)")
+                            + f.apply(
+                                CardType.ATTACK,
+                                "end your turn and the next player has additional turns (your remaining turns + 2)")
+                            + f.apply(
+                                CardType.NOPE,
+                                "invalid the last played card (the action is not applied) - can be chained to undo the nope"))
+                    .build())
+            .build());
+
+    return SlashCommandResponse.builder().responseType("ephemeral").blocks(blocks).build();
   }
 }
