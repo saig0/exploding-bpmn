@@ -172,32 +172,18 @@ public class SlackGameStateNotifier implements GameListener {
         user -> {
           if (player.equals(user)) {
             return String.format(
-                "You took %s from %s.", formatCard(card), formatPlayer(playerTakenFrom));
+                "You got %s from %s.", formatCard(card), formatPlayer(playerTakenFrom));
           } else if (playerTakenFrom.equals(user)) {
-            return String.format("%s took %s from you.", formatPlayer(player), formatCard(card));
+            return String.format("%s got %s from you.", formatPlayer(player), formatCard(card));
           } else {
             return String.format(
-                "%s took a card form %s.", formatPlayer(player), formatPlayer(playerTakenFrom));
+                "%s got a card form %s.", formatPlayer(player), formatPlayer(playerTakenFrom));
           }
         });
   }
 
   @Override
-  public void cardChosenFrom(Context context, String player, String playerChosenFrom, Card card) {
-    sendMessage(
-        context,
-        user -> {
-          if (player.equals(user)) {
-            return String.format(
-                "You got %s from %s.", formatCard(card), formatPlayer(playerChosenFrom));
-          } else if (playerChosenFrom.equals(user)) {
-            return String.format("%s got %s from you.", formatPlayer(player), formatCard(card));
-          } else {
-            return String.format(
-                "%s got a card form %s.", formatPlayer(player), formatPlayer(playerChosenFrom));
-          }
-        });
-  }
+  public void cardChosenFrom(Context context, String player, String playerChosenFrom, Card card) {}
 
   @Override
   public void playerSawTheFuture(Context context, String player, List<Card> cards) {
