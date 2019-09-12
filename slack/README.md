@@ -17,4 +17,4 @@
 
 1. Download and run [ngrok](https://dashboard.ngrok.com)
 2. Setting request urls to `ngrok.io` url
-3. Run `Application` class
+3. Run `SlackApplication` class with activated Spring profile `local`
