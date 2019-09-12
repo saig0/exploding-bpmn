@@ -6,7 +6,7 @@ import java.util.concurrent.CompletableFuture;
 
 public interface GameInteraction {
 
-  CompletableFuture<List<Card>> selectCardsToPlay(String player, List<Card> handCards);
+  CompletableFuture<List<Card>> selectCardsToPlay(String player, List<Card> handCards, int deckSize);
 
   CompletableFuture<Boolean> nopeThePlayedCard(String player);
 

@@ -28,8 +28,10 @@ public class SelectAction implements JobHandler {
     final var players = variables.getPlayers();
     final var hand = players.get(player);
 
+    final var deck = variables.getDeck();
+
     interaction
-        .selectCardsToPlay(player, hand)
+        .selectCardsToPlay(player, hand, deck.size())
         .thenAccept(cardsToPlay -> completeJob(jobClient, job, variables, player, cardsToPlay));
   }
 

@@ -3,6 +3,7 @@ package io.zeebe.bpmn.games.slack;
 import com.github.seratch.jslack.api.methods.MethodsClient;
 import com.github.seratch.jslack.api.methods.SlackApiException;
 import com.github.seratch.jslack.api.model.block.ActionsBlock;
+import com.github.seratch.jslack.api.model.block.DividerBlock;
 import com.github.seratch.jslack.api.model.block.LayoutBlock;
 import com.github.seratch.jslack.api.model.block.SectionBlock;
 import com.github.seratch.jslack.api.model.block.composition.MarkdownTextObject;
@@ -42,20 +43,20 @@ public class SlackUserInteraction implements GameInteraction {
   @Autowired private MethodsClient methodsClient;
 
   @Override
-  public CompletableFuture<List<Card>> selectCardsToPlay(String player, List<Card> handCards) {
+  public CompletableFuture<List<Card>> selectCardsToPlay(String player, List<Card> handCards, int deckSize) {
 
     final var channelId = session.getChannelId(player);
 
     final var blocks = new ArrayList<LayoutBlock>();
 
-    final var block1 =
-        SectionBlock.builder()
-            .text(
-                MarkdownTextObject.builder()
-                    .text("Choose one of the cards to play, or pass.")
-                    .build())
-            .build();
-    blocks.add(block1);
+    blocks.add(DividerBlock.builder().build());
+
+    blocks.add(SectionBlock.builder()
+        .text(
+            MarkdownTextObject.builder()
+                .text("Choose one of the cards to play, or pass and draw a card.")
+                .build())
+        .build());
 
     final var cardButtons = new ArrayList<BlockElement>();
 
@@ -112,23 +113,28 @@ public class SlackUserInteraction implements GameInteraction {
     actionCards.forEach(card -> cardButtons.add(buildActionButton("play_card", List.of(card))));
     nonPlayableCards.removeAll(actionCards);
 
-    final var block2 = ActionsBlock.builder().elements(cardButtons).build();
-    blocks.add(block2);
+    blocks.add(ActionsBlock.builder().elements(cardButtons).build());
 
     if (!nonPlayableCards.isEmpty()) {
 
-      final var block3 =
-          SectionBlock.builder()
-              .text(
-                  MarkdownTextObject.builder()
-                      .text(
-                          String.format(
-                              "Not playable cards: %s", SlackUtil.formatCards(nonPlayableCards)))
-                      .build())
-              .build();
-
-      blocks.add(block3);
+      blocks.add(SectionBlock.builder()
+          .text(
+              MarkdownTextObject.builder()
+                  .text(
+                      String.format(
+                          "Not playable cards: %s", SlackUtil.formatCards(nonPlayableCards)))
+                  .build())
+          .build());
     }
+
+    blocks.add(SectionBlock.builder()
+        .text(
+            MarkdownTextObject.builder()
+                .text(
+                    String.format(
+                        "Remaining cards in the deck: %d", deckSize))
+                .build())
+        .build());
 
     try {
 
@@ -171,7 +177,9 @@ public class SlackUserInteraction implements GameInteraction {
 
     final var block1 =
         SectionBlock.builder()
-            .text(MarkdownTextObject.builder().text("Do you want to NOPE the card?").build())
+            .text(MarkdownTextObject.builder().text("Do you want to NOPE the card?\n" +
+                "_Better be fast - you just have few seconds._"
+                ).build())
             .build();
 
     final var nopeButton =
@@ -184,7 +192,7 @@ public class SlackUserInteraction implements GameInteraction {
 
     final var skipButton =
         ButtonElement.builder()
-            .text(PlainTextObject.builder().text("Skip").build())
+            .text(PlainTextObject.builder().text("Skip.").build())
             .value("skip")
             .actionId("skip")
             .build();
@@ -202,7 +210,7 @@ public class SlackUserInteraction implements GameInteraction {
       final var messageTs = resp.getTs();
 
       executorService.schedule(
-          () -> removeMessage(future, channelId, messageTs), 5, TimeUnit.SECONDS);
+          () -> removeMessage(future, channelId, messageTs), 4, TimeUnit.SECONDS);
 
     } catch (SlackApiException | IOException e) {
       throw new RuntimeException(e);
