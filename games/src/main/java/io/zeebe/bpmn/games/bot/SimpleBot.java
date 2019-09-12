@@ -15,7 +15,8 @@ import java.util.stream.Collectors;
 public class SimpleBot implements GameInteraction {
 
   @Override
-  public CompletableFuture<List<Card>> selectCardsToPlay(String player, List<Card> handCards, int deckSize) {
+  public CompletableFuture<List<Card>> selectCardsToPlay(String player, List<Card> handCards,
+      int deckSize, String nextPlayer) {
     return CompletableFuture.completedFuture(selectCards(handCards));
   }
 

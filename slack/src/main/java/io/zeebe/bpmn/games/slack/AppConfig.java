@@ -42,8 +42,9 @@ public class AppConfig {
 
     return new GameInteraction() {
       @Override
-      public CompletableFuture<List<Card>> selectCardsToPlay(String player, List<Card> handCards, int deckSize) {
-        return delegate.apply(player).selectCardsToPlay(player, handCards, deckSize);
+      public CompletableFuture<List<Card>> selectCardsToPlay(String player, List<Card> handCards,
+          int deckSize, String nextPlayer) {
+        return delegate.apply(player).selectCardsToPlay(player, handCards, deckSize, nextPlayer);
       }
 
       @Override

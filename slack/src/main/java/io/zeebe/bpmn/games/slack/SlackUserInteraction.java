@@ -43,7 +43,8 @@ public class SlackUserInteraction implements GameInteraction {
   @Autowired private MethodsClient methodsClient;
 
   @Override
-  public CompletableFuture<List<Card>> selectCardsToPlay(String player, List<Card> handCards, int deckSize) {
+  public CompletableFuture<List<Card>> selectCardsToPlay(String player, List<Card> handCards,
+      int deckSize, String nextPlayer) {
 
     final var channelId = session.getChannelId(player);
 
@@ -133,6 +134,15 @@ public class SlackUserInteraction implements GameInteraction {
                 .text(
                     String.format(
                         "Remaining cards in the deck: %d", deckSize))
+                .build())
+        .build());
+
+    blocks.add(SectionBlock.builder()
+        .text(
+            MarkdownTextObject.builder()
+                .text(
+                    String.format(
+                        "Next player will be %s", SlackUtil.formatPlayer(nextPlayer)))
                 .build())
         .build());
 
