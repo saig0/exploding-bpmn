@@ -73,7 +73,7 @@ public class SlackGameStateNotifier implements GameListener {
                   .map(SlackUtil::formatPlayer)
                   .collect(Collectors.joining(", "));
 
-          return String.format("New game :boom: :cat2: with %s", otherPlayers);
+          return String.format("New game :boom: BPMN :boom: with %s", otherPlayers);
         });
   }
 

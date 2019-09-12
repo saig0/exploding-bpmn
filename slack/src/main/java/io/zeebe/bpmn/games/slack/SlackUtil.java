@@ -102,7 +102,7 @@ public class SlackUtil {
     if (!isBot(userId)) {
       return String.format("<@%s>", userId);
     } else {
-      return String.format("_%s_", userId);
+      return String.format(":robot_face: _%s_", userId);
     }
   }
 
