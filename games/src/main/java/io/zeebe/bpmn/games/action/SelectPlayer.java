@@ -20,10 +20,9 @@ public class SelectPlayer implements JobHandler {
   public void handle(JobClient jobClient, ActivatedJob job) {
     final var variables = Variables.from(job);
 
-    final var players = variables.getPlayers();
     final int round = variables.getRound();
 
-    final var playerNames = new ArrayList<>(players.keySet());
+    final var playerNames = variables.getPlayerNames();
     final var nextPlayer = playerNames.get(round % playerNames.size());
 
     final int turns = variables.getTurns();
