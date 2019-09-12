@@ -29,9 +29,10 @@ public class Variables {
 
   private Card asCard(Map serializedCard) {
     final var id = Optional.ofNullable((Integer) serializedCard.get("id")).orElseThrow();
-    final var type = Optional.ofNullable((String) serializedCard.get("type"))
-        .map(CardType::valueOf)
-        .orElseThrow();
+    final var type =
+        Optional.ofNullable((String) serializedCard.get("type"))
+            .map(CardType::valueOf)
+            .orElseThrow();
     return new Card(id, type);
   }
 
@@ -60,9 +61,7 @@ public class Variables {
   public Map<String, List<Card>> getPlayers() {
     final var map = (Map<String, List>) jobVariables.get("players");
     return map.entrySet().stream()
-        .collect(Collectors.toMap(
-            e -> e.getKey(),
-            e -> asCardList(e.getValue())));
+        .collect(Collectors.toMap(e -> e.getKey(), e -> asCardList(e.getValue())));
   }
 
   public Variables putPlayers(Map<String, List<Card>> players) {
@@ -201,4 +200,12 @@ public class Variables {
     return this;
   }
 
+  public Integer getNextPlayerIndex() {
+    return (Integer) jobVariables.get("nextPlayerIndex");
+  }
+
+  public Variables putNextPlayerIndex(Integer nextPlayerIndex) {
+    resultVariables.put("nextPlayerIndex", nextPlayerIndex);
+    return this;
+  }
 }

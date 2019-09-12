@@ -6,7 +6,6 @@ import io.zeebe.bpmn.games.model.Variables;
 import io.zeebe.client.api.response.ActivatedJob;
 import io.zeebe.client.api.worker.JobClient;
 import io.zeebe.client.api.worker.JobHandler;
-import java.util.ArrayList;
 
 public class SelectPlayer implements JobHandler {
 
@@ -23,15 +22,17 @@ public class SelectPlayer implements JobHandler {
     final int round = variables.getRound();
 
     final var playerNames = variables.getPlayerNames();
-    final var nextPlayer = playerNames.get(round % playerNames.size());
+    final var currentPlayerIndex = variables.getNextPlayerIndex();
+    final var currentPlayer = playerNames.get(currentPlayerIndex);
 
     final int turns = variables.getTurns();
 
-    listener.nextPlayerSelected(GameContext.of(job), nextPlayer, turns);
+    listener.nextPlayerSelected(GameContext.of(job), currentPlayer, turns);
 
     variables
         .putRound(round + 1)
-        .putNextPlayer(nextPlayer)
+        .putNextPlayer(currentPlayer)
+        .putNextPlayerIndex((currentPlayerIndex + 1) % playerNames.size())
         .putTurnArray(turns)  // used for multi-instance
         .putNopedPlayer(null);
 

@@ -6,8 +6,8 @@ import io.zeebe.bpmn.games.model.Variables;
 import io.zeebe.client.api.response.ActivatedJob;
 import io.zeebe.client.api.worker.JobClient;
 import io.zeebe.client.api.worker.JobHandler;
-import java.util.Collections;
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class InitGame implements JobHandler {
 
@@ -32,7 +32,7 @@ public class InitGame implements JobHandler {
     }
 
     // start with a random player
-    Collections.shuffle(playerNames);
+    final var nextPlayerIndex = ThreadLocalRandom.current().nextInt(playerCount);
 
     listener.newGameStarted(GameContext.of(job), playerNames);
 
@@ -40,6 +40,7 @@ public class InitGame implements JobHandler {
         .putPlayerNames(playerNames)
         .putRound(0)
         .putTurns(1)
+        .putNextPlayerIndex(nextPlayerIndex)
         .putCorrelationKey(String.valueOf(job.getWorkflowInstanceKey()));
 
     jobClient

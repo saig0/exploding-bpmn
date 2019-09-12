@@ -30,11 +30,14 @@ public class CleanUpAfterExploding implements JobHandler {
     final var handCards = players.remove(currentPlayer);
     discardPile.addAll(handCards);
 
+    final var nextPlayerIndex = Math.max(variables.getNextPlayerIndex() - 1, 0);
+
     listener.playerExploded(GameContext.of(job), currentPlayer);
 
     variables
         .putPlayers(players)
         .putPlayerNames(playerNames)
+        .putNextPlayerIndex(nextPlayerIndex)
         .putDiscardPile(discardPile)
         .putTurns(0)
         .putPlayerCount(players.size());
