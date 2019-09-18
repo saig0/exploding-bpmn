@@ -30,6 +30,8 @@ import io.zeebe.client.api.worker.JobHandler;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -126,6 +128,8 @@ public class GamesApplication {
           .jobType(jobTypeHandler.getKey())
           .handler(jobTypeHandler.getValue())
           .timeout(Duration.ofMinutes(10))
+          .pollInterval(Duration.ofMillis(100).plusMillis(ThreadLocalRandom.current().nextInt(1, 250)))
+          .requestTimeout(Duration.ofSeconds(10).plusSeconds(ThreadLocalRandom.current().nextInt(1, 10)))
           .open();
     }
   }
