@@ -1,0 +1,25 @@
+spring:
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+    default-property-inclusion: non_null
+
+slack.token: x
+
+zeebe:
+  client:
+    cloud:
+      clusterId: x
+      clientId: x
+      clientSecret: x
+      baseUrl: zeebe.ultrawombat.com
+      region: bru-3
+      authUrl: https://login.cloud.ultrawombat.com/oauth/token
+
+    job:
+      timeout: PT30S
+
+    worker:
+      default-name: exploding-bpmn-app
+
+logging.level.io.camunda.zeebe.client.job.poller: error
+logging.level.io.zeebe.bpmn.games.slack: warn

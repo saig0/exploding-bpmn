@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: exploding-bpmn-app
+  labels:
+    app: exploding-bpmn-app
+spec:
+  selector:
+    matchLabels:
+      app: exploding-bpmn-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: exploding-bpmn-app
+    spec:
+      containers:
+      - name: exploding-bpmn-app
+        image: gcr.io/zeebe-io/exploding-bpmn:latest
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 8080
+        # https://kubernetes.io/docs/concepts/configuration/secret/#using-secrets-as-environment-variables
+        env:
+          - name: ZEEBE_CLIENT_CLOUD_CLUSTERID
+            value: "x"
+          - name: ZEEBE_CLIENT_CLOUD_CLIENTID
+            value: "x"
+          - name: CLOUD_CLIENTSECRET
+            valueFrom:
+              secretKeyRef:
+                name: exploding-bpmn-app-secret
+                key: clientSecret
+          - name: ZEEBE_CLIENT_CLOUD_BASEURL
+            value: "zeebe.ultrawombat.com"
+          - name: ZEEBE_CLIENT_CLOUD_REGION
+            value: "bru-3"
+          - name: ZEEBE_CLIENT_CLOUD_AUTHURL
+            value: "https://login.cloud.ultrawombat.com/oauth/token"
+          - name: SLACK_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: exploding-bpmn-app-secret
+                key: slackToken
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: exploding-bpmn-app-svc
+spec:
+  externalTrafficPolicy: Cluster
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  selector:
+    app: exploding-bpmn-app
+  sessionAffinity: None
+  type: LoadBalancer
