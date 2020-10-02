@@ -1,8 +1,8 @@
 package io.zeebe.bpmn.games.slack;
 
 import io.zeebe.client.ZeebeClient;
-import io.zeebe.client.impl.OAuthCredentialsProvider;
-import io.zeebe.client.impl.OAuthCredentialsProviderBuilder;
+import io.zeebe.client.impl.oauth.OAuthCredentialsProvider;
+import io.zeebe.client.impl.oauth.OAuthCredentialsProviderBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,15 +29,24 @@ public class ZeebeCloudConfig {
 
   @Bean
   public ZeebeClient zeebeClient() {
-    LOG.info("Configuration: \n Client id: {}, \n Client secret: {}, \n Auth server: {}, \n Contactpoint: {}", cloudClientId, cloudClientSecret, cloudAuthServer, contactPoint);
+    LOG.info(
+        "Configuration: \n Client id: {}, \n Client secret: {}, \n Auth server: {}, \n Contactpoint: {}",
+        cloudClientId,
+        cloudClientSecret,
+        cloudAuthServer,
+        contactPoint);
 
-    final OAuthCredentialsProviderBuilder c = new OAuthCredentialsProviderBuilder();
-    final OAuthCredentialsProvider cred = c.audience(contactPoint).clientId(cloudClientId)
-        .clientSecret(cloudClientSecret).authorizationServerUrl(cloudAuthServer).build();
+    final OAuthCredentialsProvider credentialsProvider =
+        new OAuthCredentialsProviderBuilder()
+            .audience(contactPoint)
+            .clientId(cloudClientId)
+            .clientSecret(cloudClientSecret)
+            .authorizationServerUrl(cloudAuthServer)
+            .build();
 
     return ZeebeClient.newClientBuilder()
         .brokerContactPoint(contactPoint + ":443")
-        .credentialsProvider(cred)
+        .credentialsProvider(credentialsProvider)
         .build();
   }
 }
