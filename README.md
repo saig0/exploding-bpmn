@@ -33,7 +33,7 @@ The Slack application provides two commands:
 6. Store the OAuth Token for Your Workspace from `OAuth & Permissions`
 7. Installing the app to the workspace
 
-## Publish the Docker image 
+### Publish the Docker image 
 
 The docker image is built and pushed using Jib. 
 
