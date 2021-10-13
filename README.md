@@ -1,9 +1,9 @@
-# exploding-bpmn
+# 💥 exploding-bpmn 💥
 
 Exploding BPMN is like the game _Exploding Kittens_ but with BPMN symbols. The game is modeled in
 BPMN and executed in Camunda Cloud.
 
-## Usage
+## 💣 Usage
 
 The Slack application provides two commands:
 
@@ -13,7 +13,7 @@ The Slack application provides two commands:
   * use a player name like `bot_*` to add a bot (e.g. `/exploding-bpmn @me bot_1 bot_2`)
   * the game is played in private chats with the app
 
-## Install
+## 🚀 Install
 
 ### Set up a Slack App
 
@@ -74,7 +74,7 @@ kubectl get services
 2. Set the public IP address for Interactivity Request URL
 3. Set the public IP address for Slash commands
 
-## Development
+## 🔥 Development
 
 1. Download and run [ngrok](https://dashboard.ngrok.com)
 2. Setting request URLs to `ngrok.io` 
@@ -82,7 +82,7 @@ kubectl get services
 4. Start a new game by creating a new instance of `exploding-kittens` 
   * with a variable `playerNames` (e.g. `["player1","player2"]`)
 
-## Configuration
+## 🔧 Configuration
 
 Environment variables:
 
