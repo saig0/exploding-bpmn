@@ -56,6 +56,7 @@ public class SlashCommands {
 
     final var payload = payloadParser.parse(body);
     final var text = payload.getText();
+    final var channelId = payload.getChannelId();
 
     final List<String> userIds = getUserIds(text);
 
@@ -70,9 +71,9 @@ public class SlashCommands {
 
     userIds.stream().filter(userId -> !SlackUtil.isBot(userId)).forEach(this::openConversation);
 
-    final String key = gamesApplication.startNewGame(userIds);
+    final String key = gamesApplication.startNewGame(userIds, channelId);
 
-    session.putGame(key, payload.getChannelId(), userIds);
+    session.putGame(key, channelId, userIds);
 
     final var playerList =
         userIds.stream().map(SlackUtil::formatPlayer).collect(Collectors.joining(", "));

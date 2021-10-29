@@ -222,4 +222,13 @@ public class Variables {
     resultVariables.put("game-key", gameKey);
     return this;
   }
+
+  public String getChannelId() {
+    return (String) jobVariables.get("channelId");
+  }
+
+  public Variables putChannelId(String channelId) {
+    resultVariables.put("channelId", channelId);
+    return this;
+  }
 }

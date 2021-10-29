@@ -45,7 +45,7 @@ public class GamesApplication {
         .join();
   }
 
-  public String startNewGame(List<String> playerNames) {
+  public String startNewGame(List<String> playerNames, String channelId) {
 
     final var gameKey = UUID.randomUUID().toString();
 
@@ -57,6 +57,7 @@ public class GamesApplication {
             Variables.createNew()
                 .putPlayerNames(playerNames)
                 .putGameKey(gameKey)
+                .putChannelId(channelId)
                 .getResultVariables())
         .send()
         .join();
