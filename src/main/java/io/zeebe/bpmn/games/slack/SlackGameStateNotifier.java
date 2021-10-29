@@ -48,7 +48,7 @@ public class SlackGameStateNotifier implements GameListener {
 
   private void sendMessage(Context context, Function<String, String> messageForUser) {
 
-    final List<String> userIds = session.getUserIdsOfGame(context.getKey());
+    final List<String> userIds = session.getUserIdsOfGame(context);
 
     userIds.stream()
         .filter(userId -> !SlackUtil.isBot(userId))
@@ -256,13 +256,13 @@ public class SlackGameStateNotifier implements GameListener {
         });
 
     final String losers =
-        session.getUserIdsOfGame(context.getKey()).stream()
+        session.getUserIdsOfGame(context).stream()
             .filter(user -> !user.equals(player))
             .map(SlackUtil::formatPlayer)
             .collect(Collectors.joining(", "));
 
     sendMessageTo(
-        session.getGameChannelId(context.getKey()),
+        session.getGameChannelId(context),
         String.format(
             ":tada: %s won against %s in :boom: Exploding BPMN :boom:",
             formatPlayer(player), losers));

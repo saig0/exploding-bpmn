@@ -4,6 +4,7 @@ import com.github.seratch.jslack.api.methods.MethodsClient;
 import com.github.seratch.jslack.api.methods.SlackApiException;
 import com.github.seratch.jslack.app_backend.interactive_messages.payload.BlockActionPayload;
 import com.github.seratch.jslack.app_backend.interactive_messages.response.ActionResponse;
+import io.zeebe.bpmn.games.GameListener.Context;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -43,16 +44,16 @@ public class SlackSession {
     }
   }
 
-  public List<String> getUserIdsOfGame(String key) {
-    return Optional.ofNullable(games.get(key))
+  public List<String> getUserIdsOfGame(Context context) {
+    return Optional.ofNullable(games.get(context.getKey()))
         .map(GameInfo::getUserIds)
-        .orElseThrow(() -> new RuntimeException("no game found for key: " + key));
+        .orElse(context.getUserIds());
   }
 
-  public String getGameChannelId(String key) {
-    return Optional.ofNullable(games.get(key))
+  public String getGameChannelId(Context context) {
+    return Optional.ofNullable(games.get(context.getKey()))
         .map(GameInfo::getChannelId)
-        .orElseThrow(() -> new RuntimeException("no game found for key: " + key));
+        .orElse(context.getChannelId());
   }
 
   public void putGame(String key, String channelId, List<String> userIds) {

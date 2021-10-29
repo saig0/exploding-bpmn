@@ -50,5 +50,7 @@ public interface GameListener {
 
   interface Context {
     String getKey();
+    List<String> getUserIds();
+    String getChannelId();
   }
 }
