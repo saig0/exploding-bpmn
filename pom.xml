@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.zeebe.bpmn-games</groupId>
   <artifactId>exploding-bpmn</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>1.0.1</version>
   <name>Exploding BPMN</name>
 
   <packaging>jar</packaging>
@@ -13,7 +13,7 @@
   <parent>
     <groupId>org.camunda</groupId>
     <artifactId>camunda-release-parent</artifactId>
-    <version>3.8.1</version>
+    <version>3.9.1</version>
     <!-- do not remove empty tag - http://jira.codehaus.org/browse/MNG-4687 -->
     <relativePath/>
   </parent>
@@ -42,7 +42,7 @@
       <dependency>
         <groupId>io.camunda</groupId>
         <artifactId>spring-zeebe-starter</artifactId>
-        <version>1.1.0</version>
+        <version>1.2.3</version>
       </dependency>
 
       <dependency>
