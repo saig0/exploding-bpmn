@@ -1,7 +1,7 @@
 # 💥 exploding-bpmn 💥
 
 Exploding BPMN is like the game _Exploding Kittens_ but with BPMN symbols. The game is modeled in
-BPMN and executed in Camunda Cloud.
+BPMN and executed in Camunda 8 SaaS.
 
 ## 💣 Usage
 
