@@ -89,7 +89,7 @@ Environment variables:
 * `SLACK_TOKEN`
 * `ZEEBE_CLIENT_CLOUD_CLUSTERID`
 * `ZEEBE_CLIENT_CLOUD_CLIENTID`
-* `CLOUD_CLIENTSECRET`
+* `ZEEBE_CLIENT_CLOUD_CLIENTSECRET`
 * `ZEEBE_CLIENT_CLOUD_BASEURL` (default: `zeebe.ultrawombat.com`)
 * `ZEEBE_CLIENT_CLOUD_REGION` (default: `bru-3`)
 * `ZEEBE_CLIENT_CLOUD_AUTHURL` (default: `https://login.cloud.ultrawombat.com/oauth/token`)
