@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.zeebe.bpmn-games</groupId>
   <artifactId>exploding-bpmn</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
   <name>Exploding BPMN</name>
 
   <packaging>jar</packaging>
@@ -27,9 +27,9 @@
     <!-- release parent settings -->
     <version.java>11</version.java>
     <nexus.snapshot.repository>
-      https://app.camunda.com/nexus/content/repositories/zeebe-io-snapshots/
+      https://artifacts.camunda.com/artifactory/zeebe-io-snapshots/
     </nexus.snapshot.repository>
-    <nexus.release.repository>https://app.camunda.com/nexus/content/repositories/zeebe-io/
+    <nexus.release.repository>https://artifacts.camunda.com/artifactory/zeebe-io/
     </nexus.release.repository>
 
     <!-- disable jdk8 javadoc checks on release build -->
@@ -124,7 +124,7 @@
       <plugin>
         <groupId>com.google.cloud.tools</groupId>
         <artifactId>jib-maven-plugin</artifactId>
-        <version>3.1.2</version>
+        <version>3.3.1</version>
         <executions>
           <execution>
             <phase>deploy</phase>
@@ -137,10 +137,6 @@
           <to>
             <image>gcr.io/zeebe-io/exploding-bpmn</image>
             <tags>${project.version}</tags>
-<!--            <auth>-->
-<!--              <username>_json_key</username>-->
-<!--              <password>${env.GCR_KEYFILE}</password>-->
-<!--            </auth>-->
           </to>
           <container>
             <ports>
@@ -197,7 +193,7 @@
     <repository>
       <id>zeebe</id>
       <name>Zeebe Repository</name>
-      <url>https://app.camunda.com/nexus/content/repositories/zeebe-io/</url>
+      <url>https://artifacts.camunda.com/artifactory/zeebe-io/</url>
       <releases>
         <enabled>true</enabled>
       </releases>
@@ -209,7 +205,7 @@
     <repository>
       <id>zeebe-snapshots</id>
       <name>Zeebe Snapshot Repository</name>
-      <url>https://app.camunda.com/nexus/content/repositories/zeebe-io-snapshots/</url>
+      <url>https://artifacts.camunda.com/artifactory/zeebe-io-snapshots/</url>
       <releases>
         <enabled>false</enabled>
       </releases>
