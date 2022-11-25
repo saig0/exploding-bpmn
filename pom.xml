@@ -21,7 +21,7 @@
   <properties>
     <version.zeebe>8.1.6</version.zeebe>
     <version.jslack>3.4.2</version.jslack>
-    <version.spring>2.2.11.RELEASE</version.spring>
+    <version.spring>2.7.6</version.spring>
 
 
     <!-- release parent settings -->
