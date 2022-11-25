@@ -26,7 +26,7 @@ spec:
             value: "x"
           - name: ZEEBE_CLIENT_CLOUD_CLIENTID
             value: "x"
-          - name: CLOUD_CLIENTSECRET
+          - name: ZEEBE_CLIENT_CLOUD_CLIENTSECRET
             valueFrom:
               secretKeyRef:
                 name: exploding-bpmn-app-secret
