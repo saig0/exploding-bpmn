@@ -30,9 +30,11 @@ public class DiscardNope implements JobHandler {
     final var discardPile = variables.getDiscardPile();
 
     final var nopedPlayer = variables.getNopedPlayer();
+
+    listener.playerNoped(GameContext.of(job), nopedPlayer, variables.getLastPlayedCards());
+
     final var players = variables.getPlayers();
     final var hand = players.get(nopedPlayer);
-
     final var nopeCard =
         hand.stream().filter(c -> c.getType() == CardType.NOPE).findFirst().orElseThrow();
 

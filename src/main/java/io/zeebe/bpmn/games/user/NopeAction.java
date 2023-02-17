@@ -32,8 +32,6 @@ public class NopeAction implements JobHandler {
   public void handle(JobClient jobClient, ActivatedJob job) {
     final var variables = Variables.from(job);
 
-    final var playedCards = variables.getLastPlayedCards();
-
     final var currentPlayer = variables.getNextPlayer();
     final var nopePlayer = variables.getNopePlayer();
     final var nopedPlayer = Optional.ofNullable(variables.getNopedPlayer());
@@ -53,17 +51,9 @@ public class NopeAction implements JobHandler {
           .thenAccept(
               wantToNope -> {
                 if (wantToNope) {
-                  completeJob(jobClient, job, playedCards, nopePlayer);
+                  jobClient.newCompleteCommand(job.getKey()).send().join();
                 }
               });
     }
-  }
-
-  private void completeJob(
-      JobClient jobClient, ActivatedJob job, List<Card> playedCards, String nopePlayer) {
-
-    listener.playerNoped(GameContext.of(job), nopePlayer, playedCards);
-
-    jobClient.newCompleteCommand(job.getKey()).send().join();
   }
 }
