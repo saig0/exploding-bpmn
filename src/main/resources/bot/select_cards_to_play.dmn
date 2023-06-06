@@ -1,0 +1,1202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/" id="Definitions_0802ggq" name="DRD" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.12.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.2.0">
+  <decision id="cards_to_play" name="Cards to play">
+    <decisionTable id="DecisionTable_1byjhiv" hitPolicy="FIRST">
+      <input id="Input_1" label="Hand cards">
+        <inputExpression id="InputExpression_1" typeRef="Any">
+          <text>hand_cards.type</text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_1x0ip14" label="Remaining rounds">
+        <inputExpression id="LiteralExpression_0gc38re" typeRef="number">
+          <text>round down(deck_size / player_count, 0)</text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_0cy8mxp" label="Has defuse card">
+        <inputExpression id="LiteralExpression_0xlhgry" typeRef="boolean">
+          <text>list contains(hand_cards.type, "DEFUSE") </text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_0ms7dyz" label="Remaining player turns">
+        <inputExpression id="LiteralExpression_14rwys5" typeRef="number">
+          <text>remaining_turns</text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_17qyerc" label="Last played card">
+        <inputExpression id="LiteralExpression_0an951p" typeRef="Any">
+          <text>if count(discard_pile) &gt; 0 then discard_pile[-1].type else ""</text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_16mhddp" label="Do I know the next card?">
+        <inputExpression id="LiteralExpression_0i4bmt0" typeRef="boolean">
+          <text>next_card != null</text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_0x2a6b5" label="Is exploding the next card?">
+        <inputExpression id="LiteralExpression_0o8h99d" typeRef="Any">
+          <text>if next_card != null then next_card.type = "EXPLODING" else null</text>
+        </inputExpression>
+      </input>
+      <output id="Output_1" label="Cards to play" name="cards_to_play" typeRef="Any" />
+      <rule id="DecisionRule_18xdshn">
+        <description>Next is exploding</description>
+        <inputEntry id="UnaryTests_1230pdt">
+          <text>list contains(?, "ATTACK")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1087d3k">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1s09gi1">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0dfa8x1">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_16qqyqo">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0w07bbj">
+          <text>true</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1h9ej63">
+          <text>true</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_08r78q9">
+          <text>["ATTACK"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0dq191r">
+        <description>Next is exploding</description>
+        <inputEntry id="UnaryTests_1gsaov0">
+          <text>list contains(?, "SHUFFLE")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_143k7df">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0vdwfwq">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0yi2gi5">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0yrujwp">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1ftmb6b">
+          <text>true</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_054bk1b">
+          <text>true</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0405l3z">
+          <text>["SHUFFLE"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0dldjp4">
+        <description>Next is exploding</description>
+        <inputEntry id="UnaryTests_1861kx4">
+          <text>list contains(?, "SKIP")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1llvp92">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0fereuh">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_08urjzc">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1ulmuyv">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0d5o8m6">
+          <text>true</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_00vmicx">
+          <text>true</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0xa5i5d">
+          <text>["SKIP"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1o7d712">
+        <description>Next is exploding</description>
+        <inputEntry id="UnaryTests_0iuklgg">
+          <text>list contains(?, "ALTER_THE_FUTURE")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0ii6sj8">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_19odmyz">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0n71iea">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0g4ole7">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_18jn655">
+          <text>true</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_05nxz6k">
+          <text>true</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1uvtna6">
+          <text>["ALTER_THE_FUTURE"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0p9kdno">
+        <description>Next is exploding</description>
+        <inputEntry id="UnaryTests_0d11d9g">
+          <text>list contains(?, "DRAW_FROM_BOTTOM")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_142p73s">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_14iusja">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_01ftbgw">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1h64hgt">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_036cps5">
+          <text>true</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1fdj3sk">
+          <text>true</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0kurhrm">
+          <text>["DRAW_FROM_BOTTOM"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1rsbuof">
+        <description>Continue attack</description>
+        <inputEntry id="UnaryTests_026lno3">
+          <text>list contains(?, "ATTACK")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1be781p">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0o7u115">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_00d8p4p">
+          <text>&gt; 1</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0hx5lwl">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1pov9pw">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1nvbji5">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0q3afln">
+          <text>["ATTACK"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0hih4f3">
+        <description>On attack</description>
+        <inputEntry id="UnaryTests_0gjuuf1">
+          <text>list contains(?, "SEE_THE_FUTURE")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0u2jzp9">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_10rp44k">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0ks7ycu">
+          <text>&gt; 1</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_02cunkc">
+          <text>not("SEE_THE_FUTURE")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1i4xojl">
+          <text>false</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0czqnl0">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1alouvg">
+          <text>["SEE_THE_FUTURE"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1tsk29e">
+        <description>On attack</description>
+        <inputEntry id="UnaryTests_1011hdk">
+          <text>list contains(?, "ALTER_THE_FUTURE")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_13j89dq">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0v9d2cj">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1dzt16k">
+          <text>&gt; 1</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_169z1fz">
+          <text>not("ALTER_THE_FUTURE")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0jy2pbv">
+          <text>false</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1nyqxlm">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1eadz5x">
+          <text>["ALTER_THE_FUTURE"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0dn72x0">
+        <inputEntry id="UnaryTests_09le3va">
+          <text>count(index of(?, "CAT_1")) &gt;= 2</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_038ln15">
+          <text>&lt; 11</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0xw5rho">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_00vej0b">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1sr7m3r">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_07l7ja3">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_023pjbs">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0ipnef0">
+          <text>["CAT_1", "CAT_1"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1srewoi">
+        <inputEntry id="UnaryTests_09zkqen">
+          <text>count(index of(?, "CAT_1")) &gt;= 2</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_02v4yey">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_03ss4jg">
+          <text>false</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_17foje6">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1tspxij">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1oo13ml">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1528a68">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0zwto90">
+          <text>["CAT_1", "CAT_1"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0zyr3ez">
+        <inputEntry id="UnaryTests_0c2m9bc">
+          <text>count(index of(?, "CAT_2")) &gt;= 2</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1wlkh2g">
+          <text>&lt; 11</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0f60yra">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0qfugpm">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0wll6hi">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_12473k0">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0z19ynw">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_05l5gka">
+          <text>["CAT_2", "CAT_2"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0apapqm">
+        <inputEntry id="UnaryTests_133csse">
+          <text>count(index of(?, "CAT_2")) &gt;= 2</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_17gw4el">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_18uftj9">
+          <text>false</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1k04fvb">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_105bs2r">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1s9ougb">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1360au6">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1yg533m">
+          <text>["CAT_2", "CAT_2"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0jasecf">
+        <inputEntry id="UnaryTests_0fsmzun">
+          <text>count(index of(?, "CAT_3")) &gt;= 2</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_08rxr5i">
+          <text>&lt; 11</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1tb6dmc">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0k7gyjj">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1w4wipe">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0an02l3">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0ayop4c">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1cg8vk0">
+          <text>["CAT_3", "CAT_3"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1f6npt1">
+        <inputEntry id="UnaryTests_0o65v4s">
+          <text>count(index of(?, "CAT_3")) &gt;= 2</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_05yif10">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0ydgmm9">
+          <text>false</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0d96tk7">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1tjgkmr">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_14apdtv">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_064q4mn">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0z1scwz">
+          <text>["CAT_3", "CAT_3"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0533aoo">
+        <inputEntry id="UnaryTests_07wz6lu">
+          <text>count(index of(?, "CAT_4")) &gt;= 2</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1fsdtiu">
+          <text>&lt; 11</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0vm73ae">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_07cqh9r">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0vim70n">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_16watvt">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1i6i4ss">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1leunfh">
+          <text>["CAT_4", "CAT_4"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0im3h1x">
+        <inputEntry id="UnaryTests_1vxirxo">
+          <text>count(index of(?, "CAT_4")) &gt;= 2</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0pv92r5">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0y27i80">
+          <text>false</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0h8hwhn">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1unc6ab">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_19v9uez">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0zswmzz">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_19godtv">
+          <text>["CAT_4", "CAT_4"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1ctcom8">
+        <inputEntry id="UnaryTests_1xv0ubi">
+          <text>count(index of(?, "CAT_5")) &gt;= 2</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1l016o1">
+          <text>&lt; 11</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0zdso9q">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1lm7lpc">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0fcjscv">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_16cawvj">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_19a70hz">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0ytc5ge">
+          <text>["CAT_5", "CAT_5"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0nebmco">
+        <inputEntry id="UnaryTests_1jmazfg">
+          <text>count(index of(?, "CAT_5")) &gt;= 2</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1tf7kqx">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1vb8bec">
+          <text>false</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0nro22j">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0n6l2t4">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0tf6n8u">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1f32y0d">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1784kyh">
+          <text>["CAT_5", "CAT_5"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0618wcn">
+        <inputEntry id="UnaryTests_1htykmh">
+          <text>list contains(?, "FERAL_CAT") and list contains(?, "CAT_1")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_152cg73">
+          <text>&lt; 10</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0nzjzkr">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0i86ext">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1iwm3zp">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_13j30wy">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0uubzon">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0kyr2ux">
+          <text>["FERAL_CAT", "CAT_1"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0tbj79k">
+        <inputEntry id="UnaryTests_0jyb7r7">
+          <text>list contains(?, "FERAL_CAT") and list contains(?, "CAT_1")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0qdxawd">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0ytjpj4">
+          <text>false</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1fu8v81">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0xbes9f">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_07xlbgp">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1nig2co">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1v0ooh2">
+          <text>["FERAL_CAT", "CAT_1"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0mo6b7a">
+        <inputEntry id="UnaryTests_0y7isq8">
+          <text>list contains(?, "FERAL_CAT") and list contains(?, "CAT_2")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0rkhlk1">
+          <text>&lt; 10</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0h7ibbg">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1qp59l5">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_01slmt1">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0qdjaj7">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0nr874p">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1c21j11">
+          <text>["FERAL_CAT", "CAT_2"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_16gj4mu">
+        <inputEntry id="UnaryTests_1qsl12x">
+          <text>list contains(?, "FERAL_CAT") and list contains(?, "CAT_2")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0ju27ou">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0zjketo">
+          <text>false</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1aq843a">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0v404ty">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1hl8p83">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0l4vsl5">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_074u531">
+          <text>["FERAL_CAT", "CAT_2"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0l3uryh">
+        <inputEntry id="UnaryTests_0pos8j9">
+          <text>list contains(?, "FERAL_CAT") and list contains(?, "CAT_3")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1ek5jqx">
+          <text>&lt; 10</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0okkslz">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1ph8bzf">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0tebd2s">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1w27eqg">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1pylrws">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0kienvu">
+          <text>["FERAL_CAT", "CAT_3"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_14mdfjp">
+        <inputEntry id="UnaryTests_03apw44">
+          <text>list contains(?, "FERAL_CAT") and list contains(?, "CAT_3")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_10likuo">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_02jet39">
+          <text>false</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_035mx28">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0avcnhj">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1pu2ot8">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1a8ccxy">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_15gtoyh">
+          <text>["FERAL_CAT", "CAT_3"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0y2kjbn">
+        <inputEntry id="UnaryTests_03dfpg7">
+          <text>list contains(?, "FERAL_CAT") and list contains(?, "CAT_4")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1nm5d11">
+          <text>&lt; 10</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_118o19p">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_01my90s">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0gpn9dv">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_06qib0a">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0ohq21q">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1t284gz">
+          <text>["FERAL_CAT", "CAT_4"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1xik9xd">
+        <inputEntry id="UnaryTests_1j8uyyc">
+          <text>list contains(?, "FERAL_CAT") and list contains(?, "CAT_4")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1a34e8y">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_152m5va">
+          <text>false</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1qfnfh6">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_136qteg">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_124v3q7">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0l7nhsw">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_14hv60g">
+          <text>["FERAL_CAT", "CAT_4"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0qsfger">
+        <inputEntry id="UnaryTests_1t4wtz6">
+          <text>list contains(?, "FERAL_CAT") and list contains(?, "CAT_5")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1ctjhw5">
+          <text>&lt; 10</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1hduc67">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_10ed0y7">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1opim6l">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0wdhe8a">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_18xx2uw">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0nes6ny">
+          <text>["FERAL_CAT", "CAT_5"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_193f2en">
+        <inputEntry id="UnaryTests_075yd7n">
+          <text>list contains(?, "FERAL_CAT") and list contains(?, "CAT_5")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0zo3ph2">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0odkirx">
+          <text>false</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1qzm36i">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0dy1s71">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1ju12fk">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1kw6elx">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_00uek3b">
+          <text>["FERAL_CAT", "CAT_5"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0sw6m5j">
+        <inputEntry id="UnaryTests_1g9d8sc">
+          <text>list contains(?, "FAVOR")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1x9r6ov">
+          <text>&lt; 9</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_06qw3x2">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_09in0so">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0kvas6f">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0yc12m9">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0f0d2fr">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_077zsi6">
+          <text>["FAVOR"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0ofxzsg">
+        <inputEntry id="UnaryTests_1yxi7sa">
+          <text>list contains(?, "FAVOR")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_121mzxa">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_06xyxv8">
+          <text>false</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1ac6gez">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_142lbaw">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1kkxk3d">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_18cefku">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_01zjxdn">
+          <text>["FAVOR"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1cbj3wr">
+        <inputEntry id="UnaryTests_0r49a5u">
+          <text>list contains(?, "SEE_THE_FUTURE")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0jgq1ot">
+          <text>&lt; 9</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1r4qrex">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1x766ij">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0b50bjl">
+          <text>not("SEE_THE_FUTURE")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1m9ctot">
+          <text>false</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_03rqg37">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1kbju7f">
+          <text>["SEE_THE_FUTURE"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1ttizk8">
+        <inputEntry id="UnaryTests_1y8qokz">
+          <text>list contains(?, "SEE_THE_FUTURE")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1gv2z6k">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1mhzstt">
+          <text>false</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1omy6mr">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1m012fs">
+          <text>not("SEE_THE_FUTURE")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1bl5df2">
+          <text>false</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_04ustgr">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1gh9m9o">
+          <text>["SEE_THE_FUTURE"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0f4dd7q">
+        <inputEntry id="UnaryTests_0mzdo3t">
+          <text>list contains(?, "ALTER_THE_FUTURE")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_00dlm3p">
+          <text>&lt; 8</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0hin9ob">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1gdzvs0">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_00n0tgu">
+          <text>not("ALTER_THE_FUTURE")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_17lmdpl">
+          <text>false</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1jotan4">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_09c1vvm">
+          <text>["ALTER_THE_FUTURE"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1jzkgrh">
+        <inputEntry id="UnaryTests_0abm51f">
+          <text>list contains(?, "ALTER_THE_FUTURE")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1mvku60">
+          <text>&lt; 10</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1e434bm">
+          <text>false</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1q9q7gw">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_06k98eg">
+          <text>not("ALTER_THE_FUTURE")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0x6mdi9">
+          <text>false</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0on389q">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1qkilm8">
+          <text>["ALTER_THE_FUTURE"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0a4f0fx">
+        <inputEntry id="UnaryTests_0zomz2f">
+          <text>list contains(?, "ATTACK")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0upc8s3">
+          <text>&lt; 5</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1njkxsy">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1ayv3u4">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1185zlp">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0rnz1s0">
+          <text>false</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1f2cqsd">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1wxw2js">
+          <text>["ATTACK"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1symwv2">
+        <inputEntry id="UnaryTests_0tb8tjs">
+          <text>list contains(?, "ATTACK")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_144e6c8">
+          <text>&lt; 7</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0qsraxa">
+          <text>false</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1cr924v">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1wwk0nt">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0szfqjx">
+          <text>false</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_007p8ta">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1iz2eju">
+          <text>["ATTACK"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1raouwn">
+        <inputEntry id="UnaryTests_0wcsl7f">
+          <text>list contains(?, "SHUFFLE")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1nag6ur">
+          <text>&lt; 5</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_19yjicf">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0222vav">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0eh3yw5">
+          <text>not("SHUFFLE")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1kj2uz3">
+          <text>false</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_07twnmh">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1qunm91">
+          <text>["SHUFFLE"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0el9n2m">
+        <inputEntry id="UnaryTests_02ognla">
+          <text>list contains(?, "SHUFFLE")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1c0eo7v">
+          <text>&lt; 7</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0t9dr7b">
+          <text>false</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1t5yuie">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1d53wot">
+          <text>not("SHUFFLE")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0a3i7h3">
+          <text>false</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_06igbh7">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_133crrf">
+          <text>["SHUFFLE"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_16sv4dc">
+        <description>Avoid draw from the buttom after shuffle</description>
+        <inputEntry id="UnaryTests_1wev92m">
+          <text>list contains(?, "DRAW_FROM_BOTTOM")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_15igvks">
+          <text>&lt; 4</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0t0cr8b">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_18jypw3">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0w0rmr1">
+          <text>not("SHUFFLE")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1jqkgqh">
+          <text>false</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_164sz8i">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1m25duy">
+          <text>["DRAW_FROM_BOTTOM"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0eudhqr">
+        <description>Avoid draw from the buttom after shuffle</description>
+        <inputEntry id="UnaryTests_0gzw5ey">
+          <text>list contains(?, "DRAW_FROM_BOTTOM")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0z2x2fs">
+          <text>&lt; 6</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_163s51g">
+          <text>false</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0i4gu50">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0xwdmrh">
+          <text>not("SHUFFLE")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0oy6b0b">
+          <text>false</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0l1ufec">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_05agvms">
+          <text>["DRAW_FROM_BOTTOM"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0ggk7da">
+        <description>Avoid skipping after shuffle</description>
+        <inputEntry id="UnaryTests_0nbi4ly">
+          <text>list contains(?, "SKIP")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0dv1fsa">
+          <text>&lt; 3</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_136uzgn">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_18w5pah">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1pznc33">
+          <text>not("SHUFFLE")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0bauxxh">
+          <text>false</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1hbqht8">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_04eapt5">
+          <text>["SKIP"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_142dnay">
+        <description>Avoid skipping after shuffle</description>
+        <inputEntry id="UnaryTests_0l55ys5">
+          <text>list contains(?, "SKIP")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1r7qojs">
+          <text>&lt; 6</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0dqzxrl">
+          <text>false</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1yrbgzg">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_095kfgu">
+          <text>not("SHUFFLE")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_10dm0h8">
+          <text>false</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1xsextn">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0nu1fxy">
+          <text>["SKIP"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_014ydrl">
+        <description>Pass. Don't play any card.</description>
+        <inputEntry id="UnaryTests_1b6pgeh">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1uw68b0">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_17guk89">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_03afmwp">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1e32yhd">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0x5zgvy">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_15qn1m5">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0thrrsb">
+          <text>[]</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <decision id="select_cards_to_play" name="Select cards to play">
+    <variable id="InformationItem_0opqvng" name="select_cards_to_play" typeRef="Any" />
+    <informationRequirement id="InformationRequirement_1009o0d">
+      <requiredDecision href="#cards_to_play" />
+    </informationRequirement>
+    <literalExpression id="LiteralExpression_08plsxy">
+      <text>{
+  cards: flatten(for card in distinct values(cards_to_play) return hand_cards[type = card]),
+  number_of_cards: count(cards_to_play),
+  select_cards: sublist(cards, 1, number_of_cards)   
+}.select_cards</text>
+    </literalExpression>
+  </decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram>
+      <dmndi:DMNShape dmnElementRef="cards_to_play">
+        <dc:Bounds height="80" width="180" x="160" y="230" />
+      </dmndi:DMNShape>
+      <dmndi:DMNShape id="DMNShape_1cznzgr" dmnElementRef="select_cards_to_play">
+        <dc:Bounds height="80" width="180" x="160" y="80" />
+      </dmndi:DMNShape>
+      <dmndi:DMNEdge id="DMNEdge_05bng1y" dmnElementRef="InformationRequirement_1009o0d">
+        <di:waypoint x="250" y="230" />
+        <di:waypoint x="250" y="180" />
+        <di:waypoint x="250" y="160" />
+      </dmndi:DMNEdge>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>

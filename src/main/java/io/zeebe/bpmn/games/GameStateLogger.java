@@ -4,9 +4,15 @@ import com.google.common.base.Strings;
 import io.zeebe.bpmn.games.model.Card;
 import java.util.List;
 import java.util.Map;
+
+import io.zeebe.bpmn.games.slack.SlackGameStateNotifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.stereotype.Component;
 
+@Component
+@ConditionalOnMissingBean(SlackGameStateNotifier.class)
 public class GameStateLogger implements GameListener {
 
   private final Logger LOG = LoggerFactory.getLogger(GameStateLogger.class);
@@ -37,8 +43,13 @@ public class GameStateLogger implements GameListener {
   }
 
   @Override
-  public void playerDrawnCard(Context context, String player, Card card) {
-    LOG.debug("Player {} drawn card {}.", player, card);
+  public void playerDrawnCardFromBottom(Context context, String player, Card card) {
+    LOG.debug("Player {} drawn card {} from the bottom.", player, card);
+  }
+
+  @Override
+  public void playerDrawnCardFromTop(GameContext context, String player, Card card) {
+    LOG.debug("Player {} drawn card {} from the top.", player, card);
   }
 
   @Override

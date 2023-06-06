@@ -8,6 +8,7 @@ import io.zeebe.bpmn.games.GameContext;
 import io.zeebe.bpmn.games.GameInteraction;
 import io.zeebe.bpmn.games.GameListener;
 import io.zeebe.bpmn.games.model.Card;
+import io.zeebe.bpmn.games.model.PlayerTurn;
 import io.zeebe.bpmn.games.model.Variables;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,20 +30,13 @@ public class SelectAction implements JobHandler {
   @Override
   public void handle(JobClient jobClient, ActivatedJob job) {
     final var variables = Variables.from(job);
-
-    final var player = variables.getNextPlayer();
-    final var players = variables.getPlayers();
-    final var hand = players.get(player);
-
-    final var deck = variables.getDeck();
-
-    final var playerNames = variables.getPlayerNames();
-    final var nextPlayerIndex = variables.getNextPlayerIndex();
-    final var nextPlayer = playerNames.get(nextPlayerIndex);
+    final var playerTurn = PlayerTurn.of(variables);
 
     interaction
-        .selectCardsToPlay(player, hand, deck.size(), nextPlayer)
-        .thenAccept(cardsToPlay -> completeJob(jobClient, job, variables, player, cardsToPlay));
+        .selectCardsToPlay(playerTurn)
+        .thenAccept(
+            cardsToPlay ->
+                completeJob(jobClient, job, variables, playerTurn.getCurrentPlayer(), cardsToPlay));
   }
 
   private void completeJob(

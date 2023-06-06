@@ -7,12 +7,19 @@ import io.camunda.zeebe.spring.client.annotation.ZeebeWorker;
 import io.zeebe.bpmn.games.GameContext;
 import io.zeebe.bpmn.games.GameInteraction;
 import io.zeebe.bpmn.games.GameListener;
+import io.zeebe.bpmn.games.model.PlayersOverview;
 import io.zeebe.bpmn.games.model.Variables;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class SelectOtherPlayer implements JobHandler {
+
+  private static Logger LOGGER = LoggerFactory.getLogger(SelectOtherPlayer.class);
 
   private final GameListener listener;
   private final GameInteraction interaction;
@@ -27,18 +34,19 @@ public class SelectOtherPlayer implements JobHandler {
   @Override
   public void handle(JobClient jobClient, ActivatedJob job) throws Exception {
     final var variables = Variables.from(job);
+    final var playersOverview = PlayersOverview.of(variables);
 
     final var currentPlayer = variables.getNextPlayer();
+    final var otherPlayers = playersOverview.getPlayers();
 
-    final var playerNames = variables.getPlayerNames();
-    playerNames.remove(currentPlayer);
-
-    if (playerNames.size() == 1) {
-      final var otherPlayer = playerNames.get(0);
+    if (otherPlayers.size() == 1) {
+      final var otherPlayer = otherPlayers.get(0).getName();
       completeJob(jobClient, job, variables, currentPlayer, otherPlayer);
     } else {
+      LOGGER.debug("Select one player of {}", playersOverview.getPlayers());
+
       interaction
-          .selectPlayer(currentPlayer, playerNames)
+          .selectPlayer(currentPlayer, playersOverview)
           .thenAccept(
               otherPlayer -> completeJob(jobClient, job, variables, currentPlayer, otherPlayer));
     }

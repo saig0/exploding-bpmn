@@ -8,6 +8,7 @@ import io.zeebe.bpmn.games.GameContext;
 import io.zeebe.bpmn.games.GameInteraction;
 import io.zeebe.bpmn.games.GameListener;
 import io.zeebe.bpmn.games.model.Card;
+import io.zeebe.bpmn.games.model.PlayerTurn;
 import io.zeebe.bpmn.games.model.Variables;
 import java.util.List;
 import java.util.Map;
@@ -30,11 +31,12 @@ public class InjectKitten implements JobHandler {
   @Override
   public void handle(JobClient jobClient, ActivatedJob job) throws Exception {
     final var variables = Variables.from(job);
+    final var playerTurn = PlayerTurn.of(variables);
 
     final var card = variables.getCard();
     final var deck = variables.getDeck();
 
-    final var currentPlayer = variables.getNextPlayer();
+    final var currentPlayer = playerTurn.getCurrentPlayer();
     final var players = variables.getPlayers();
     final var hand = players.get(currentPlayer);
 
@@ -48,7 +50,7 @@ public class InjectKitten implements JobHandler {
     } else {
 
       interaction
-          .selectPositionToInsertCard(currentPlayer, card, deck.size())
+          .selectPositionToInsertExplodingCard(playerTurn, card)
           .thenAccept(
               index -> {
                 deck.add(index, card);

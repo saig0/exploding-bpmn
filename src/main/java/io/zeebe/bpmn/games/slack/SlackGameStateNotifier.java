@@ -6,6 +6,7 @@ import static io.zeebe.bpmn.games.slack.SlackUtil.formatPlayer;
 
 import com.github.seratch.jslack.api.methods.MethodsClient;
 import com.github.seratch.jslack.api.methods.SlackApiException;
+import io.zeebe.bpmn.games.GameContext;
 import io.zeebe.bpmn.games.GameListener;
 import io.zeebe.bpmn.games.model.Card;
 import io.zeebe.bpmn.games.model.CardType;
@@ -17,9 +18,11 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
+@Profile("slack")
 public class SlackGameStateNotifier implements GameListener {
 
   private static final Logger LOG = LoggerFactory.getLogger(SlackGameStateNotifier.class);
@@ -119,7 +122,7 @@ public class SlackGameStateNotifier implements GameListener {
   }
 
   @Override
-  public void playerDrawnCard(Context context, String player, Card card) {
+  public void playerDrawnCardFromBottom(Context context, String player, Card card) {
     sendMessage(
         context,
         user -> {
@@ -133,7 +136,22 @@ public class SlackGameStateNotifier implements GameListener {
         });
   }
 
-  @Override
+    @Override
+    public void playerDrawnCardFromTop(GameContext context, String player, Card card) {
+        sendMessage(
+                context,
+                user -> {
+                    if (player.equals(user)) {
+                        return String.format("You draw %s", formatCard(card));
+                    } else if (card.getType() == CardType.EXPLODING) {
+                        return String.format("%s draw %s", formatPlayer(player), formatCard(card));
+                    } else {
+                        return String.format("%s draw a card.", formatPlayer(player));
+                    }
+                });
+    }
+
+    @Override
   public void turnEnded(Context context, String player, int remainingTurns) {}
 
   @Override

@@ -34,7 +34,7 @@ public class DrawTopCard implements JobHandler {
 
     handCards.add(card);
 
-    listener.playerDrawnCard(GameContext.of(job), currentPlayer, card);
+    listener.playerDrawnCardFromTop(GameContext.of(job), currentPlayer, card);
 
     variables.putPlayers(players).putDeck(deck).putCard(card);
 
