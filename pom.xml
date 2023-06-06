@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.zeebe.bpmn-games</groupId>
   <artifactId>exploding-bpmn</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.3</version>
   <name>Exploding BPMN</name>
 
   <packaging>jar</packaging>
@@ -35,6 +35,9 @@
     <additionalparam>-Xdoclint:none</additionalparam>
 
     <enforcer.skip>true</enforcer.skip>
+
+    <skip.central.release>true</skip.central.release>
+    <skip.camunda.release>true</skip.camunda.release>
   </properties>
 
   <dependencyManagement>
