@@ -4,13 +4,9 @@ import io.camunda.zeebe.client.api.response.ActivatedJob;
 import io.camunda.zeebe.client.api.worker.JobClient;
 import io.camunda.zeebe.client.api.worker.JobHandler;
 import io.camunda.zeebe.spring.client.annotation.ZeebeWorker;
-import io.zeebe.bpmn.games.GameContext;
 import io.zeebe.bpmn.games.GameInteraction;
-import io.zeebe.bpmn.games.GameListener;
-import io.zeebe.bpmn.games.model.Card;
 import io.zeebe.bpmn.games.model.CardType;
 import io.zeebe.bpmn.games.model.Variables;
-import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,12 +14,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class NopeAction implements JobHandler {
 
-  private final GameListener listener;
   private final GameInteraction interaction;
 
   @Autowired
-  public NopeAction(GameListener listener, GameInteraction interaction) {
-    this.listener = listener;
+  public NopeAction(GameInteraction interaction) {
     this.interaction = interaction;
   }
 
