@@ -24,7 +24,7 @@
 
 
     <!-- release parent settings -->
-    <version.java>11</version.java>
+    <version.java>17</version.java>
     <nexus.snapshot.repository>
       https://artifacts.camunda.com/artifactory/zeebe-io-snapshots/
     </nexus.snapshot.repository>
