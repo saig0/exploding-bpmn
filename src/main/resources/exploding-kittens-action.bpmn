@@ -2,6 +2,11 @@
 <bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:zeebe="http://camunda.org/schema/zeebe/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1c0uu3w" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.12.0">
   <bpmn:process id="exploding-kittens-action" name="Exploding Kittens: Apply a card action" isExecutable="true">
     <bpmn:startEvent id="Event_1m08pf0" name="Apply Action">
+      <bpmn:extensionElements>
+        <zeebe:ioMapping>
+          <zeebe:output source="=false" target="endTurn" />
+        </zeebe:ioMapping>
+      </bpmn:extensionElements>
       <bpmn:outgoing>Flow_0figpgf</bpmn:outgoing>
     </bpmn:startEvent>
     <bpmn:exclusiveGateway id="Gateway_1pqfwv5" name="Which action?">
@@ -78,7 +83,8 @@
       <bpmn:incoming>Flow_1pvbc88</bpmn:incoming>
       <bpmn:incoming>Flow_1pyk8o2</bpmn:incoming>
       <bpmn:incoming>Flow_1xnd7rf</bpmn:incoming>
-      <bpmn:incoming>Flow_1igrzok</bpmn:incoming>
+      <bpmn:incoming>Flow_13r2ts0</bpmn:incoming>
+      <bpmn:incoming>Flow_0g09equ</bpmn:incoming>
       <bpmn:outgoing>Flow_0n68dzy</bpmn:outgoing>
     </bpmn:exclusiveGateway>
     <bpmn:endEvent id="Event_0mubhxj" name="Action applied">
@@ -123,13 +129,9 @@
     <bpmn:sequenceFlow id="Flow_1pyk8o2" sourceRef="Activity_0tst3a6" targetRef="Gateway_0547r8f" />
     <bpmn:sequenceFlow id="Flow_1xnd7rf" sourceRef="Activity_1pdtlxj" targetRef="Gateway_0547r8f" />
     <bpmn:sequenceFlow id="Flow_0n68dzy" sourceRef="Gateway_0547r8f" targetRef="Event_0mubhxj" />
-    <bpmn:sequenceFlow id="Flow_1nxsygr" name="Skip" sourceRef="Gateway_1pqfwv5" targetRef="Event_02gf3ei">
+    <bpmn:sequenceFlow id="Flow_1nxsygr" name="Skip" sourceRef="Gateway_1pqfwv5" targetRef="Activity_167c1gq">
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">= action = "skip"</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
-    <bpmn:endEvent id="Event_02gf3ei" name="Skip">
-      <bpmn:incoming>Flow_1nxsygr</bpmn:incoming>
-      <bpmn:errorEventDefinition id="ErrorEventDefinition_1blz0pq" errorRef="Error_0nbjl10" />
-    </bpmn:endEvent>
     <bpmn:endEvent id="Event_07db4i1" name="Draw from Bottom">
       <bpmn:incoming>Flow_0qpt4bc</bpmn:incoming>
       <bpmn:errorEventDefinition id="ErrorEventDefinition_1k1rfgi" errorRef="Error_0gl9bie" />
@@ -160,9 +162,25 @@
         <zeebe:taskDefinition type="atomic" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1rqecyx</bpmn:incoming>
-      <bpmn:outgoing>Flow_1igrzok</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0gl18c0</bpmn:outgoing>
     </bpmn:serviceTask>
-    <bpmn:sequenceFlow id="Flow_1igrzok" sourceRef="Activity_0ogwlow" targetRef="Gateway_0547r8f" />
+    <bpmn:scriptTask id="Activity_167c1gq" name="Set endTurn to true">
+      <bpmn:extensionElements>
+        <zeebe:script expression="=true" resultVariable="endTurn" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_1nxsygr</bpmn:incoming>
+      <bpmn:outgoing>Flow_13r2ts0</bpmn:outgoing>
+    </bpmn:scriptTask>
+    <bpmn:sequenceFlow id="Flow_13r2ts0" sourceRef="Activity_167c1gq" targetRef="Gateway_0547r8f" />
+    <bpmn:sequenceFlow id="Flow_0gl18c0" sourceRef="Activity_0ogwlow" targetRef="Activity_1b9lhg4" />
+    <bpmn:sequenceFlow id="Flow_0g09equ" sourceRef="Activity_1b9lhg4" targetRef="Gateway_0547r8f" />
+    <bpmn:scriptTask id="Activity_1b9lhg4" name="Set endTurn to true">
+      <bpmn:extensionElements>
+        <zeebe:script expression="=true" resultVariable="endTurn" />
+      </bpmn:extensionElements>
+      <bpmn:incoming>Flow_0gl18c0</bpmn:incoming>
+      <bpmn:outgoing>Flow_0g09equ</bpmn:outgoing>
+    </bpmn:scriptTask>
   </bpmn:process>
   <bpmn:error id="Error_0nbjl10" name="skip" errorCode="skip" />
   <bpmn:error id="Error_0fp8pba" name="attack" errorCode="attack" />
@@ -217,12 +235,6 @@
       <bpmndi:BPMNShape id="Activity_1pdtlxj_di" bpmnElement="Activity_1pdtlxj">
         <dc:Bounds x="423" y="701" width="100" height="80" />
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="Event_0zxqmhg_di" bpmnElement="Event_02gf3ei">
-        <dc:Bounds x="455" y="92" width="36" height="36" />
-        <bpmndi:BPMNLabel>
-          <dc:Bounds x="462" y="135" width="22" height="14" />
-        </bpmndi:BPMNLabel>
-      </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Event_0s99n4n_di" bpmnElement="Event_07db4i1">
         <dc:Bounds x="452" y="836" width="36" height="36" />
         <bpmndi:BPMNLabel>
@@ -237,6 +249,14 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="Activity_1kajar9_di" bpmnElement="Activity_0ogwlow">
         <dc:Bounds x="620" y="910" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0inz0ib_di" bpmnElement="Activity_167c1gq">
+        <dc:Bounds x="423" y="70" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0k2yt8j_di" bpmnElement="Activity_1b9lhg4">
+        <dc:Bounds x="810" y="910" width="100" height="80" />
         <bpmndi:BPMNLabel />
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="Flow_0figpgf_di" bpmnElement="Flow_0figpgf">
@@ -348,9 +368,9 @@
       <bpmndi:BPMNEdge id="Flow_1nxsygr_di" bpmnElement="Flow_1nxsygr">
         <di:waypoint x="321" y="245" />
         <di:waypoint x="321" y="110" />
-        <di:waypoint x="455" y="110" />
+        <di:waypoint x="423" y="110" />
         <bpmndi:BPMNLabel>
-          <dc:Bounds x="362" y="83" width="22" height="14" />
+          <dc:Bounds x="360" y="83" width="22" height="14" />
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="Flow_0150u75_di" bpmnElement="Flow_0150u75">
@@ -365,8 +385,17 @@
         <di:waypoint x="530" y="950" />
         <di:waypoint x="620" y="950" />
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="Flow_1igrzok_di" bpmnElement="Flow_1igrzok">
+      <bpmndi:BPMNEdge id="Flow_13r2ts0_di" bpmnElement="Flow_13r2ts0">
+        <di:waypoint x="523" y="110" />
+        <di:waypoint x="979" y="110" />
+        <di:waypoint x="979" y="323" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0gl18c0_di" bpmnElement="Flow_0gl18c0">
         <di:waypoint x="720" y="950" />
+        <di:waypoint x="810" y="950" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0g09equ_di" bpmnElement="Flow_0g09equ">
+        <di:waypoint x="910" y="950" />
         <di:waypoint x="979" y="950" />
         <di:waypoint x="979" y="373" />
       </bpmndi:BPMNEdge>
