@@ -34,7 +34,8 @@ public class BuildDeck implements JobHandler {
           CardType.DRAW_FROM_BOTTOM, List.of(3, 4, 7),
           CardType.FAVOR, List.of(2, 4, 6),
           CardType.NOPE, List.of(4, 6, 10),
-          CardType.DEFUSE, List.of(3, 7, 10));
+          CardType.DEFUSE, List.of(3, 7, 10),
+          CardType.ATOMIC, List.of(1, 1, 1));
 
   private final Map<CardType, List<Integer>> catCards =
       Map.of(
