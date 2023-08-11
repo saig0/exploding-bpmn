@@ -10,42 +10,24 @@ import java.util.stream.Collectors;
 
 public class SlackUtil {
 
-  private static final Map<CardType, String> cardEmojis1 =
-      Map.of(
-          CardType.EXPLODING, ":bpmn-error-throw-event-red:",
-          CardType.DEFUSE, ":bpmn-error-catch-event-green:",
-          CardType.ATTACK, ":bpmn-parallel-gateway-purple:",
-          CardType.SEE_THE_FUTURE, ":bpmn-timer-catch-event-blue:",
-          CardType.ALTER_THE_FUTURE, ":bpmn-compensation-throw-event-blue:",
-          CardType.DRAW_FROM_BOTTOM, ":bpmn-escalation-throw-event-blue:",
-          CardType.SHUFFLE, ":bpmn-complex-gateway-blue:",
-          CardType.SKIP, ":bpmn-link-throw-event-blue:",
-          CardType.NOPE, ":bpmn-cancel-throw-event-yellow:",
-          CardType.FAVOR, ":bpmn-receive-task:");
-
-  private static final Map<CardType, String> cardEmojis2 =
-      Map.of(
-          CardType.FERAL_CAT,
-          ":bpmn-none-task:",
-          CardType.CAT_1,
-          ":bpmn-user-task:",
-          CardType.CAT_2,
-          ":bpmn-manual-task:",
-          CardType.CAT_3,
-          ":bpmn-service-task:",
-          CardType.CAT_4,
-          ":bpmn-script-task:",
-          CardType.CAT_5,
-          ":bpmn-business-rule-task:");
-
-  private static final Map<CardType, String> cardEmojis;
-
-  static {
-    cardEmojis = new HashMap<>();
-    cardEmojis.putAll(cardEmojis1);
-    cardEmojis.putAll(cardEmojis2);
-  }
-  ;
+  private static final Map<CardType, String> cardEmojis = Map.ofEntries(
+          Map.entry(CardType.EXPLODING, ":bpmn-error-throw-event-red:"),
+          Map.entry(CardType.DEFUSE, ":bpmn-error-catch-event-green:"),
+          Map.entry(CardType.ATTACK, ":bpmn-parallel-gateway-purple:"),
+          Map.entry(CardType.SEE_THE_FUTURE, ":bpmn-timer-catch-event-blue:"),
+          Map.entry(CardType.ALTER_THE_FUTURE, ":bpmn-compensation-throw-event-blue:"),
+          Map.entry(CardType.DRAW_FROM_BOTTOM, ":bpmn-escalation-throw-event-blue:"),
+          Map.entry(CardType.SHUFFLE, ":bpmn-complex-gateway-blue:"),
+          Map.entry(CardType.SKIP, ":bpmn-link-throw-event-blue:"),
+          Map.entry(CardType.NOPE, ":bpmn-cancel-throw-event-yellow:"),
+          Map.entry(CardType.FAVOR, ":bpmn-receive-task:"),
+          Map.entry(CardType.FERAL_CAT, ":bpmn-none-task:"),
+          Map.entry(CardType.CAT_1, ":bpmn-user-task:"),
+          Map.entry(CardType.CAT_2, ":bpmn-manual-task:"),
+          Map.entry(CardType.CAT_3, ":bpmn-service-task:"),
+          Map.entry(CardType.CAT_4, ":bpmn-script-task:"),
+          Map.entry(CardType.CAT_5, ":bpmn-business-rule-task:"),
+          Map.entry(CardType.ATOMIC, ":bpmn-termination-end-event:"));
 
   public static String formatCard(Card card) {
     final var type = card.getType();
