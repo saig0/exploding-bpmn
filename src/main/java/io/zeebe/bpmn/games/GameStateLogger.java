@@ -122,4 +122,9 @@ public class GameStateLogger implements GameListener {
   public void gameCanceled(final Context context) {
     LOG.debug("The game is canceled.");
   }
+
+  @Override
+  public void explodingKittensMovedToTopOfDeck(Context context, List<Card> deck) {
+    LOG.debug("All exploding kittens are placed at the top of the deck {}", deck);
+  }
 }
