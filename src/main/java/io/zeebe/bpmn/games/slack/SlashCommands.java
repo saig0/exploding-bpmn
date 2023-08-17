@@ -145,7 +145,7 @@ public class SlashCommands {
             .text(
                 MarkdownTextObject.builder()
                     .text(
-                        "The game is modeled in BPMN :bpmn: and executed in Camunda Cloud :camunda-cloud: The code is available here: https://github.com/saig0/exploding-bpmn")
+                        "The game is modeled in BPMN :bpmn: and executed in Camunda 8 SaaS :camunda-cloud: The code is available here: https://github.com/saig0/exploding-bpmn")
                     .build())
             .build());
 
@@ -207,6 +207,19 @@ public class SlashCommands {
                                 "shuffle the deck and put all exploding kittens on top - end your turn (without drawing)"))
                     .build())
             .build());
+
+    blocks.add(
+            SectionBlock.builder()
+                    .text(
+                            MarkdownTextObject.builder()
+                                    .text(
+                                            "*Get started:*\n"
+                                                    + "- type `/exploding-bpmn @player1 @player2 @player3` to start a new game\n"
+                                                    + "- mention all players for the game, including you\n"
+                                                    + "- add `bot_1` to invite a bot to the game (e.g. `/exploding-bpmn @player1 bot_1 bot_2`) :robot_face:\n"
+                                                    + "- choose between a DMN-based bot `bot_1` and a unpredictable bot `bot_random_1`\n")
+                                    .build())
+                    .build());
 
     return SlashCommandResponse.builder().responseType("ephemeral").blocks(blocks).build();
   }
