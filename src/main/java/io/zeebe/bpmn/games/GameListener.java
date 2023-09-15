@@ -50,7 +50,7 @@ public interface GameListener {
 
   void playerDrawnCardFromTop(GameContext context, String player, Card card);
 
-  void explodingKittensMovedToTopOfDeck(Context context, List<Card> deck);
+  void explodingKittensMovedToTopOfDeck(Context context, List<Card> explodingKittens, List<Card> deck);
 
   interface Context {
     String getKey();

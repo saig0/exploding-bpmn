@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1rfn8sw" name="DRD" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.12.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.2.0">
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1rfn8sw" name="DRD" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.15.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.2.0">
   <decision id="nope_played_cards" name="Nope played cards">
     <decisionTable id="DecisionTable_0w02anq" hitPolicy="FIRST">
       <input id="Input_1" label="Played cards">
@@ -55,6 +55,23 @@
           <text></text>
         </inputEntry>
         <outputEntry id="LiteralExpression_1iyfdqx">
+          <text>true</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0f5lnmb">
+        <inputEntry id="UnaryTests_1ijxinr">
+          <text>["ATOMIC"]</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_02nag99">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_007xf16">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_126hvww">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0hqc862">
           <text>true</text>
         </outputEntry>
       </rule>

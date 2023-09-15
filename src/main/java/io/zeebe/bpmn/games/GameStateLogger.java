@@ -135,7 +135,7 @@ public class GameStateLogger implements GameListener {
   }
 
   @Override
-  public void explodingKittensMovedToTopOfDeck(Context context, List<Card> deck) {
+  public void explodingKittensMovedToTopOfDeck(Context context, List<Card> explodingKittens, List<Card> deck) {
     LOG.debug("All exploding kittens are placed at the top of the deck {}", deck);
   }
 }

@@ -35,7 +35,7 @@ public class AtomicAction implements JobHandler {
 
     variables.putDeck(deck);
 
-    listener.explodingKittensMovedToTopOfDeck(GameContext.of(job), deck);
+    listener.explodingKittensMovedToTopOfDeck(GameContext.of(job), explodingKittens, deck);
 
     jobClient
         .newCompleteCommand(job.getKey())

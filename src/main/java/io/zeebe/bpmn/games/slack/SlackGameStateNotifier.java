@@ -309,7 +309,7 @@ public class SlackGameStateNotifier implements GameListener {
   }
 
     @Override
-    public void explodingKittensMovedToTopOfDeck(Context context, List<Card> deck) {
+    public void explodingKittensMovedToTopOfDeck(Context context, List<Card> explodingKittens, List<Card> deck) {
         sendMessage(context, user -> "All exploding kittens are placed at the top of the deck!");
     }
 }

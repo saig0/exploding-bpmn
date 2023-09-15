@@ -22,6 +22,10 @@ public class BotMemory {
     memoryByPlayer.clear();
   }
 
+  public void rememberFutureAll(List<Card> cards) {
+    memoryByPlayer.forEach((player, memory) -> memory.putFuture(cards));
+  }
+
   public void removeNextCard() {
     memoryByPlayer.forEach((player, memory) -> memory.removeNext());
   }

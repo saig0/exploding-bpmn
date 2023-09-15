@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/" id="Definitions_0802ggq" name="DRD" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.12.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.2.0">
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" xmlns:di="http://www.omg.org/spec/DMN/20180521/DI/" id="Definitions_0802ggq" name="DRD" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.15.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.2.0">
   <decision id="cards_to_play" name="Cards to play">
     <decisionTable id="DecisionTable_1byjhiv" hitPolicy="FIRST">
       <input id="Input_1" label="Hand cards">
@@ -824,6 +824,58 @@
         </inputEntry>
         <outputEntry id="LiteralExpression_01zjxdn">
           <text>["FAVOR"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1nzjmmh">
+        <inputEntry id="UnaryTests_1fhp7rm">
+          <text>list contains(?, "ATOMIC")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1hqyth5">
+          <text>&lt; 10</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_14d3erc">
+          <text>true</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0jfxkjd">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0s5cdsg">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0jrvx2o">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1jliaqg">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_13j7ynd">
+          <text>["ATOMIC"]</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0an5lqv">
+        <inputEntry id="UnaryTests_05ddxwo">
+          <text>list contains(?, "ATOMIC")</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0eugi57">
+          <text>&lt; 5</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0d7ibks">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1762vgq">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_08o2p1b">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1lkzkfc">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0twmrkg">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_04jjlk1">
+          <text>["ATOMIC"]</text>
         </outputEntry>
       </rule>
       <rule id="DecisionRule_1cbj3wr">

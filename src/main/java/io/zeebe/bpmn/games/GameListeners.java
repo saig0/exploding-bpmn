@@ -126,4 +126,9 @@ public class GameListeners implements GameListener {
   public void gameCanceled(Context context) {
     listeners.forEach(l -> l.gameCanceled(context));
   }
+
+  @Override
+  public void explodingKittensMovedToTopOfDeck(Context context, List<Card> explodingKittens, List<Card> deck) {
+    listeners.forEach(l -> l.explodingKittensMovedToTopOfDeck(context, explodingKittens, deck));
+  }
 }

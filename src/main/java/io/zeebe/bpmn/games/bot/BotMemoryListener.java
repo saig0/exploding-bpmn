@@ -138,4 +138,11 @@ public class BotMemoryListener implements GameListener, BotMemoryAccess {
   public void gameCanceled(Context context) {
     memoryByGame.remove(context.getKey());
   }
+
+  @Override
+  public void explodingKittensMovedToTopOfDeck(Context context, List<Card> explodingKittens, List<Card> deck) {
+    getMemory(context).forgetAll();
+
+    getMemory(context).rememberFutureAll(explodingKittens);
+  }
 }
