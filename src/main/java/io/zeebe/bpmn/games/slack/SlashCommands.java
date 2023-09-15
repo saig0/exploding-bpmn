@@ -199,7 +199,9 @@ public class SlashCommands {
                                 "end your turn and the next player has additional turns (your remaining turns + 2)")
                             + format.apply(
                                 CardType.NOPE,
-                                "invalid the last played card (the action is not applied) - can be chained to undo the nope"))
+                                "invalid the last played card (the action is not applied) - can be chained to undo the nope")
+                            + format.apply(CardType.ATOMIC,
+                                "shuffle the deck and put all exploding kittens on top - end your turn (without drawing)"))
                     .build())
             .build());
 

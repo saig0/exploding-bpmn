@@ -48,6 +48,8 @@ public interface GameListener {
 
   void gameCanceled(Context context);
 
+  void explodingKittensMovedToTopOfDeck(Context context, List<Card> deck);
+
   interface Context {
     String getKey();
 

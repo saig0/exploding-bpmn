@@ -5,6 +5,7 @@ public enum CardType {
   // special
   EXPLODING,
   DEFUSE,
+  ATOMIC,
 
   // actions
   ATTACK,
