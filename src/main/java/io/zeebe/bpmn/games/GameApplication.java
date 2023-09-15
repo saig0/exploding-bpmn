@@ -10,8 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @ZeebeDeployment(resources = {"classpath*:/**/*.bpmn", "classpath*:/**/*.dmn"})
 public class GameApplication {
 
-    public static void main(String[] args){
-        SpringApplication.run(GameApplication.class, args);
-    }
-
+  public static void main(String[] args) {
+    SpringApplication.run(GameApplication.class, args);
+  }
 }

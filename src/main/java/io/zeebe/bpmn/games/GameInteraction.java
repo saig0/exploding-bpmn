@@ -4,7 +4,6 @@ import io.zeebe.bpmn.games.model.Card;
 import io.zeebe.bpmn.games.model.NopeTurn;
 import io.zeebe.bpmn.games.model.PlayerTurn;
 import io.zeebe.bpmn.games.model.PlayersOverview;
-
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 

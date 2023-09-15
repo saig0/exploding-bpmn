@@ -2,10 +2,9 @@ package io.zeebe.bpmn.games;
 
 import com.google.common.base.Strings;
 import io.zeebe.bpmn.games.model.Card;
+import io.zeebe.bpmn.games.slack.SlackGameStateNotifier;
 import java.util.List;
 import java.util.Map;
-
-import io.zeebe.bpmn.games.slack.SlackGameStateNotifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -135,7 +134,8 @@ public class GameStateLogger implements GameListener {
   }
 
   @Override
-  public void explodingKittensMovedToTopOfDeck(Context context, List<Card> explodingKittens, List<Card> deck) {
+  public void explodingKittensMovedToTopOfDeck(
+      Context context, List<Card> explodingKittens, List<Card> deck) {
     LOG.debug("All exploding kittens are placed at the top of the deck {}", deck);
   }
 }

@@ -136,22 +136,22 @@ public class SlackGameStateNotifier implements GameListener {
         });
   }
 
-    @Override
-    public void playerDrawnCardFromTop(GameContext context, String player, Card card) {
-        sendMessage(
-                context,
-                user -> {
-                    if (player.equals(user)) {
-                        return String.format("You draw %s", formatCard(card));
-                    } else if (card.getType() == CardType.EXPLODING) {
-                        return String.format("%s draw %s", formatPlayer(player), formatCard(card));
-                    } else {
-                        return String.format("%s draw a card.", formatPlayer(player));
-                    }
-                });
-    }
+  @Override
+  public void playerDrawnCardFromTop(GameContext context, String player, Card card) {
+    sendMessage(
+        context,
+        user -> {
+          if (player.equals(user)) {
+            return String.format("You draw %s", formatCard(card));
+          } else if (card.getType() == CardType.EXPLODING) {
+            return String.format("%s draw %s", formatPlayer(player), formatCard(card));
+          } else {
+            return String.format("%s draw a card.", formatPlayer(player));
+          }
+        });
+  }
 
-    @Override
+  @Override
   public void turnEnded(Context context, String player, int remainingTurns) {}
 
   @Override
@@ -308,8 +308,9 @@ public class SlackGameStateNotifier implements GameListener {
     gameEnded(context);
   }
 
-    @Override
-    public void explodingKittensMovedToTopOfDeck(Context context, List<Card> explodingKittens, List<Card> deck) {
-        sendMessage(context, user -> "All exploding kittens are placed at the top of the deck!");
-    }
+  @Override
+  public void explodingKittensMovedToTopOfDeck(
+      Context context, List<Card> explodingKittens, List<Card> deck) {
+    sendMessage(context, user -> "All exploding kittens are placed at the top of the deck!");
+  }
 }

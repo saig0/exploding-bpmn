@@ -4,15 +4,13 @@ import io.zeebe.bpmn.games.bot.DmnBasedBot;
 import io.zeebe.bpmn.games.bot.GameBot;
 import io.zeebe.bpmn.games.bot.RandomBot;
 import io.zeebe.bpmn.games.model.Card;
-
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
-
 import io.zeebe.bpmn.games.model.NopeTurn;
 import io.zeebe.bpmn.games.model.PlayerTurn;
 import io.zeebe.bpmn.games.model.PlayersOverview;
 import io.zeebe.bpmn.games.slack.SlackUtil;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -64,7 +62,8 @@ public class AppConfig {
       }
 
       @Override
-      public CompletableFuture<String> selectPlayer(String player, PlayersOverview playersOverview) {
+      public CompletableFuture<String> selectPlayer(
+          String player, PlayersOverview playersOverview) {
         return delegate.apply(player).selectPlayer(player, playersOverview);
       }
 
@@ -74,8 +73,11 @@ public class AppConfig {
       }
 
       @Override
-      public CompletableFuture<Integer> selectPositionToInsertExplodingCard(PlayerTurn playerTurn, Card card) {
-        return delegate.apply(playerTurn.getCurrentPlayer()).selectPositionToInsertExplodingCard(playerTurn, card);
+      public CompletableFuture<Integer> selectPositionToInsertExplodingCard(
+          PlayerTurn playerTurn, Card card) {
+        return delegate
+            .apply(playerTurn.getCurrentPlayer())
+            .selectPositionToInsertExplodingCard(playerTurn, card);
       }
     };
   }
@@ -95,5 +97,4 @@ public class AppConfig {
       return dmnBasedBot;
     }
   }
-
 }

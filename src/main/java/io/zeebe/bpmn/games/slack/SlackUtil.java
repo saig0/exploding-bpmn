@@ -2,7 +2,6 @@ package io.zeebe.bpmn.games.slack;
 
 import io.zeebe.bpmn.games.model.Card;
 import io.zeebe.bpmn.games.model.CardType;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -10,7 +9,8 @@ import java.util.stream.Collectors;
 
 public class SlackUtil {
 
-  private static final Map<CardType, String> cardEmojis = Map.ofEntries(
+  private static final Map<CardType, String> cardEmojis =
+      Map.ofEntries(
           Map.entry(CardType.EXPLODING, ":bpmn-error-throw-event-red:"),
           Map.entry(CardType.DEFUSE, ":bpmn-error-catch-event-green:"),
           Map.entry(CardType.ATTACK, ":bpmn-parallel-gateway-purple:"),

@@ -5,12 +5,11 @@ import io.zeebe.bpmn.games.model.NopeTurn;
 import io.zeebe.bpmn.games.model.PlayerTurn;
 import io.zeebe.bpmn.games.model.PlayersOverview;
 import io.zeebe.bpmn.games.slack.SlackUserInteraction;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.stereotype.Component;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.stereotype.Component;
 
 @Component
 @ConditionalOnMissingBean(SlackUserInteraction.class)
@@ -42,7 +41,8 @@ public class NoopUserInteraction implements UserInteraction {
   }
 
   @Override
-  public CompletableFuture<Integer> selectPositionToInsertExplodingCard(PlayerTurn playerTurn, Card card) {
+  public CompletableFuture<Integer> selectPositionToInsertExplodingCard(
+      PlayerTurn playerTurn, Card card) {
     return CompletableFuture.completedFuture(0);
   }
 }

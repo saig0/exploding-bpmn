@@ -3,12 +3,11 @@ package io.zeebe.bpmn.games.bot;
 import io.zeebe.bpmn.games.GameContext;
 import io.zeebe.bpmn.games.GameListener;
 import io.zeebe.bpmn.games.model.Card;
-import org.springframework.stereotype.Component;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.springframework.stereotype.Component;
 
 @Component
 public class BotMemoryListener implements GameListener, BotMemoryAccess {
@@ -140,7 +139,8 @@ public class BotMemoryListener implements GameListener, BotMemoryAccess {
   }
 
   @Override
-  public void explodingKittensMovedToTopOfDeck(Context context, List<Card> explodingKittens, List<Card> deck) {
+  public void explodingKittensMovedToTopOfDeck(
+      Context context, List<Card> explodingKittens, List<Card> deck) {
     getMemory(context).forgetAll();
 
     getMemory(context).rememberFutureAll(explodingKittens);

@@ -7,7 +7,6 @@ import com.github.seratch.jslack.api.model.block.SectionBlock;
 import com.github.seratch.jslack.api.model.block.composition.MarkdownTextObject;
 import com.github.seratch.jslack.app_backend.slash_commands.payload.SlashCommandPayloadParser;
 import com.github.seratch.jslack.app_backend.slash_commands.response.SlashCommandResponse;
-import io.zeebe.bpmn.games.GameApplication;
 import io.zeebe.bpmn.games.GameStarter;
 import io.zeebe.bpmn.games.model.CardType;
 import java.io.IOException;
@@ -203,23 +202,24 @@ public class SlashCommands {
                             + format.apply(
                                 CardType.NOPE,
                                 "invalid the last played card (the action is not applied) - can be chained to undo the nope")
-                            + format.apply(CardType.ATOMIC,
+                            + format.apply(
+                                CardType.ATOMIC,
                                 "shuffle the deck and put all exploding kittens on top - end your turn (without drawing)"))
                     .build())
             .build());
 
     blocks.add(
-            SectionBlock.builder()
+        SectionBlock.builder()
+            .text(
+                MarkdownTextObject.builder()
                     .text(
-                            MarkdownTextObject.builder()
-                                    .text(
-                                            "*Get started:*\n"
-                                                    + "- type `/exploding-bpmn @player1 @player2 @player3` to start a new game\n"
-                                                    + "- mention all players for the game, including you\n"
-                                                    + "- add `bot_1` to invite a bot to the game (e.g. `/exploding-bpmn @player1 bot_1 bot_2`) :robot_face:\n"
-                                                    + "- choose between a DMN-based bot `bot_1` and a unpredictable bot `bot_random_1`\n")
-                                    .build())
-                    .build());
+                        "*Get started:*\n"
+                            + "- type `/exploding-bpmn @player1 @player2 @player3` to start a new game\n"
+                            + "- mention all players for the game, including you\n"
+                            + "- add `bot_1` to invite a bot to the game (e.g. `/exploding-bpmn @player1 bot_1 bot_2`) :robot_face:\n"
+                            + "- choose between a DMN-based bot `bot_1` and a unpredictable bot `bot_random_1`\n")
+                    .build())
+            .build());
 
     return SlashCommandResponse.builder().responseType("ephemeral").blocks(blocks).build();
   }

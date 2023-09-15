@@ -1,11 +1,10 @@
 package io.zeebe.bpmn.games;
 
 import io.zeebe.bpmn.games.model.Card;
-import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.Map;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Component;
 
 @Component
 @Primary
@@ -128,7 +127,8 @@ public class GameListeners implements GameListener {
   }
 
   @Override
-  public void explodingKittensMovedToTopOfDeck(Context context, List<Card> explodingKittens, List<Card> deck) {
+  public void explodingKittensMovedToTopOfDeck(
+      Context context, List<Card> explodingKittens, List<Card> deck) {
     listeners.forEach(l -> l.explodingKittensMovedToTopOfDeck(context, explodingKittens, deck));
   }
 }

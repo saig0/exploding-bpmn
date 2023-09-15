@@ -7,6 +7,8 @@
  */
 package io.zeebe.bpmn.games.bot;
 
+import static java.util.Map.entry;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,18 +17,13 @@ import io.zeebe.bpmn.games.model.Card;
 import io.zeebe.bpmn.games.model.NopeTurn;
 import io.zeebe.bpmn.games.model.PlayerTurn;
 import io.zeebe.bpmn.games.model.PlayersOverview;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-
-import static java.util.Map.entry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 @Component
 public final class DmnBasedBot implements GameBot {

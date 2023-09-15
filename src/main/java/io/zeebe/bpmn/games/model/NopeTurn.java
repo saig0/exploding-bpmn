@@ -4,61 +4,61 @@ import java.util.List;
 
 public class NopeTurn {
 
-    private String nopePlayer;
-    private String currentPlayer;
-    private String nextPlayer;
-    private int playerCount;
+  private String nopePlayer;
+  private String currentPlayer;
+  private String nextPlayer;
+  private int playerCount;
 
-    private List<Card> playedCards;
+  private List<Card> playedCards;
 
-    private int deckSize;
+  private int deckSize;
 
-    private List<Card> handCards;
+  private List<Card> handCards;
 
-    public static NopeTurn of(Variables variables) {
-        final var nopeTurn = new NopeTurn();
+  public static NopeTurn of(Variables variables) {
+    final var nopeTurn = new NopeTurn();
 
-        final int playerCount = variables.getPlayerCount();
-        final String nopePlayer = variables.getNopePlayer();
-        final String nextPlayer = variables.getPlayerNames().get(variables.getNextPlayerIndex());
-        final List<Card> handCards = variables.getPlayers().get(nopePlayer);
+    final int playerCount = variables.getPlayerCount();
+    final String nopePlayer = variables.getNopePlayer();
+    final String nextPlayer = variables.getPlayerNames().get(variables.getNextPlayerIndex());
+    final List<Card> handCards = variables.getPlayers().get(nopePlayer);
 
-        nopeTurn.nopePlayer = nopePlayer;
-        nopeTurn.currentPlayer = variables.getNextPlayer();
-        nopeTurn.nextPlayer = nextPlayer;
-        nopeTurn.playerCount = playerCount;
-        nopeTurn.playedCards = variables.getLastPlayedCards();
-        nopeTurn.deckSize = variables.getDeck().size();
-        nopeTurn.handCards = handCards;
+    nopeTurn.nopePlayer = nopePlayer;
+    nopeTurn.currentPlayer = variables.getNextPlayer();
+    nopeTurn.nextPlayer = nextPlayer;
+    nopeTurn.playerCount = playerCount;
+    nopeTurn.playedCards = variables.getLastPlayedCards();
+    nopeTurn.deckSize = variables.getDeck().size();
+    nopeTurn.handCards = handCards;
 
-        return nopeTurn;
-    }
+    return nopeTurn;
+  }
 
-    public String getNopePlayer() {
-        return nopePlayer;
-    }
+  public String getNopePlayer() {
+    return nopePlayer;
+  }
 
-    public String getCurrentPlayer() {
-        return currentPlayer;
-    }
+  public String getCurrentPlayer() {
+    return currentPlayer;
+  }
 
-    public String getNextPlayer() {
-        return nextPlayer;
-    }
+  public String getNextPlayer() {
+    return nextPlayer;
+  }
 
-    public int getPlayerCount() {
-        return playerCount;
-    }
+  public int getPlayerCount() {
+    return playerCount;
+  }
 
-    public List<Card> getPlayedCards() {
-        return playedCards;
-    }
+  public List<Card> getPlayedCards() {
+    return playedCards;
+  }
 
-    public int getDeckSize() {
-        return deckSize;
-    }
+  public int getDeckSize() {
+    return deckSize;
+  }
 
-    public List<Card> getHandCards() {
-        return handCards;
-    }
+  public List<Card> getHandCards() {
+    return handCards;
+  }
 }

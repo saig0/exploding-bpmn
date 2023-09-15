@@ -6,10 +6,7 @@ import io.camunda.zeebe.client.api.worker.JobHandler;
 import io.camunda.zeebe.spring.client.annotation.ZeebeWorker;
 import io.zeebe.bpmn.games.GameInteraction;
 import io.zeebe.bpmn.games.model.*;
-
-import java.util.List;
 import java.util.Optional;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +34,8 @@ public class NopeAction implements JobHandler {
     final var nopePlayer = variables.getNopePlayer();
     final var nopedPlayer = Optional.ofNullable(variables.getNopedPlayer());
 
-    final var nopeCard = nopeTurn.getHandCards().stream().filter(c -> c.getType() == CardType.NOPE).findFirst();
+    final var nopeCard =
+        nopeTurn.getHandCards().stream().filter(c -> c.getType() == CardType.NOPE).findFirst();
 
     // don't nope your self
     // don't nope if you played the last nope
@@ -45,7 +43,11 @@ public class NopeAction implements JobHandler {
     final boolean hasPlayedNopeOrCards = nopePlayer.equals(nopedPlayer.orElse(currentPlayer));
     final boolean hasNopeCard = nopeCard.isPresent();
 
-    LOGGER.debug("Nope action for {}? [has-played-nope-or-cards: {}, has-nope-card: {}]", nopePlayer, hasPlayedNopeOrCards, hasNopeCard);
+    LOGGER.debug(
+        "Nope action for {}? [has-played-nope-or-cards: {}, has-nope-card: {}]",
+        nopePlayer,
+        hasPlayedNopeOrCards,
+        hasNopeCard);
 
     if (!hasPlayedNopeOrCards && hasNopeCard) {
 

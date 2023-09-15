@@ -1,8 +1,6 @@
 package io.zeebe.bpmn.games.bot;
 
 import io.zeebe.bpmn.games.model.*;
-import org.springframework.stereotype.Component;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -11,7 +9,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
-
+import org.springframework.stereotype.Component;
 
 @Component
 public class RandomBot implements GameBot {
@@ -57,7 +55,8 @@ public class RandomBot implements GameBot {
   }
 
   @Override
-  public CompletableFuture<Integer> selectPositionToInsertExplodingCard(PlayerTurn playerTurn, Card card) {
+  public CompletableFuture<Integer> selectPositionToInsertExplodingCard(
+      PlayerTurn playerTurn, Card card) {
 
     final int index = ThreadLocalRandom.current().nextInt(0, playerTurn.getDeckSize());
 
