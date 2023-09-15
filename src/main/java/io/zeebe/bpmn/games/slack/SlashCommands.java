@@ -7,7 +7,8 @@ import com.github.seratch.jslack.api.model.block.SectionBlock;
 import com.github.seratch.jslack.api.model.block.composition.MarkdownTextObject;
 import com.github.seratch.jslack.app_backend.slash_commands.payload.SlashCommandPayloadParser;
 import com.github.seratch.jslack.app_backend.slash_commands.response.SlashCommandResponse;
-import io.zeebe.bpmn.games.GamesApplication;
+import io.zeebe.bpmn.games.GameApplication;
+import io.zeebe.bpmn.games.GameStarter;
 import io.zeebe.bpmn.games.model.CardType;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/slack/command/")
+@Profile("slack")
 public class SlashCommands {
 
   public static final String BASE_URL =
@@ -41,7 +44,7 @@ public class SlashCommands {
 
   @Autowired private MethodsClient methodsClient;
 
-  @Autowired private GamesApplication gamesApplication;
+  @Autowired private GameStarter gameStarter;
 
   @Autowired private SlackSession session;
 
@@ -71,7 +74,7 @@ public class SlashCommands {
 
     userIds.stream().filter(userId -> !SlackUtil.isBot(userId)).forEach(this::openConversation);
 
-    final String key = gamesApplication.startNewGame(userIds, channelId);
+    final String key = gameStarter.startNewGame(userIds, channelId);
 
     session.putGame(key, channelId, userIds);
 
@@ -142,7 +145,7 @@ public class SlashCommands {
             .text(
                 MarkdownTextObject.builder()
                     .text(
-                        "The game is modeled in BPMN :bpmn: and executed in Camunda Cloud :camunda-cloud: The code is available here: https://github.com/saig0/exploding-bpmn")
+                        "The game is modeled in BPMN :bpmn: and executed in Camunda 8 SaaS :camunda-cloud: The code is available here: https://github.com/saig0/exploding-bpmn")
                     .build())
             .build());
 
@@ -204,6 +207,19 @@ public class SlashCommands {
                                 "shuffle the deck and put all exploding kittens on top - end your turn (without drawing)"))
                     .build())
             .build());
+
+    blocks.add(
+            SectionBlock.builder()
+                    .text(
+                            MarkdownTextObject.builder()
+                                    .text(
+                                            "*Get started:*\n"
+                                                    + "- type `/exploding-bpmn @player1 @player2 @player3` to start a new game\n"
+                                                    + "- mention all players for the game, including you\n"
+                                                    + "- add `bot_1` to invite a bot to the game (e.g. `/exploding-bpmn @player1 bot_1 bot_2`) :robot_face:\n"
+                                                    + "- choose between a DMN-based bot `bot_1` and a unpredictable bot `bot_random_1`\n")
+                                    .build())
+                    .build());
 
     return SlashCommandResponse.builder().responseType("ephemeral").blocks(blocks).build();
   }

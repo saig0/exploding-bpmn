@@ -2,8 +2,11 @@ spring:
   jackson:
     property-naming-strategy: SNAKE_CASE
     default-property-inclusion: non_null
+  profiles:
+    active: slack #disable profile for local dev without Slack
 
 slack.token: x
+default-bot: dmn
 
 zeebe:
   client:
@@ -14,6 +17,10 @@ zeebe:
       baseUrl: zeebe.ultrawombat.com
       region: bru-3
       authUrl: https://login.cloud.ultrawombat.com/oauth/token
+#    broker:
+#      gateway-address: "localhost:26500"
+#    security:
+#      plaintext: true
 
     job:
       timeout: PT30S
@@ -21,5 +28,11 @@ zeebe:
     worker:
       default-name: exploding-bpmn-app
 
-logging.level.io.camunda.zeebe.client.job.poller: error
-logging.level.io.zeebe.bpmn.games.slack: warn
+logging:
+  level:
+    root: info
+    io.camunda.zeebe.client: warn
+    io.camunda.zeebe.client.job.poller: error
+    io.zeebe.bpmn.games: info
+    io.zeebe.bpmn.games.GameStateLogger: debug
+    io.zeebe.bpmn.games.slack: warn

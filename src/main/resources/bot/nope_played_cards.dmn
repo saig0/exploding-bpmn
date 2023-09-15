@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1rfn8sw" name="DRD" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.15.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.2.0">
+  <decision id="nope_played_cards" name="Nope played cards">
+    <decisionTable id="DecisionTable_0w02anq" hitPolicy="FIRST">
+      <input id="Input_1" label="Played cards">
+        <inputExpression id="InputExpression_1" typeRef="Any">
+          <text>played_cards.type</text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_0c79t3h" label="Remaining rounds">
+        <inputExpression id="LiteralExpression_1lgj28w" typeRef="number">
+          <text>round down(deck_size / player_count, 0)</text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_1ycvxv8" label="I&#39;m next">
+        <inputExpression id="LiteralExpression_1rzsue1" typeRef="boolean">
+          <text>next_player = nope_player</text>
+        </inputExpression>
+      </input>
+      <input id="InputClause_02l63er" label="I played the cards">
+        <inputExpression id="LiteralExpression_0ecx1rf" typeRef="boolean">
+          <text>current_player = nope_player</text>
+        </inputExpression>
+      </input>
+      <output id="Output_1" label="Nope played cards" name="nope_played_cards" typeRef="boolean" />
+      <rule id="DecisionRule_0iw41bx">
+        <description>Nope the Nope cards to apply my played cards.</description>
+        <inputEntry id="UnaryTests_1crcoi3">
+          <text>["NOPE"]</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0gwnwhs">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0ewbv3k">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0q0ck8d">
+          <text>true</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_12cz7q2">
+          <text>true</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0s0dkyq">
+        <inputEntry id="UnaryTests_1smtok7">
+          <text>["ATTACK"]</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1hwpeir">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_18awisd">
+          <text>true</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1jwx5os">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1iyfdqx">
+          <text>true</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0f5lnmb">
+        <inputEntry id="UnaryTests_1ijxinr">
+          <text>["ATOMIC"]</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_02nag99">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_007xf16">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_126hvww">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0hqc862">
+          <text>true</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0ajl8kk">
+        <inputEntry id="UnaryTests_0w4b3uu">
+          <text>["SKIP"]</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1ybfb91">
+          <text>&lt; 7</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1cowiah">
+          <text>true</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_03kdgab">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0drx70j">
+          <text>true</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_12jr6di">
+        <inputEntry id="UnaryTests_1igt4uk">
+          <text>["ALTER_THE_FUTURE"]</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1vu56pr">
+          <text>&lt; 6</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0n54sie">
+          <text>true</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1p6imvi">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0v8hyh7">
+          <text>true</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1njss42">
+        <inputEntry id="UnaryTests_00iehg3">
+          <text>["DRAW_FROM_BOTTOM"]</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0dm1jvb">
+          <text>&lt; 5</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0ut55zq">
+          <text>true</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1ktmp48">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0bdzu37">
+          <text>true</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0ikr68o">
+        <inputEntry id="UnaryTests_0yh36wi">
+          <text>["SEE_THE_FUTURE"]</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_16ltwtc">
+          <text>&lt; 4</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1325smp">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1b2o0hn">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_027b4xz">
+          <text>true</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0znz1pp">
+        <inputEntry id="UnaryTests_0vvpe4b">
+          <text>["SHUFFLE"]</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0amgelq">
+          <text>&lt; 4</text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0o5g5c1">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_16km0ra">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1g01okn">
+          <text>true</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_1jwij9y">
+        <inputEntry id="UnaryTests_0i83w1r">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0rve732">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_1fpi8og">
+          <text></text>
+        </inputEntry>
+        <inputEntry id="UnaryTests_0l3vpjv">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1fl8y7w">
+          <text>false</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram>
+      <dmndi:DMNShape dmnElementRef="nope_played_cards">
+        <dc:Bounds height="80" width="180" x="160" y="100" />
+      </dmndi:DMNShape>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>

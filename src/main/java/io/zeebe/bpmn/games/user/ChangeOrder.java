@@ -8,6 +8,7 @@ import io.zeebe.bpmn.games.GameContext;
 import io.zeebe.bpmn.games.GameInteraction;
 import io.zeebe.bpmn.games.GameListener;
 import io.zeebe.bpmn.games.model.Card;
+import io.zeebe.bpmn.games.model.PlayerTurn;
 import io.zeebe.bpmn.games.model.Variables;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,17 +30,18 @@ public class ChangeOrder implements JobHandler {
   @Override
   public void handle(JobClient jobClient, ActivatedJob job) throws Exception {
     final var variables = Variables.from(job);
+    final var playerTurn = PlayerTurn.of(variables);
 
-    final var currentPlayer = variables.getNextPlayer();
     final var deck = variables.getDeck();
-
     final var amount = Math.min(3, deck.size());
     final var cards = deck.subList(0, amount);
 
     interaction
-        .alterTheFuture(currentPlayer, cards)
+        .alterTheFuture(playerTurn, cards)
         .thenAccept(
-            alteredFuture -> completeJob(jobClient, job, variables, currentPlayer, alteredFuture));
+            alteredFuture ->
+                completeJob(
+                    jobClient, job, variables, playerTurn.getCurrentPlayer(), alteredFuture));
   }
 
   private void completeJob(

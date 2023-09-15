@@ -1,8 +1,8 @@
 package io.zeebe.bpmn.games.bot;
 
-import io.zeebe.bpmn.games.GameInteraction;
-import io.zeebe.bpmn.games.model.Card;
-import io.zeebe.bpmn.games.model.CardType;
+import io.zeebe.bpmn.games.model.*;
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -12,23 +12,24 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
-public class SimpleBot implements GameInteraction {
+
+@Component
+public class RandomBot implements GameBot {
 
   @Override
-  public CompletableFuture<List<Card>> selectCardsToPlay(
-      String player, List<Card> handCards, int deckSize, String nextPlayer) {
-    return CompletableFuture.completedFuture(selectCards(handCards));
+  public CompletableFuture<List<Card>> selectCardsToPlay(PlayerTurn playerTurn) {
+    return CompletableFuture.completedFuture(selectCards(playerTurn.getHandCards()));
   }
 
   @Override
-  public CompletableFuture<Boolean> nopeThePlayedCard(String player) {
+  public CompletableFuture<Boolean> nopeThePlayedCard(NopeTurn nopeTurn) {
     final var wantToNope = ThreadLocalRandom.current().nextDouble() > 0.5;
 
     return CompletableFuture.completedFuture(wantToNope);
   }
 
   @Override
-  public CompletableFuture<List<Card>> alterTheFuture(String player, List<Card> cards) {
+  public CompletableFuture<List<Card>> alterTheFuture(PlayerTurn playerTurn, List<Card> cards) {
 
     final var alteredFuture = new ArrayList<>(cards);
     Collections.shuffle(alteredFuture);
@@ -37,10 +38,11 @@ public class SimpleBot implements GameInteraction {
   }
 
   @Override
-  public CompletableFuture<String> selectPlayer(String player, List<String> otherPlayers) {
+  public CompletableFuture<String> selectPlayer(String player, PlayersOverview playersOverview) {
 
-    final var index = ThreadLocalRandom.current().nextInt(0, otherPlayers.size());
-    final var otherPlayer = otherPlayers.get(index);
+    final var players = playersOverview.getPlayers();
+    final var index = ThreadLocalRandom.current().nextInt(0, players.size());
+    final var otherPlayer = players.get(index).getName();
 
     return CompletableFuture.completedFuture(otherPlayer);
   }
@@ -55,10 +57,9 @@ public class SimpleBot implements GameInteraction {
   }
 
   @Override
-  public CompletableFuture<Integer> selectPositionToInsertCard(
-      String player, Card card, int deckSize) {
+  public CompletableFuture<Integer> selectPositionToInsertExplodingCard(PlayerTurn playerTurn, Card card) {
 
-    final int index = ThreadLocalRandom.current().nextInt(0, deckSize);
+    final int index = ThreadLocalRandom.current().nextInt(0, playerTurn.getDeckSize());
 
     return CompletableFuture.completedFuture(index);
   }

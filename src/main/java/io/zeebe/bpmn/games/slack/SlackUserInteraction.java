@@ -13,9 +13,9 @@ import com.github.seratch.jslack.api.model.block.element.BlockElement;
 import com.github.seratch.jslack.api.model.block.element.ButtonElement;
 import com.github.seratch.jslack.api.model.block.element.StaticSelectElement;
 import com.github.seratch.jslack.app_backend.interactive_messages.response.ActionResponse;
-import io.zeebe.bpmn.games.GameInteraction;
-import io.zeebe.bpmn.games.model.Card;
-import io.zeebe.bpmn.games.model.CardType;
+import io.zeebe.bpmn.games.UserInteraction;
+import io.zeebe.bpmn.games.model.*;
+
 import java.io.IOException;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -31,11 +31,14 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SlackUserInteraction implements GameInteraction {
+@Profile("slack")
+public class SlackUserInteraction implements UserInteraction {
 
   private final Duration playNoopTimeout = Duration.ofSeconds(6);
 
@@ -46,10 +49,9 @@ public class SlackUserInteraction implements GameInteraction {
   @Autowired private MethodsClient methodsClient;
 
   @Override
-  public CompletableFuture<List<Card>> selectCardsToPlay(
-      String player, List<Card> handCards, int deckSize, String nextPlayer) {
+  public CompletableFuture<List<Card>> selectCardsToPlay(PlayerTurn playerTurn) {
 
-    final var channelId = session.getChannelId(player);
+    final var channelId = session.getChannelId(playerTurn.getCurrentPlayer());
 
     final var blocks = new ArrayList<LayoutBlock>();
 
@@ -75,10 +77,10 @@ public class SlackUserInteraction implements GameInteraction {
 
     cardButtons.add(passButton);
 
-    final List<Card> nonPlayableCards = new ArrayList<>(handCards);
+    final List<Card> nonPlayableCards = new ArrayList<>(playerTurn.getHandCards());
 
     final Map<CardType, List<Card>> catCards =
-        handCards.stream()
+        playerTurn.getHandCards().stream()
             .filter(card -> card.getType().isCatCard())
             .collect(Collectors.groupingBy(Card::getType));
 
@@ -110,7 +112,7 @@ public class SlackUserInteraction implements GameInteraction {
     twoSameCatCards.forEach(nonPlayableCards::removeAll);
 
     final List<Card> actionCards =
-        handCards.stream()
+        playerTurn.getHandCards().stream()
             .filter(card -> card.getType() != CardType.NOPE && card.getType() != CardType.DEFUSE)
             .filter(card -> !card.getType().isCatCard())
             .collect(Collectors.toList());
@@ -137,11 +139,12 @@ public class SlackUserInteraction implements GameInteraction {
         SectionBlock.builder()
             .text(
                 MarkdownTextObject.builder()
-                    .text(String.format("Remaining cards in the deck: %d", deckSize))
+                    .text(String.format("Remaining cards in the deck: %d", playerTurn.getDeckSize()))
                     .build())
             .build());
 
-    blocks.add(
+      final String nextPlayer = playerTurn.getNextPlayers().get(0);
+      blocks.add(
         SectionBlock.builder()
             .text(
                 MarkdownTextObject.builder()
@@ -186,8 +189,8 @@ public class SlackUserInteraction implements GameInteraction {
   }
 
   @Override
-  public CompletableFuture<Boolean> nopeThePlayedCard(String player) {
-    final var channelId = session.getChannelId(player);
+  public CompletableFuture<Boolean> nopeThePlayedCard(NopeTurn nopeTurn) {
+      final var channelId = session.getChannelId(nopeTurn.getNopePlayer());
 
     final var block1 =
         SectionBlock.builder()
@@ -256,8 +259,8 @@ public class SlackUserInteraction implements GameInteraction {
   }
 
   @Override
-  public CompletableFuture<List<Card>> alterTheFuture(String player, List<Card> cards) {
-    final var channelId = session.getChannelId(player);
+  public CompletableFuture<List<Card>> alterTheFuture(PlayerTurn playerTurn, List<Card> cards) {
+    final var channelId = session.getChannelId(playerTurn.getCurrentPlayer());
 
     final var permutations = permutations(cards);
     final var possibleFutures = distinct(permutations);
@@ -306,7 +309,7 @@ public class SlackUserInteraction implements GameInteraction {
   }
 
   @Override
-  public CompletableFuture<String> selectPlayer(String player, List<String> otherPlayers) {
+  public CompletableFuture<String> selectPlayer(String player, PlayersOverview playersOverview) {
     final var channelId = session.getChannelId(player);
 
     final var blocks = new ArrayList<LayoutBlock>();
@@ -316,17 +319,18 @@ public class SlackUserInteraction implements GameInteraction {
             .text(MarkdownTextObject.builder().text("Choose a player to draw a card from:").build())
             .build());
 
-    otherPlayers.stream()
+    playersOverview.getPlayers()
         .forEach(
             otherPlayer -> {
-              final var text =
-                  MarkdownTextObject.builder().text(SlackUtil.formatPlayer(otherPlayer)).build();
+                final String playerName = otherPlayer.getName();
+                final var text =
+                  MarkdownTextObject.builder().text(SlackUtil.formatPlayer(playerName)).build();
 
               final var button =
                   ButtonElement.builder()
                       .text(PlainTextObject.builder().text("Choose").build())
-                      .value(otherPlayer)
-                      .actionId("select_player" + otherPlayer)
+                      .value(playerName)
+                      .actionId("select_player" + playerName)
                       .build();
 
               final var playerBlock = SectionBlock.builder().text(text).accessory(button).build();
@@ -397,11 +401,11 @@ public class SlackUserInteraction implements GameInteraction {
   }
 
   @Override
-  public CompletableFuture<Integer> selectPositionToInsertCard(
-      String player, Card card, int deckSize) {
-    final var channelId = session.getChannelId(player);
+  public CompletableFuture<Integer> selectPositionToInsertExplodingCard(PlayerTurn playerTurn, Card card) {
+    final var channelId = session.getChannelId(playerTurn.getCurrentPlayer());
+      final int deckSize = playerTurn.getDeckSize();
 
-    final var text =
+      final var text =
         String.format(
             "Choose where to insert %s in the deck (%d cards):",
             SlackUtil.formatCard(card), deckSize);

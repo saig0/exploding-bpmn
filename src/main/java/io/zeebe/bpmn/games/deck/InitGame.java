@@ -42,6 +42,7 @@ public class InitGame implements JobHandler {
 
     variables
         .putPlayerNames(playerNames)
+        .putPlayerCount(playerNames.size())
         .putRound(0)
         .putTurns(1)
         .putNextPlayerIndex(nextPlayerIndex)

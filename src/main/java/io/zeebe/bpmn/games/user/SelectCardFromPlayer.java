@@ -9,11 +9,15 @@ import io.zeebe.bpmn.games.GameInteraction;
 import io.zeebe.bpmn.games.GameListener;
 import io.zeebe.bpmn.games.model.Card;
 import io.zeebe.bpmn.games.model.Variables;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class SelectCardFromPlayer implements JobHandler {
+
+  private static final Logger LOGGER = LoggerFactory.getLogger(SelectCardFromPlayer.class);
 
   private final GameListener listener;
   private final GameInteraction interaction;
@@ -42,6 +46,8 @@ public class SelectCardFromPlayer implements JobHandler {
         completeJob(jobClient, job, variables, currentPlayer, otherPlayer, card);
 
       } else {
+        LOGGER.debug("Select one card to give of {}", otherHand);
+
         interaction
             .selectCardToGive(otherPlayer, otherHand)
             .thenAccept(

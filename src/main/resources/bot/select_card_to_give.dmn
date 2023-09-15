@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1s89g4g" name="DRD" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.15.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.2.0">
+  <decision id="select_card_to_give" name="Select card to give">
+    <variable id="InformationItem_1757w4c" name="select_card_to_give" typeRef="Any" />
+    <literalExpression id="LiteralExpression_1rof02q">
+      <text>{
+  order: ["CAT_1", "CAT_2", "CAT_3", "CAT_4", "CAT_5", "FERAL_CAT", "SHUFFLE", "FAVOR", "DRAW_FROM_BOTTOM", "ATOMIC", "SKIP", "SEE_THE_FUTURE", "ALTER_THE_FUTURE", "NOPE", "ATTACK", "DEFUSE"],
+  ordered_cards: flatten(for card_type in order return hand_cards[type = card_type]),
+  card: ordered_cards[1] 
+}.card</text>
+    </literalExpression>
+  </decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram>
+      <dmndi:DMNShape id="DMNShape_0n12n7a" dmnElementRef="select_card_to_give">
+        <dc:Bounds height="80" width="180" x="160" y="100" />
+      </dmndi:DMNShape>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>

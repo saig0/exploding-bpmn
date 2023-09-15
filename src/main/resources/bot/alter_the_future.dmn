@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_1l5fi93" name="DRD" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.15.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.2.0">
+  <decision id="alter_the_future" name="Alter the future">
+    <variable id="InformationItem_0f5d3es" name="alter_the_future" typeRef="Any" />
+    <literalExpression id="LiteralExpression_0nghac7">
+      <text>{
+  order: ["DEFUSE", "ATTACK", "ALTER_THE_FUTURE", "ATOMIC", "NOPE", "SEE_THE_FUTURE", "SKIP", "DRAW_FROM_BOTTOM", "SHUFFLE", "FAVOR", "FERAL_CAT", "CAT_1", "CAT_2", "CAT_3", "CAT_4", "CAT_5", "EXPLODING"],
+  ordered_cards: flatten(for card_type in order return cards[type = card_type]),
+  my_cards: sublist(ordered_cards, 1, remaining_turns),
+  other_cards: sublist(reverse(ordered_cards), 1, 3 - remaining_turns),
+  altered_future: concatenate(my_cards, other_cards)
+}.altered_future</text>
+    </literalExpression>
+  </decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram>
+      <dmndi:DMNShape id="DMNShape_0358fgq" dmnElementRef="alter_the_future">
+        <dc:Bounds height="80" width="180" x="160" y="100" />
+      </dmndi:DMNShape>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>

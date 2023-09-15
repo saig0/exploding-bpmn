@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0czj067" name="DRD" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.12.0" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.2.0">
+  <decision id="position_of_exploding_card" name="Position of exploding card">
+    <decisionTable id="DecisionTable_1vond40" hitPolicy="FIRST">
+      <input id="InputClause_1n3ku1b" label="Remaining rounds">
+        <inputExpression id="LiteralExpression_150bp22" typeRef="number">
+          <text>round down(deck_size / player_count, 0)</text>
+        </inputExpression>
+      </input>
+      <output id="Output_1" label="Position of exploding card" name="position_of_exploding_card" typeRef="number" />
+      <rule id="DecisionRule_0486t23">
+        <description>Next player after remaining turns</description>
+        <inputEntry id="UnaryTests_0nrkc6o">
+          <text>&lt; 7</text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_0gns8m4">
+          <text>remaining_turns - 1</text>
+        </outputEntry>
+      </rule>
+      <rule id="DecisionRule_0sme9go">
+        <description>One of the next players</description>
+        <inputEntry id="UnaryTests_00uy08b">
+          <text></text>
+        </inputEntry>
+        <outputEntry id="LiteralExpression_1ktr3yk">
+          <text>remaining_turns - 1 + round down((player_count - 1) * random number(), 0)</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram>
+      <dmndi:DMNShape dmnElementRef="position_of_exploding_card">
+        <dc:Bounds height="80" width="180" x="160" y="100" />
+      </dmndi:DMNShape>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>

@@ -34,7 +34,7 @@ public class DrawBottomCard implements JobHandler {
 
     handCards.add(card);
 
-    listener.playerDrawnCard(GameContext.of(job), currentPlayer, card);
+    listener.playerDrawnCardFromBottom(GameContext.of(job), currentPlayer, card);
 
     variables.putPlayers(players).putDeck(deck).putCard(card);
 

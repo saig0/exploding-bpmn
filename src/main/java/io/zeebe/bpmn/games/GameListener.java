@@ -16,7 +16,7 @@ public interface GameListener {
 
   void playerPassed(Context context, String player);
 
-  void playerDrawnCard(Context context, String player, Card card);
+  void playerDrawnCardFromBottom(Context context, String player, Card card);
 
   void turnEnded(Context context, String player, int remainingTurns);
 
@@ -48,7 +48,9 @@ public interface GameListener {
 
   void gameCanceled(Context context);
 
-  void explodingKittensMovedToTopOfDeck(Context context, List<Card> deck);
+  void playerDrawnCardFromTop(GameContext context, String player, Card card);
+
+  void explodingKittensMovedToTopOfDeck(Context context, List<Card> explodingKittens, List<Card> deck);
 
   interface Context {
     String getKey();
