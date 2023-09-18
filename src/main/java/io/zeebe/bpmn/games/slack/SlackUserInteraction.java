@@ -458,10 +458,18 @@ public class SlackUserInteraction implements UserInteraction {
 
     final var block2 = ActionsBlock.builder().elements(List.of(positionSelect)).build();
 
-    final var playerNames = playerTurn.getNextPlayers().stream().map(SlackUtil::formatPlayer).collect(Collectors.joining(", "));
+    final var playerNames =
+        playerTurn.getNextPlayers().stream()
+            .map(SlackUtil::formatPlayer)
+            .collect(Collectors.joining(", "));
 
     final var block3 =
-              SectionBlock.builder().text(MarkdownTextObject.builder().text("Next players are: %s".formatted(playerNames)).build()).build();
+        SectionBlock.builder()
+            .text(
+                MarkdownTextObject.builder()
+                    .text("Next players are: %s".formatted(playerNames))
+                    .build())
+            .build();
 
     final var future = new CompletableFuture<Integer>();
 
