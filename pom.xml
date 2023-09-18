@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.zeebe.bpmn-games</groupId>
   <artifactId>exploding-bpmn</artifactId>
-  <version>1.1.0</version>
+  <version>1.1.2</version>
   <name>Exploding BPMN</name>
 
   <packaging>jar</packaging>
@@ -18,9 +18,9 @@
   </parent>
 
   <properties>
-    <version.zeebe>8.2.2</version.zeebe>
+    <version.zeebe>8.2.4</version.zeebe>
     <version.jslack>3.4.2</version.jslack>
-    <version.spring>2.7.6</version.spring>
+    <version.spring>2.7.15</version.spring>
 
 
     <!-- release parent settings -->
@@ -72,6 +72,21 @@
         <artifactId>assertj-core</artifactId>
         <version>3.10.0</version>
       </dependency>
+
+      <dependency>
+        <groupId>com.fasterxml.jackson</groupId>
+        <artifactId>jackson-bom</artifactId>
+        <version>2.14.2</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+
+      <dependency>
+        <groupId>org.yaml</groupId>
+        <artifactId>snakeyaml</artifactId>
+        <version>1.33</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 
